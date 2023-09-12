@@ -1,0 +1,19 @@
+---
+import MainHead from "./MainHead.astro"
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title ='Nueva pagina', description='Esta es una Nueva Pagina' } = Astro.props as Props;
+---
+
+<!doctype html>
+<html class="dark" lang="en">
+	<MainHead {title} {description} />
+	<body class="dark:bg-[#13151a]">
+		<main class="">
+			<slot />
+		</main>
+	</body>
+</html>
