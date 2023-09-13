@@ -1,5 +1,10 @@
 export const navData = [
     {
+        name: 'Home',
+        path: '/',
+        icon: 'home',
+    },
+    {
         name: 'About Me',
         path: '/about/',
         icon: 'person',
