@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon';
 import { navData, social } from '../data/navData';
+import DownloadButton from './DownloadButton.astro';
 import Link from './Link.astro';
 ---
 
@@ -41,6 +42,9 @@ import Link from './Link.astro';
                     ))
                 }
             </ul>
+        </div>
+        <div class="w-full h-full">
+            <DownloadButton />
         </div>
     </div>
 </nav>
