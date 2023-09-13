@@ -1,0 +1,26 @@
+---
+import { Icon } from 'astro-icon';
+
+interface Props {
+    name: string;
+    path: string;
+    icon?: string;
+}
+const { path, name, icon } = Astro.props as Props;
+---
+
+<a
+    class="group transition-all ease-out duration-500 flex gap-3 items-center text-neutral-500 hover:text-indigo-800"
+    href={path}
+>
+    {
+        icon && (
+            <Icon
+                class="fill-neutral-500 transition-all ease-out duration-500 group-hover:fill-indigo-800"
+                name={icon}
+                width="20"
+            />
+        )
+    }
+    {name}</a
+>

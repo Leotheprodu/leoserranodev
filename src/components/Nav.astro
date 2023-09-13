@@ -1,0 +1,46 @@
+---
+import { Icon } from 'astro-icon';
+import { navData, social } from '../data/navData';
+import Link from './Link.astro';
+---
+
+<nav class="fixed top-36" aria-label="Primary">
+    <div class="dark:text-white flex flex-col gap-10">
+        <a class="flex gap-3 items-center" href="/">
+            <Icon name="braille-l" width="20" />
+            <h1 class="font-bold text-xl">Portfolio</h1>
+        </a>
+        <div class="flex w-full gap-3">
+            <div
+                class="bg-[url('../../public/leo.jpg')] bg-cover bg-no-repeat bg-center rounded-full w-14 shadow-md"
+            >
+            </div>
+
+            <div class="w-full">
+                <h2 class="font-semibold">Leonardo Serrano A.</h2>
+                <p class="text-sm">Fullstack Developer</p>
+            </div>
+        </div>
+        <ul class="flex flex-col gap-5">
+            {
+                navData.map((item) => (
+                    <Link name={item.name} path={item.path} icon={item.icon} />
+                ))
+            }
+        </ul>
+        <div class="flex flex-col gap-3">
+            <h4 class="uppercase font-semibold text-neutral-500">Socials</h4>
+            <ul class="flex flex-col gap-5">
+                {
+                    social.map((item) => (
+                        <Link
+                            name={item.name}
+                            path={item.path}
+                            icon={item.icon}
+                        />
+                    ))
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
