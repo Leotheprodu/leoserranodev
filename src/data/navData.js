@@ -41,4 +41,9 @@ export const social = [
         path: 'https://twitter.com/leonardosays03',
         icon: 'x',
     },
+    {
+        name: 'WhatsApp',
+        path: 'https://wa.me/50663017707?text="I%20would%20like%20to%20know%20more%20about%20you,%20"',
+        icon: 'whatsapp',
+    },
 ];
