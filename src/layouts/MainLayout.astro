@@ -1,23 +1,27 @@
 ---
+import { DarkModeInput } from '../components/DarkModeInput.tsx';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 import MainHead from './MainHead.astro';
+
 interface Props {
     title: string;
     description?: string;
 }
-
 const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
     Astro.props as Props;
 ---
 
 <!doctype html>
-<html class="" lang="en">
+<html id="htmlMain" lang="en">
     <MainHead {title} {description} />
     <body class="dark:bg-neutral-900 bg-neutral-50 px-3">
         <main
-            class="bg-white border shadow-md gap-5 flex mt-20 max-w-[80rem] h-[50rem] m-auto items-center relative overflow-y-scroll"
+            class="bg-white border shadow-md gap-5 flex mt-20 max-w-[80rem] h-[50rem] m-auto items-center relative overflow-y-scroll overflow-x-hidden"
         >
+            <div class="absolute top-[-3.5rem] right-[-11rem]">
+                <DarkModeInput client:only />
+            </div>
             <section class="px-8 w-[20rem]">
                 <Nav />
             </section>
@@ -26,5 +30,18 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
             </section>
         </main>
         <Footer />
+        <script>
+            import { darkModeStore } from '../stores/store';
+
+            darkModeStore.subscribe((darkmode) => {
+                if (darkmode) {
+                    document.getElementById('htmlMain').classList.add('dark');
+                } else {
+                    document
+                        .getElementById('htmlMain')
+                        .classList.remove('dark');
+                }
+            });
+        </script>
     </body>
 </html>

@@ -5,11 +5,13 @@ interface Props {
     name: string;
     path: string;
     icon?: string;
+    newWindow?: boolean;
 }
-const { path, name, icon } = Astro.props as Props;
+const { path, name, icon, newWindow = false } = Astro.props as Props;
 ---
 
 <a
+    target={newWindow ? '_blank' : undefined}
     class="group transition-all ease-out duration-500 flex gap-3 items-center text-neutral-600 hover:text-indigo-700"
     href={path}
 >
