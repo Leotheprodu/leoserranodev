@@ -5,18 +5,22 @@ import DownloadButton from './DownloadButton.astro';
 import Link from './Link.astro';
 ---
 
-<nav class="fixed top-36" aria-label="Primary">
-    <div class="dark:text-white flex flex-col gap-10">
+<nav class="" aria-label="Primary">
+    <div class="flex flex-col gap-10 pl-10 pt-14 h-full">
         <a
             class="flex group gap-3 items-center hover:text-neutral-700"
             href="/"
         >
             <Icon
-                class="group-hover:fill-neutral-700"
+                class="group-hover:fill-neutral-700 dark:group-hover:fill-neutral-100 dark:fill-neutral-400"
                 name="braille-l"
                 width="20"
             />
-            <h1 class="font-bold text-xl">Portfolio</h1>
+            <h1
+                class="font-bold text-xl dark:text-neutral-300 dark:group-hover:text-neutral-100"
+            >
+                Portfolio
+            </h1>
         </a>
         <div class="flex w-full gap-3">
             <div
@@ -25,8 +29,10 @@ import Link from './Link.astro';
             </div>
 
             <div class="w-full">
-                <h2 class="font-semibold">Leonardo Serrano A.</h2>
-                <p class="text-sm">Fullstack Developer</p>
+                <h2 class="font-semibold dark:text-neutral-50">
+                    Leonardo Serrano A.
+                </h2>
+                <p class="text-sm dark:text-neutral-100">Fullstack Developer</p>
             </div>
         </div>
         <ul class="flex flex-col gap-3">
@@ -37,7 +43,11 @@ import Link from './Link.astro';
             }
         </ul>
         <div class="flex flex-col gap-3">
-            <h4 class="uppercase font-semibold text-neutral-500">Socials</h4>
+            <h4
+                class="uppercase font-semibold text-neutral-500 dark:text-neutral-400"
+            >
+                Socials
+            </h4>
             <ul class="flex flex-col gap-5">
                 {
                     social.map((item) => (

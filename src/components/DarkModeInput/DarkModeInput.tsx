@@ -32,7 +32,7 @@ export const DarkModeInput = () => {
     };
 
     return (
-        <div className="scale-[.2]">
+        <div className="scale-[.2] opacity-30 hover:opacity-100 transition-opacity ease-out duration-700">
             <input
                 className="w-0 h-0 hidden peer mierda"
                 type="checkbox"
