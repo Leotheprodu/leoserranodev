@@ -1,5 +1,5 @@
 ---
-import { DarkModeInput } from '../components/DarkModeInput.tsx';
+import { DarkModeInput } from '../components/DarkModeInput/DarkModeInput.tsx';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 import MainHead from './MainHead.astro';
@@ -13,7 +13,7 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
 ---
 
 <!doctype html>
-<html id="htmlMain" lang="en">
+<html lang="en">
     <MainHead {title} {description} />
     <body class="dark:bg-neutral-900 bg-neutral-50 px-3">
         <main
@@ -30,18 +30,5 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
             </section>
         </main>
         <Footer />
-        <script>
-            import { darkModeStore } from '../stores/store';
-
-            darkModeStore.subscribe((darkmode) => {
-                if (darkmode) {
-                    document.getElementById('htmlMain').classList.add('dark');
-                } else {
-                    document
-                        .getElementById('htmlMain')
-                        .classList.remove('dark');
-                }
-            });
-        </script>
     </body>
 </html>
