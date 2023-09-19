@@ -5,8 +5,12 @@ import DownloadButton from './DownloadButton.astro';
 import Link from './Link.astro';
 ---
 
-<nav class="" aria-label="Primary">
-    <div class="flex flex-col gap-10 pl-10 pt-14 h-full">
+<nav
+    id="mainMenu"
+    class="h-full w-[20rem] lg:w-full bg-neutral-200 lg:bg-white dark:bg-gray-900 shadow-lg lg:shadow-none"
+    aria-label="Primary"
+>
+    <div class="flex flex-col gap-10 px-10 py-14 w-full h-full">
         <a
             class="flex group gap-3 items-center hover:text-neutral-700"
             href="/"

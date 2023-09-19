@@ -1,9 +1,19 @@
 module.exports = {
     // ...
+    root: true,
+    env: {
+        browser: true,
+        es2021: true,
+        node: true,
+    },
     extends: [
         // ...
         'plugin:astro/recommended',
+        'eslint:recommended',
+        /* 'plugin:react/recommended', */
+        /* 'plugin:@typescript-eslint/recommended', */
     ],
+    parser: '@typescript-eslint/parser',
     // ...
     overrides: [
         {
@@ -24,4 +34,9 @@ module.exports = {
         },
         // ...
     ],
+    /*  plugins: ['react', '@typescript-eslint'], */
+    parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+    },
 };

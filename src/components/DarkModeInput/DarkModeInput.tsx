@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { $darkModeStore } from '../../stores/store';
+import { darkModeStore } from '../../stores/store';
 import { useStore } from '@nanostores/react';
 import { IconsReact } from '../IconsReact';
 
 export const DarkModeInput = () => {
     const [iconActive, setIconActive] = useState({ sun: null, moon: null });
-    const $darkMode = useStore($darkModeStore);
+    const $darkMode = useStore(darkModeStore);
     const mainElement = document.querySelector('html');
     useEffect(() => {
         setIconActive({
@@ -21,18 +21,18 @@ export const DarkModeInput = () => {
 
     const darkmode = () => {
         if ($darkMode) {
-            $darkModeStore.set(false);
+            darkModeStore.set(false);
             setIconActive({ sun: true, moon: false });
             mainElement.classList.remove('dark');
         } else {
-            $darkModeStore.set(true);
+            darkModeStore.set(true);
             setIconActive({ sun: false, moon: true });
             mainElement.classList.add('dark');
         }
     };
 
     return (
-        <div className="scale-[.2] opacity-30 hover:opacity-100 transition-opacity ease-out duration-700">
+        <div className=" opacity-30 hover:opacity-100 transition-opacity ease-out duration-700">
             <input
                 className="w-0 h-0 hidden peer mierda"
                 type="checkbox"

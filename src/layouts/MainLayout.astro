@@ -3,6 +3,7 @@ import { DarkModeInput } from '../components/DarkModeInput/DarkModeInput.tsx';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
 import MainHead from './MainHead.astro';
+import { ResponsiveNavButton } from '../components/ResponsiveNavButton';
 
 interface Props {
     title: string;
@@ -15,49 +16,46 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
 <!doctype html>
 <html class="" lang="en">
     <MainHead {title} {description} />
-    <body class="dark:bg-neutral-800 dark:text-neutral-300 bg-neutral-50 px-3">
+    <body
+        class="dark:bg-neutral-800 bg-neutral-50 flex flex-col justify-center items-center"
+    >
         <main
-            class="bg-white border-neutral-400 dark:border-slate-100 shadow-md dark:shadow-2xl gap-5 flex mt-20 max-w-[80rem] h-[50rem] m-auto items-center relative dark:bg-neutral-900"
+            class="shadow-md dark:shadow-2xl flex flex-col h-full w-full m-auto items-center relative"
         >
-            <section
-                class="h-full w-[25rem] dark:bg-neutral-800 border-r border-r-neutral-200 dark:border-r-neutral-900"
+            <header
+                class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 fixed"
             >
-                <div class="absolute top-[-8.5rem] right-[-12.7rem]">
-                    <DarkModeInput client:only />
+                <div class="visible lg:invisible h-full col-start-1 col-end-2">
+                    <ResponsiveNavButton client:only="react" />
                 </div>
-                <Nav />
-            </section>
-            <section
-                class="main-section w-full h-full px-14 py-28 overflow-y-scroll overflow-x-hidden"
+
+                <div class="scale-[.2] lg:col-start-3 lg:col-end-4">
+                    <DarkModeInput client:only="'react" />
+                </div>
+            </header>
+
+            <div
+                class="flex mt-[4rem] w-full h-full lg:w-[65rem] lg:h-[50rem] relative border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900"
             >
-                <slot />
-            </section>
+                <section
+                    id="sectionNav"
+                    class="fixed hidden mt-[4rem] lg:mt-0 lg:block left-0 top-0 lg:static h-full w-full lg:w-[25rem] dark:bg-neutral-800/70 backdrop-blur-sm lg:backdrop-blur-none border-r border-r-neutral-200 dark:border-r-neutral-900"
+                >
+                    <Nav />
+                </section>
+                <section
+                    class="main-section w-full h-full lg:px-44 py-28 overflow-y-scroll px-6 sm:px-24 overflow-x-hidden"
+                >
+                    <slot />
+                </section>
+            </div>
+            <Footer />
         </main>
-        <Footer />
+
         <style>
-            .dark .main-section {
-                &::-webkit-scrollbar {
-                    width: 1rem;
-                    background-color: rgb(38 38 38 / var(--tw-bg-opacity));
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    background-color: rgb(64 64 64 / var(--tw-border-opacity));
-                }
-            }
-            .main-section {
-                &::-webkit-scrollbar {
-                    width: 1rem;
-                    background-color: rgb(
-                        245 245 245 / var(--tw-border-opacity)
-                    );
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    background-color: rgb(
-                        229 229 229 / var(--tw-border-opacity)
-                    );
-                }
+            .dark .main-section::-webkit-scrollbar {
+                width: 1rem;
+                background-color: rgba(38, 38, 38, 0.3);
             }
         </style>
     </body>
