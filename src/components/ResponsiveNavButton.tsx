@@ -5,25 +5,26 @@ export const ResponsiveNavButton = () => {
     const $responsiveButton = useStore(responsiveStore);
 
     const handleClick = () => {
-        if (
-            $responsiveButton &&
-            !document.getElementById('sectionNav').classList.contains('hidden')
-        ) {
+        const nav = document.getElementById('sectionNav');
+        if ($responsiveButton && !nav.classList.contains('hidden')) {
             responsiveStore.set(false);
-            document.getElementById('sectionNav').classList.add('hidden');
-            document.getElementById('sectionNav').classList.remove('block');
+            nav.classList.add('hidden');
+            nav.classList.remove('block');
         } else {
             responsiveStore.set(true);
-            document.getElementById('sectionNav').classList.add('block');
-            document.getElementById('sectionNav').classList.remove('hidden');
+            nav.classList.add('block');
+            nav.classList.remove('hidden');
         }
     };
     return (
         <button
-            className="h-full w-20 flex justify-center items-center"
+            className="h-full w-20 flex justify-center items-center active:scale-90 transition duration-300 ease-in-out "
             onClick={handleClick}
         >
-            <IconsReact name="menu" css="dark:fill-slate-300 h-12 w-12 z-50" />
+            <IconsReact
+                name="menu"
+                css="dark:fill-slate-300 fill-slate-500 h-12 w-12 z-50"
+            />
         </button>
     );
 };

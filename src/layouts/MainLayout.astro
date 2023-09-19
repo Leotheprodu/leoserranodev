@@ -17,25 +17,22 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
 <html class="" lang="en">
     <MainHead {title} {description} />
     <body
-        class="dark:bg-neutral-800 bg-neutral-50 flex flex-col justify-center items-center"
+        class="dark:bg-neutral-800 bg-neutral-50 flex flex-col h-full w-full justify-center items-center"
     >
-        <main
-            class="shadow-md dark:shadow-2xl flex flex-col h-full w-full m-auto items-center relative"
+        <header
+            class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 fixed top-0"
         >
-            <header
-                class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 fixed"
-            >
-                <div class="visible lg:invisible h-full col-start-1 col-end-2">
-                    <ResponsiveNavButton client:only="react" />
-                </div>
+            <div class="visible lg:invisible h-full col-start-1 col-end-2">
+                <ResponsiveNavButton client:only="react" />
+            </div>
 
-                <div class="scale-[.2] lg:col-start-3 lg:col-end-4">
-                    <DarkModeInput client:only="'react" />
-                </div>
-            </header>
-
+            <div class="scale-[.2] lg:col-start-3 lg:col-end-4">
+                <DarkModeInput client:only="'react" />
+            </div>
+        </header>
+        <main class="flex flex-col h-full w-full m-auto items-center relative">
             <div
-                class="flex mt-[4rem] w-full h-full lg:w-[65rem] lg:h-[50rem] relative border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900"
+                class="flex mt-[4rem] w-full h-full lg:max-w-[80rem] lg:h-[50rem] relative border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
             >
                 <section
                     id="sectionNav"
@@ -49,8 +46,8 @@ const { title = 'Nueva pagina', description = 'Esta es una Nueva Pagina' } =
                     <slot />
                 </section>
             </div>
-            <Footer />
         </main>
+        <Footer />
 
         <style>
             .dark .main-section::-webkit-scrollbar {
