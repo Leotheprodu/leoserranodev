@@ -1,7 +1,49 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import personalProjects from '../data/personalProjects.json';
 ---
 
-<MainLayout title="Projects" description="Projects">
-    <h1>Projects</h1>
+<MainLayout
+    title="Projects"
+    description="Find here information about the projects I have developed."
+>
+    <section class="flex flex-col gap-4">
+        <h1>Projects</h1>
+
+        <p>
+            Currently, I have several ongoing projects, both practical and in
+            progress. Many of them can be found on my GitHub profile. However,
+            I'd like to share with you the ones I'm actively working on
+        </p>
+
+        <h2>Personal Projects</h2>
+        {
+            personalProjects.map((project) => (
+                <div class="bg-zinc-950 rounded-md p-5">
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div>
+                        <h4>Technologies used in this project</h4>
+                        <ul>
+                            {project.technologiesUsed.map((technology) => (
+                                <li>{technology}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Links</h4>
+                        {project.links.map((link) => (
+                            <a href={link.url}>{link.text}</a>
+                        ))}
+                    </div>
+                </div>
+            ))
+        }
+
+        <h2>Client Projects</h2>
+
+        <h2>Future Projects</h2>
+
+        <h2>Practice Projects</h2>
+    </section>
 </MainLayout>

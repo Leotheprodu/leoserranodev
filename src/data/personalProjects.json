@@ -1,0 +1,28 @@
+[
+    {
+        "title": "Personal Website",
+        "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
+        "technologiesUsed": [
+            "Astro",
+            "React",
+            "Tailwind",
+            "NanoStores",
+            "TypeScript",
+            "Astro"
+        ],
+        "links": [
+            {
+                "text": "More Information",
+                "url": "./blog/readme-leonardoserrano-site"
+            },
+            {
+                "text": "GitHub",
+                "url": "https://github.com/Leotheprodu/leoserranodev"
+            },
+            {
+                "text": "Related Articles",
+                "url": "./blog/categories/leonardo-serrano-site"
+            }
+        ]
+    }
+]

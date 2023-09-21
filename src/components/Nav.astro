@@ -1,8 +1,9 @@
 ---
 import { Icon } from 'astro-icon';
-import { navData, social } from '../data/navData';
 import DownloadButton from './DownloadButton.astro';
 import Link from './Link.astro';
+import navLinks from '../data/navLinks.json';
+import socialLinks from '../data/socialLinks.json';
 ---
 
 <nav
@@ -33,7 +34,7 @@ import Link from './Link.astro';
             </div>
 
             <div class="w-full">
-                <h2 class="font-semibold dark:text-neutral-50">
+                <h2 class="font-semibold dark:text-neutral-50 text-lg">
                     Leonardo Serrano A.
                 </h2>
                 <p class="text-sm dark:text-neutral-100">Fullstack Developer</p>
@@ -41,20 +42,20 @@ import Link from './Link.astro';
         </div>
         <ul class="flex flex-col gap-3">
             {
-                navData.map((item) => (
+                navLinks.map((item) => (
                     <Link name={item.name} path={item.path} icon={item.icon} />
                 ))
             }
         </ul>
         <div class="flex flex-col gap-3">
             <h4
-                class="uppercase font-semibold text-neutral-500 dark:text-neutral-400"
+                class="uppercase font-semibold text-neutral-500 dark:text-neutral-400 text-sm"
             >
                 Socials
             </h4>
             <ul class="flex flex-col gap-5">
                 {
-                    social.map((item) => (
+                    socialLinks.map((item) => (
                         <Link
                             newWindow
                             name={item.name}
