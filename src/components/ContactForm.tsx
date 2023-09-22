@@ -43,16 +43,13 @@ export function ContactForm() {
 
     return (
         <>
-            <div className="mx-auto max-w-[900px]">
+            <div className=" max-w-[900px]">
                 {!statusenviado && (
                     <form
                         className="dark:bg-slate-800 shadow-xl flex flex-col gap-3 justify-center items-center w-full p-10 rounded-2xl"
                         onSubmit={onSubmit}
                     >
-                        <div
-                            className="flex flex-col gap-1 w-full"
-                            data-te-input-wrapper-init
-                        >
+                        <div className="flex flex-col gap-1 w-full">
                             <label className="" htmlFor="nombre">
                                 Name
                             </label>

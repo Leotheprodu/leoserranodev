@@ -8,4 +8,4 @@ categories:
 
 #### ...soon
 
-I'm sorry, but I'm currently writing this article, and I'll be publishing it soon. In the meantime, you can take a look at my blog... [Tap Here](http://localhost:4321/blog/)
+I'm sorry, but I'm currently writing this article, and I'll be publishing it soon. In the meantime, you can take a look at my blog... [Tap Here](/blog/)

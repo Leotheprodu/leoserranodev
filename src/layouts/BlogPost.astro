@@ -73,11 +73,6 @@ const categoyData = categories && generateCategoryData(categories);
     </article>
 
     <style>
-        main {
-            width: calc(100% - 2em);
-            max-width: 100%;
-            margin: 0;
-        }
         .hero-image {
             width: 100%;
         }
@@ -85,14 +80,10 @@ const categoyData = categories && generateCategoryData(categories);
             display: block;
             margin: 0 auto;
             border-radius: 12px;
-            box-shadow: var(--box-shadow);
         }
         .prose {
-            width: 720px;
-            max-width: calc(100% - 2em);
             margin: auto;
             padding: 1em;
-            color: rgb(var(--gray-dark));
         }
         .title {
             margin-bottom: 1em;
@@ -105,7 +96,6 @@ const categoyData = categories && generateCategoryData(categories);
         }
         .date {
             margin-bottom: 0.5em;
-            color: rgb(var(--gray));
         }
         .last-updated-on {
             font-style: italic;

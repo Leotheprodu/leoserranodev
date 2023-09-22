@@ -10,12 +10,12 @@
         "icon": "person"
     },
     {
-        "name": "Articles",
+        "name": "Blog",
         "path": "/blog/",
         "icon": "article"
     },
     {
-        "name": "Work",
+        "name": "Projects",
         "path": "/projects/",
         "icon": "work"
     },
