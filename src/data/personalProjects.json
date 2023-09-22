@@ -1,7 +1,8 @@
 [
     {
-        "title": "Personal Website",
+        "title": "This Website",
         "type": "front end",
+        "status": "in progress",
         "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
         "technologiesUsed": [
             { "name": "Astro", "icon": "astro" },
@@ -14,7 +15,7 @@
         "links": [
             {
                 "text": "More Information",
-                "url": "./blog/readme-leonardoserrano-site"
+                "url": "/blog/readme-leonardo-serrano-site"
             },
             {
                 "text": "GitHub",
@@ -22,7 +23,47 @@
             },
             {
                 "text": "Related Articles",
-                "url": "./blog/categories/leonardo-serrano-site"
+                "url": "/blog/categories/leonardo-serrano-site"
+            }
+        ]
+    },
+    {
+        "title": "FLProductions",
+        "type": "Full Stack",
+        "status": "in progress",
+        "description": "This is the website of my recording studio, featuring a robust Express-based backend handling user authentication, following the MVC architecture, and carefully validating every request. It also includes a paginated API, full CRUD operations, and utilizes Next.js on the frontend. Users can register, manage their profiles, share, and listen to songs from visiting artists, with many more improvements in the pipeline!",
+        "technologiesUsed": [
+            { "name": "NextJS", "icon": "nextdotjs" },
+            { "name": "Tailwind", "icon": "tailwindcss" },
+            { "name": "Redux", "icon": "redux" },
+            { "name": "TypeScript", "icon": "typescript" },
+            { "name": "Sass", "icon": "sass" },
+            { "name": "Jest", "icon": "memory" },
+            { "name": "ChatGPT", "icon": "openai" },
+            { "name": "Express JS", "icon": "memory" },
+            { "name": "MySql", "icon": "mysql" },
+            { "name": "Sequelize", "icon": "sequelize" }
+        ],
+        "links": [
+            {
+                "text": "flproductionscr.com",
+                "url": "https://flproductionscr.com/"
+            },
+            {
+                "text": "More Information",
+                "url": "/blog/readme-flproductions"
+            },
+            {
+                "text": "GitHub (Frontend)",
+                "url": "https://github.com/Leotheprodu/flproductions-app"
+            },
+            {
+                "text": "GitHub (Backend)",
+                "url": "https://github.com/Leotheprodu/flproductions-server"
+            },
+            {
+                "text": "Related Articles",
+                "url": "/blog/categories/flproductions"
             }
         ]
     }

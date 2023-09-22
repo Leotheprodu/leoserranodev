@@ -1,0 +1,32 @@
+[
+    {
+        "title": "Solar Energy landing page",
+        "type": "Full Stack",
+        "status": "in progress",
+        "description": "A project built with Next.js and Tailwind, with a backend powered by Strapi, which is a Headless CMS, and uses PostgreSQL as the database. In this project, I incorporated the company's color scheme. It's a simple landing page, but it allowed me to learn how to deploy Strapi using Google Cloud, and it was also my first experience with a headless CMS",
+        "technologiesUsed": [
+            { "name": "NextJS", "icon": "nextdotjs" },
+            { "name": "Tailwind", "icon": "tailwindcss" },
+            { "name": "TypeScript", "icon": "typescript" },
+            { "name": "Strapi", "icon": "strapi" }
+        ],
+        "links": [
+            {
+                "text": "somosmasqueenergiadcsas.com",
+                "url": "https://somosmasqueenergiadcsas.com/"
+            },
+            {
+                "text": "More Information",
+                "url": "/blog/readme-somos-mas-que-energia"
+            },
+            {
+                "text": "GitHub",
+                "url": "https://github.com/Leotheprodu/energiasolar"
+            },
+            {
+                "text": "Related Articles",
+                "url": "/blog/categories/somos-mas-que-energia"
+            }
+        ]
+    }
+]

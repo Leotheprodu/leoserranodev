@@ -52,4 +52,7 @@
     mark {
         @apply bg-indigo-500 p-1 rounded;
     }
+    a {
+        @apply font-semibold;
+    }
 }
