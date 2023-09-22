@@ -20,6 +20,7 @@ export const ResponsiveNavButton = () => {
         <button
             className="h-full w-20 flex justify-center items-center active:scale-90 transition duration-300 ease-in-out "
             onClick={handleClick}
+            aria-label="Menu"
         >
             <IconsReact
                 name="menu"
