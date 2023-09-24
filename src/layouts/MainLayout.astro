@@ -28,7 +28,7 @@ const {
         class="dark:bg-neutral-800 bg-neutral-50 flex flex-col h-full w-full justify-center items-center"
     >
         <header
-            class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 fixed top-0"
+            class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 top-0 fixed lg:static"
         >
             <div class="visible lg:invisible h-full col-start-1 col-end-2">
                 <ResponsiveNavButton client:only="react" />
@@ -40,7 +40,7 @@ const {
         </header>
         <main class="flex flex-col h-full w-full m-auto items-center relative">
             <div
-                class="flex mt-[4rem] w-full h-full lg:max-w-[80rem] lg:h-[50rem] border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
+                class="flex mt-[4rem] lg:mt-0 w-full h-full lg:max-w-[80rem] lg:h-[50rem] border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
             >
                 <section
                     id="sectionNav"
