@@ -1,48 +1,20 @@
 [
     {
-        "title": "This Website",
-        "type": "front end",
-        "status": "in progress",
-        "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
-        "technologiesUsed": [
-            { "name": "Astro", "icon": "astro" },
-            { "name": "React", "icon": "react" },
-            { "name": "Tailwind", "icon": "tailwindcss" },
-            { "name": "NanoStores", "icon": "memory" },
-            { "name": "TypeScript", "icon": "typescript" },
-            { "name": "Markdown", "icon": "markdown" }
-        ],
-        "links": [
-            {
-                "text": "Read Me",
-                "url": "/blog/readme-leonardo-serrano-site"
-            },
-            {
-                "text": "GitHub",
-                "url": "https://github.com/Leotheprodu/leoserranodev"
-            },
-            {
-                "text": "Related Articles",
-                "url": "/blog/categories/leonardo-serrano-site"
-            }
-        ]
-    },
-    {
         "title": "FLProductions",
         "type": "Full Stack",
         "status": "in progress",
         "description": "This is the website of my recording studio, featuring a robust Express-based backend handling user authentication, following the MVC architecture, and carefully validating every request. It also includes a paginated API, full CRUD operations, and utilizes Next.js on the frontend. Users can register, manage their profiles, share, and listen to songs from visiting artists, with many more improvements in the pipeline!",
         "technologiesUsed": [
-            { "name": "NextJS", "icon": "nextdotjs" },
-            { "name": "Tailwind", "icon": "tailwindcss" },
-            { "name": "Redux", "icon": "redux" },
-            { "name": "TypeScript", "icon": "typescript" },
-            { "name": "Sass", "icon": "sass" },
-            { "name": "Jest", "icon": "memory" },
-            { "name": "ChatGPT", "icon": "openai" },
-            { "name": "Express JS", "icon": "memory" },
-            { "name": "MySql", "icon": "mysql" },
-            { "name": "Sequelize", "icon": "sequelize" }
+            { "name": "NextJS 13.3", "icon": "nextdotjs" },
+            { "name": "Tailwind 3.3", "icon": "tailwindcss" },
+            { "name": "Redux 4.2", "icon": "redux" },
+            { "name": "TypeScript 5.0", "icon": "typescript" },
+            { "name": "Sass 1.55", "icon": "sass" },
+            { "name": "Jest 29.2", "icon": "memory" },
+            { "name": "Openai 3.2", "icon": "openai" },
+            { "name": "Express JS 4.18", "icon": "memory" },
+            { "name": "DB MySql", "icon": "mysql" },
+            { "name": "Sequelize 6.31", "icon": "sequelize" }
         ],
         "links": [
             {
@@ -64,6 +36,47 @@
             {
                 "text": "Related Articles",
                 "url": "/blog/categories/flproductions"
+            }
+        ],
+        "achievementsAsDeveloper": [
+            "Designed and developed the entire website from scratch, including the backend, frontend, and database.",
+            "I have learned how to migrate an entire WordPress website to vanilla javascript, then to react with vite, then to typescript, then to NextJS.",
+            "Implemented a robust authentication system, including email verification, password reset, and user profile management.",
+            "Created a paginated API with full CRUD operations, including a search feature.",
+            "Implemented a React-based frontend, including Redux for state management, and Next.js for Server Side Rendering.",
+            "Created a complete database schema, including many-to-many relationships, and implemented it using Sequelize."
+        ],
+
+        "achievementsAsBussines": [
+            "Top 3 in search engines in my country.",
+            "Most of 80% of my clients have come to me through my website, It has brought me hundreds of clients for more than 10 years."
+        ]
+    },
+    {
+        "title": "This Website",
+        "type": "front end",
+        "status": "in progress",
+        "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
+        "technologiesUsed": [
+            { "name": "Astro 3.1", "icon": "astro" },
+            { "name": "React 18.2", "icon": "react" },
+            { "name": "Tailwind 3.0", "icon": "tailwindcss" },
+            { "name": "NanoStores 0.9", "icon": "memory" },
+            { "name": "TypeScript", "icon": "typescript" },
+            { "name": "Markdown", "icon": "markdown" }
+        ],
+        "links": [
+            {
+                "text": "Read Me",
+                "url": "/blog/readme-leonardo-serrano-site"
+            },
+            {
+                "text": "GitHub",
+                "url": "https://github.com/Leotheprodu/leoserranodev"
+            },
+            {
+                "text": "Related Articles",
+                "url": "/blog/categories/leonardo-serrano-site"
             }
         ]
     }

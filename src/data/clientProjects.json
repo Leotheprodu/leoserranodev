@@ -5,10 +5,11 @@
         "status": "in progress",
         "description": "A project built with Next.js and Tailwind, with a backend powered by Strapi, which is a Headless CMS, and uses PostgreSQL as the database. In this project, I incorporated the company's color scheme. It's a simple landing page, but it allowed me to learn how to deploy Strapi using Google Cloud, and it was also my first experience with a headless CMS",
         "technologiesUsed": [
-            { "name": "NextJS", "icon": "nextdotjs" },
-            { "name": "Tailwind", "icon": "tailwindcss" },
-            { "name": "TypeScript", "icon": "typescript" },
-            { "name": "Strapi", "icon": "strapi" }
+            { "name": "NextJS 13.4", "icon": "nextdotjs" },
+            { "name": "NextUi 2.0", "icon": "nextdotjs" },
+            { "name": "Tailwind 3.3", "icon": "tailwindcss" },
+            { "name": "TypeScript 5.1", "icon": "typescript" },
+            { "name": "Strapi v4", "icon": "strapi" }
         ],
         "links": [
             {

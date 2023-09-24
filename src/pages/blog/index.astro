@@ -8,7 +8,10 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 
-<MainLayout title="Blog" description="Welcome to my Blog">
+<MainLayout
+    title="Blog de Desarrollo Web"
+    description="Find information about my web development projects or programming knowledge"
+>
     <section>
         <h1 class="mb-10">Blog</h1>
         <ul>
@@ -17,9 +20,7 @@ const posts = (await getCollection('blog')).sort(
                     <li>
                         <a href={`/blog/${post.slug}/`}>
                             <img
-                                class="object-cover object-center"
-                                width={720}
-                                height={360}
+                                class="object-cover object-center w-[720px] h-[360px]"
                                 src={
                                     post.data.heroImage
                                         ? post.data.heroImage

@@ -1,8 +1,8 @@
 ---
-title: 'Install React from scratch with vite and eslint'
-description: 'How to create react project from scratch with vite and Javascript vanilla.'
+title: 'Install React and eslint with vite from scratch'
+description: 'Learn how to create react project from scratch with Vite and Javascript vanilla.'
 pubDate: 'Sep 20 2023'
-heroImage: 'https://img.freepik.com/foto-gratis/encendido-computadora-portatil-gris_400718-47.jpg?w=1380&t=st=1695268630~exp=1695269230~hmac=53d48e1729c21c7e1fbce5150db676e94231ea12b0f810b814bc702cf6d56979'
+heroImage: '/react.jpg'
 categories:
     - 'React'
 ---

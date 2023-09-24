@@ -6,6 +6,6 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://example.com',
+    site: 'https://leonardoserrano.site',
     integrations: [tailwind({ applyBaseStyles: false }), react(), sitemap()],
 });
