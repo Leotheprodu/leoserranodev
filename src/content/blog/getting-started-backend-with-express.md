@@ -1,10 +1,11 @@
 ---
-title: 'Getting started backend with express and MVC design pattern Part 1'
+title: 'Getting started backend with express - MVC Backend part 1'
 description: 'In this article, you will learn how to start a backend using Express and the MVC (Model View Controller) design pattern'
 pubDate: 'Sep 24 2023'
 heroImage: '/photo-1534665482403-a909d0d97c67.jpeg'
 categories:
     - 'Backend'
+    - 'MVC Backend'
 ---
 
 In this article, you will learn how to start a backend using Express and the MVC (Model View Controller) design pattern. This is Part 1, and in the following volumes, we will configure other aspects. The idea is to show you how to set up MySQL, Express, Express Sessions, Nodemailer, Cors, Dotenv, Slack, and more to get your projects off to a great start!
