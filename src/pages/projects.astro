@@ -1,7 +1,7 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import personalProjects from '../data/personalProjects.json';
-import clientProjects from '../data/clientProjects.json';
+/* import clientProjects from '../data/clientProjects.json'; */
 import ProjectCard from '../components/ProjectCard.astro';
 ---
 
@@ -16,8 +16,7 @@ import ProjectCard from '../components/ProjectCard.astro';
             <p>
                 Currently, I have several ongoing projects, both practical and
                 in progress. Many of them can be found on my GitHub profile.
-                However, I'd like to share with you the ones I'm actively
-                working on
+                However, I'd like to share with you my most important projects
             </p>
         </div>
         <div class="flex flex-col gap-12">
@@ -28,9 +27,9 @@ import ProjectCard from '../components/ProjectCard.astro';
                 ))
             }
         </div>
-        <div class="flex flex-col gap-12">
+        <!-- <div class="flex flex-col gap-12">
             <h2>Client Projects</h2>
             {clientProjects.map((project) => <ProjectCard project={project} />)}
-        </div>
+        </div> -->
     </section>
 </MainLayout>
