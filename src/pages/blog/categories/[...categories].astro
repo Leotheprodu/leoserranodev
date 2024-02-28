@@ -44,7 +44,10 @@ const FilteredPosts = postsCategoryFixed.filter((post) => {
 });
 ---
 
-<MainLayout title={categories} description="Explore posts by category">
+<MainLayout
+    title={`${categories} - Category | Leonardo Serrano's blog`}
+    description={`Category "${categories}" of Leonardo Serrano's Blog, a fullstack web developer from Costa Rica.`}
+>
     <ul>
         {
             FilteredPosts.map((post) => (
