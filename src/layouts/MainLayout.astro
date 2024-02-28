@@ -7,12 +7,12 @@ import { ResponsiveNavButton } from '../components/ResponsiveNavButton';
 import BaseHead from '../components/BaseHead.astro';
 
 interface Props {
-    title: string;
+    title?: string;
     description: string;
     image?: string;
 }
 const {
-    title = 'Leo Serrano Dev',
+    title = 'Leo Serrano - Portfolio',
     description = 'Website of Leo Serrano, a full-stack developer from Costa Rica.',
     image = '/leoserranodev.jpg',
 } = Astro.props as Props;

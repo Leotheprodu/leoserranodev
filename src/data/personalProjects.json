@@ -1,8 +1,8 @@
 [
     {
-        "title": "CuentaClara",
+        "title": "Yehu.app",
         "type": "Full Stack",
-        "status": "In progress",
+        "status": "Beta",
         "description": "This is a very ambitious project, it is a application that will allow you to control the when a client buy/pay a product/service, the application will allow you to control the inventory, the clients, the products, the services, the sales, the expenses, the incomes, the taxes, the reports, the payments, the debts, the credits, and let your client check the status of their orders, invoices, payment options, and much more.",
         "technologiesUsed": [
             { "name": "NextJS 13.5", "icon": "nextdotjs" },
@@ -20,6 +20,10 @@
         ],
         "links": [
             {
+                "text": "Yehu.app (beta)",
+                "url": "https://www.yehu.app/"
+            },
+            {
                 "text": "Read Me",
                 "url": "/blog/readme-cuenta-clara"
             },
@@ -33,13 +37,14 @@
             },
             {
                 "text": "Related Articles",
-                "url": "/blog/categories/flproductions"
+                "url": "/blog/categories/yehu"
             }
         ],
         "achievementsAsDeveloper": [
-            "First project using POO in javascript.",
             "Implement components with one single responsibility, and hooks for separate logic from the components.",
-            "This is my first project thinked for the future, easy to scale, easy to add new features, easy to maintain."
+            "This is my first project thinked for the future, easy to scale, easy to add new features, easy to maintain.",
+            "First project using POO in javascript.",
+            "My First big side project with a lot of features."
         ],
 
         "achievementsAsBussines": [
@@ -49,7 +54,7 @@
     {
         "title": "FLProductions",
         "type": "Full Stack",
-        "status": "In production",
+        "status": "Production",
         "description": "This is the website of my recording studio, featuring a robust Express-based backend handling user authentication, following the MVC architecture, and carefully validating every request. It also includes a paginated API, full CRUD operations, and utilizes Next.js on the frontend. Users can register, manage their profiles, share, and listen to songs from visiting artists, with many more improvements in the pipeline!",
         "technologiesUsed": [
             { "name": "NextJS 13.3", "icon": "nextdotjs" },
@@ -102,7 +107,7 @@
     {
         "title": "This Website",
         "type": "front end",
-        "status": "In production",
+        "status": "Production",
         "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
         "technologiesUsed": [
             { "name": "Astro 3.1", "icon": "astro" },
