@@ -1,17 +1,17 @@
-import { responsiveStore } from '../stores/store';
+import { $responsiveStore } from '../stores/store';
 import { useStore } from '@nanostores/react';
 import { IconsReact } from './IconsReact';
 export const ResponsiveNavButton = () => {
-    const $responsiveButton = useStore(responsiveStore);
+    const responsiveButton = useStore($responsiveStore);
 
     const handleClick = () => {
         const nav = document.getElementById('sectionNav');
-        if ($responsiveButton && !nav.classList.contains('hidden')) {
-            responsiveStore.set(false);
+        if (responsiveButton && !nav.classList.contains('hidden')) {
+            $responsiveStore.set(false);
             nav.classList.add('hidden');
             nav.classList.remove('block');
         } else {
-            responsiveStore.set(true);
+            $responsiveStore.set(true);
             nav.classList.add('block');
             nav.classList.remove('hidden');
         }

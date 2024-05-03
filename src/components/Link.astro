@@ -6,9 +6,6 @@ interface Props {
     path: string;
     icon?: string;
     newWindow?: boolean;
-    page: {
-        url: string;
-    };
 }
 
 const { path, name, icon, newWindow = false } = Astro.props as Props;
