@@ -1,108 +1,105 @@
 ---
 import { Icon } from 'astro-icon/components';
 interface Props {
-    project: {
-        title: string;
-        type: string;
-        status: string;
-        description: string;
-        technologiesUsed: {
-            name: string;
-            icon: string;
-        }[];
-        links: {
-            text: string;
-            url: string;
-        }[];
-        achievementsAsDeveloper?: string[];
-        achievementsAsBussines?: string[];
-    };
+  project: {
+    title: string;
+    type: string;
+    status: string;
+    description: string;
+    technologiesUsed: {
+      name: string;
+      icon: string;
+    }[];
+    links: {
+      text: string;
+      url: string;
+    }[];
+    achievementsAsDeveloper?: string[];
+    achievementsAsBussines?: string[];
+  };
 }
 const { project } = Astro.props as Props;
 ---
 
 <div
-    class="dark:bg-slate-900 rounded-md p-5 border relative dark:border-slate-700/25 shadow-md flex flex-col gap-4 overflow-hidden"
+  class="dark:bg-slate-900 rounded-md p-5 border relative dark:border-slate-700/25 shadow-md flex flex-col gap-4 overflow-hidden"
 >
-    <span
-        class="uppercase text-indigo-100 dark:text-indigo-400 bg-slate-800 absolute right-[-2.7rem] top-[2.1rem] px-10 rotate-45 shadow-2xl"
-    >
-        {project.type}
-    </span>
-    <h3>{project.title}</h3>
-    <span class="text-xs uppercase text-neutral-500">{project.status}</span>
-    <p>{project.description}</p>
-    <div class="flex flex-col items-center justify-center gap-5">
-        <h4>Tech Stack</h4>
-        <ul class="flex gap-5 flex-wrap items-center justify-center">
-            {
-                project.technologiesUsed.map((technology) => (
-                    <li class=" text-indigo-900 dark:text-indigo-500 flex flex-col justify-center items-center">
-                        <Icon
-                            class="fill-slate-600 dark:fill-slate-300 transition-all ease-out duration-500 "
-                            name={technology.icon}
-                            width={20}
-                        />
-                        <p>{technology.name}</p>
-                    </li>
-                ))
-            }
+  <h3>{project.title}</h3>
+  <span class="text-xs uppercase text-neutral-500"
+    >{project.type}, {project.status}</span
+  >
+  <p>{project.description}</p>
+  <div class="flex flex-col items-center gap-5">
+    <h4>Tech Stack</h4>
+    <ul class="flex gap-5 flex-wrap justify-center items-center">
+      {
+        project.technologiesUsed.map((technology) => (
+          <li class=" text-indigo-900 dark:text-indigo-500 flex flex-col justify-center items-center">
+            <Icon
+              class="fill-slate-600 dark:fill-slate-300 transition-all ease-out duration-500 "
+              name={technology.icon}
+              width={20}
+              height={20}
+            />
+            <p>{technology.name}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  {
+    project.achievementsAsBussines && (
+      <div class="flex flex-col gap-5">
+        <h4 class="text-center">Achievements as business</h4>
+        <ul class="flex gap-2 flex-wrap">
+          {project.achievementsAsBussines.map((achievement) => (
+            <li class=" text-indigo-950 dark:text-indigo-200 flex gap-2">
+              <span>🎉</span>
+              <p class="">{achievement}</p>
+            </li>
+          ))}
         </ul>
-    </div>
-    {
-        project.achievementsAsBussines && (
-            <div class="flex flex-col gap-5">
-                <h4 class="text-center">Achievements As Business</h4>
-                <ul class="flex gap-2 flex-wrap">
-                    {project.achievementsAsBussines.map((achievement) => (
-                        <li class=" text-indigo-950 dark:text-indigo-50 flex gap-2">
-                            <span>🎉</span>
-                            <p class="underline underline-offset-1">
-                                {achievement}
-                            </p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )
-    }
-    {
-        project.achievementsAsDeveloper && (
-            <div class="flex flex-col gap-5">
-                <h4 class="text-center">Achievements As Developer</h4>
-                <ul class="flex gap-2 flex-wrap items-center justify-center">
-                    {project.achievementsAsDeveloper.map((achievement) => (
-                        <li class=" text-indigo-950 dark:text-indigo-200 flex w-[15rem] h-[10rem] border dark:border-indigo-950 border-indigo-200 p-2 rounded-xl">
-                            <p>{achievement}</p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )
-    }
+      </div>
+    )
+  }
+  {
+    project.achievementsAsDeveloper && (
+      <div class="flex flex-col gap-5">
+        <h4 class="text-center">Achievements as developer</h4>
+        <ul class="flex gap-2 flex-wrap items-center justify-center">
+          {project.achievementsAsDeveloper.map((achievement) => (
+            <li class=" text-indigo-950 dark:text-indigo-200 flex w-[15rem] h-[10rem] p-2 rounded-xl gap-2">
+              <span>✔️</span>
+              <p>{achievement}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 
-    <div class="flex flex-col items-center justify-center gap-5">
-        <h4>Links</h4>
-        <div class="flex gap-5 flex-wrap items-center justify-center">
-            {
-                project.links.map((link) => (
-                    <a
-                        target="_blank"
-                        class="border-b border-transparent hover:border-indigo-700 transition-all duration-300 relative"
-                        href={link.url}
-                    >
-                        {link.text}
+  <div class="flex flex-col items-center justify-center gap-5">
+    <h4>Links</h4>
+    <div class="flex gap-5 flex-wrap items-center justify-center">
+      {
+        project.links.map((link) => (
+          <a
+            target="_blank"
+            class="border-b border-transparent hover:border-indigo-700 transition-all duration-300 relative"
+            href={link.url}
+          >
+            {link.text}
 
-                        <span class="absolute bottom-0 left-0 w-0 bg-indigo-700 h-0 border-t-2 border-indigo-700 transition-all duration-300" />
-                    </a>
-                ))
-            }
-        </div>
+            <span class="absolute bottom-0 left-0 w-0 bg-indigo-700 h-0 border-t-2 border-indigo-700 transition-all duration-300" />
+          </a>
+        ))
+      }
     </div>
+  </div>
 </div>
 <style>
-    a:hover .absolute {
-        width: 100%; /* Ancho máximo para la animación */
-        height: 2px; /* Grosor del borde inferior */
-    }
+  a:hover .absolute {
+    width: 100%;
+    height: 2px;
+  }
 </style>
