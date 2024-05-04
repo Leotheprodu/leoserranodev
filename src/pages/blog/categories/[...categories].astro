@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
-import FormattedDate from '../../../components/FormattedDate.astro';
-import MainLayout from '../../../layouts/MainLayout.astro';
-import { generateCategoriesFormat } from '../../../utils/helpers';
+import FormattedDate from '@components/pages/blog/FormattedDate.astro';
+import MainLayout from '@/layouts/MainLayout.astro';
+import { generateCategoriesFormat } from '@utils/helpers';
 import { type InferGetStaticParamsType } from 'astro';
 export async function getStaticPaths() {
     const posts = await getCollection('blog');
@@ -28,7 +28,7 @@ type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 const { categories } = Astro.params as Params;
 
 const sortedPosts = (await getCollection('blog')).sort(
-    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf(),
+    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
 );
 const postsCategoryFixed = sortedPosts.map((post) => ({
     ...post,

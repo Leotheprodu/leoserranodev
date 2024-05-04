@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react';
-import { $languageStore } from '../stores/store';
+import { $languageStore } from '@stores/store';
 
 export const LanguageSwitcher = () => {
     const lang = useStore($languageStore);

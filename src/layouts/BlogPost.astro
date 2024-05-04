@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-import MainLayout from './MainLayout.astro';
-import { generateCategoryData } from '../utils/helpers';
+import FormattedDate from '@components/pages/blog/FormattedDate.astro';
+import MainLayout from '@/layouts/MainLayout.astro';
+import { generateCategoryData } from '@utils/helpers';
 
 type Props = CollectionEntry<'blog'>['data'];
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { $darkModeStore } from '../../stores/store';
+import { $darkModeStore } from '@stores/store';
 import { useStore } from '@nanostores/react';
-import { IconsReact } from '../IconsReact';
+import { IconsReact } from '@utils/IconsReact';
 
 export const DarkModeInput = () => {
     const [iconActive, setIconActive] = useState({ sun: null, moon: null });

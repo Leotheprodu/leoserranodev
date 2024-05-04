@@ -1,6 +1,6 @@
-import { $responsiveStore } from '../stores/store';
+import { $responsiveStore } from '@stores/store';
 import { useStore } from '@nanostores/react';
-import { IconsReact } from './IconsReact';
+import { IconsReact } from '@utils/IconsReact';
 export const ResponsiveNavButton = () => {
     const responsiveButton = useStore($responsiveStore);
 

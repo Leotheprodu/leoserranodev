@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import emailjs from 'emailjs-com';
-import { IconsReact } from './IconsReact';
+import { IconsReact } from '@utils/IconsReact';
 
 export function ContactForm() {
     const [formStatus, setFormStatus] = useState<string>('');

@@ -3,6 +3,16 @@
     "compilerOptions": {
         "strictNullChecks": false,
         "jsx": "react-jsx",
-        "jsxImportSource": "react"
+        "jsxImportSource": "react",
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": ["*"],
+            "@components/*": ["components/*"],
+            "@utils/*": ["utils/*"],
+            "@styles/*": ["styles/*"],
+            "@stores/*": ["stores/*"],
+            "@data/*": ["data/*"],
+            "@icons/*": ["icons/*"]
+        }
     }
 }
