@@ -1,5 +1,5 @@
 ---
-import { Icon } from 'astro-icon';
+import { Icon } from 'astro-icon/components';
 interface Props {
     project: {
         title: string;
@@ -41,7 +41,7 @@ const { project } = Astro.props as Props;
                         <Icon
                             class="fill-slate-600 dark:fill-slate-300 transition-all ease-out duration-500 "
                             name={technology.icon}
-                            width="20"
+                            width={20}
                         />
                         <p>{technology.name}</p>
                     </li>

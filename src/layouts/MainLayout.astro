@@ -7,60 +7,60 @@ import { ResponsiveNavButton } from '@/components/layouts/mainLayout/ResponsiveN
 import BaseHead from '@components/layouts/mainLayout/BaseHead.astro';
 
 interface Props {
-    title?: string;
-    description: string;
-    image?: string;
+  title?: string;
+  description: string;
+  image?: string;
 }
 const {
-    title = 'Leo Serrano - Portfolio',
-    description = 'Website of Leo Serrano, a full-stack developer from Costa Rica.',
-    image = '/leoserranodev.jpg',
+  title = 'Leo Serrano - Portfolio',
+  description = 'Website of Leo Serrano, a full-stack developer from Costa Rica.',
+  image = '/leoserranodev.jpg',
 } = Astro.props as Props;
 ---
 
 <!doctype html>
 <html class="" lang="en">
-    <head>
-        <BaseHead title={title} description={description} image={image} />
-    </head>
+  <head>
+    <BaseHead title={title} description={description} image={image} />
+  </head>
 
-    <body
-        class="dark:bg-neutral-800 bg-neutral-50 flex flex-col h-full w-full justify-center items-center"
+  <body
+    class="dark:bg-neutral-800 bg-neutral-50 flex flex-col h-full w-full justify-center items-center"
+  >
+    <header
+      class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 top-0 fixed lg:static"
     >
-        <header
-            class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 top-0 fixed lg:static"
+      <div class="visible lg:invisible h-full col-start-1 col-end-2">
+        <ResponsiveNavButton client:only="react" />
+      </div>
+
+      <div class="scale-[.2] lg:col-start-3 lg:col-end-4">
+        <DarkModeInput client:only="react" />
+      </div>
+    </header>
+    <main class="flex flex-col h-full w-full m-auto items-center relative">
+      <div
+        class="flex mt-[4rem] lg:mt-0 w-full h-full lg:max-w-[80rem] lg:h-[50rem] border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
+      >
+        <section
+          id="sectionNav"
+          class="fixed z-10 hidden mt-[4rem] lg:mt-0 lg:block left-0 top-0 lg:static h-full w-full lg:w-[25rem] dark:bg-neutral-800/70 backdrop-blur-sm lg:backdrop-blur-none border-r border-r-neutral-200 dark:border-r-neutral-900"
         >
-            <div class="visible lg:invisible h-full col-start-1 col-end-2">
-                <ResponsiveNavButton client:only="react" />
-            </div>
+          <Nav />
+        </section>
+        <section
+          class="main-section w-full h-full lg:px-44 py-28 overflow-y-scroll px-6 sm:px-24 overflow-x-hidden"
+        >
+          <slot />
+        </section>
+      </div>
+    </main>
+    <Footer />
 
-            <div class="scale-[.2] lg:col-start-3 lg:col-end-4">
-                <DarkModeInput client:only="'react" />
-            </div>
-        </header>
-        <main class="flex flex-col h-full w-full m-auto items-center relative">
-            <div
-                class="flex mt-[4rem] lg:mt-0 w-full h-full lg:max-w-[80rem] lg:h-[50rem] border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
-            >
-                <section
-                    id="sectionNav"
-                    class="fixed z-10 hidden mt-[4rem] lg:mt-0 lg:block left-0 top-0 lg:static h-full w-full lg:w-[25rem] dark:bg-neutral-800/70 backdrop-blur-sm lg:backdrop-blur-none border-r border-r-neutral-200 dark:border-r-neutral-900"
-                >
-                    <Nav />
-                </section>
-                <section
-                    class="main-section w-full h-full lg:px-44 py-28 overflow-y-scroll px-6 sm:px-24 overflow-x-hidden"
-                >
-                    <slot />
-                </section>
-            </div>
-        </main>
-        <Footer />
-
-        <style>
-            .dark .main-section::-webkit-scrollbar {
-                background-color: rgba(23, 23, 23, 0.3);
-            }
-        </style>
-    </body>
+    <style>
+      .dark .main-section::-webkit-scrollbar {
+        background-color: rgba(23, 23, 23, 0.3);
+      }
+    </style>
+  </body>
 </html>

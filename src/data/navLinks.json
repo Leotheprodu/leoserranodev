@@ -1,27 +1,27 @@
 [
-    {
-        "name": "Home",
-        "path": "/",
-        "icon": "home"
-    },
-    {
-        "name": "About Me",
-        "path": "/about/",
-        "icon": "person"
-    },
-    {
-        "name": "Blog",
-        "path": "/blog/",
-        "icon": "article"
-    },
-    {
-        "name": "Projects",
-        "path": "/projects/",
-        "icon": "work"
-    },
-    {
-        "name": "Contact",
-        "path": "/contact/",
-        "icon": "contact_page"
-    }
+  {
+    "name": "Home",
+    "path": "/",
+    "icon": "home"
+  },
+  {
+    "name": "About Me",
+    "path": "/about/",
+    "icon": "about"
+  },
+  {
+    "name": "Blog",
+    "path": "/blog/",
+    "icon": "blog"
+  },
+  {
+    "name": "Projects",
+    "path": "/projects/",
+    "icon": "projects"
+  },
+  {
+    "name": "Contact",
+    "path": "/contact/",
+    "icon": "contact"
+  }
 ]
