@@ -6,11 +6,21 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://leonardoserrano.site',
-    integrations: [
-        tailwind({ applyBaseStyles: false }),
-        react(),
-        sitemap(),
-        icon(),
-    ],
+  site: 'https://leonardoserrano.site',
+  integrations: [
+    tailwind({ applyBaseStyles: false }),
+    react(),
+    sitemap(),
+    icon(),
+  ],
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['es'],
+    fallback: {
+      es: 'en',
+    },
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
 });

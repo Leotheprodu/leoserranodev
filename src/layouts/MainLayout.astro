@@ -16,10 +16,11 @@ const {
   description = 'Website of Leo Serrano, a full-stack developer from Costa Rica.',
   image = '/leoserranodev.jpg',
 } = Astro.props as Props;
+const { currentLocale } = Astro;
 ---
 
 <!doctype html>
-<html class="" lang="en">
+<html class="" lang={currentLocale}>
   <head>
     <BaseHead title={title} description={description} image={image} />
   </head>

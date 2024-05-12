@@ -2,9 +2,12 @@
 import { Icon } from 'astro-icon/components';
 import DownloadButton from '@components/layouts/mainLayout/DownloadButton.astro';
 import Link from './Link.astro';
-import navLinks from '@data/navLinks.json';
 import socialLinks from '@data/socialLinks.json';
+import { navLinks, type NavLink } from '@/data/navLinks';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 /* import { LanguageSwitcher } from './LanguageSwitcher.tsx'; */
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <nav
@@ -16,7 +19,7 @@ import socialLinks from '@data/socialLinks.json';
     <!-- <LanguageSwitcher client:only="react" /> -->
     <a
       class="no-underline flex group gap-3 items-center hover:text-neutral-700"
-      href="/"
+      href={t('link.home')}
     >
       <Icon
         class="group-hover:fill-neutral-700 dark:group-hover:fill-neutral-100 dark:fill-neutral-400"
@@ -26,7 +29,7 @@ import socialLinks from '@data/socialLinks.json';
       <h1
         class="font-bold text-xl dark:text-neutral-300 dark:group-hover:text-neutral-100"
       >
-        Portfolio
+        {t('nav.iconText')}
       </h1>
     </a>
     <div class="flex w-full gap-3">
@@ -39,13 +42,13 @@ import socialLinks from '@data/socialLinks.json';
         <h2 class="font-semibold dark:text-neutral-50 text-lg">
           Leonardo Serrano A.
         </h2>
-        <p class="text-sm dark:text-neutral-100">Fullstack Developer</p>
+        <p class="text-sm dark:text-neutral-100">{t('nav.title')}</p>
       </div>
     </div>
     <ul class="flex flex-col gap-3">
       {
-        navLinks.map((item) => (
-          <Link name={item.name} path={item.path} icon={item.icon} />
+        navLinks.map((item: NavLink) => (
+          <Link name={t(item.name)} path={t(item.path)} icon={item.icon} />
         ))
       }
     </ul>
@@ -53,7 +56,7 @@ import socialLinks from '@data/socialLinks.json';
       <h4
         class="uppercase font-semibold text-neutral-500 dark:text-neutral-400 text-sm"
       >
-        Socials
+        {t('nav.socialLinks')}
       </h4>
       <ul class="flex flex-col gap-5">
         {
