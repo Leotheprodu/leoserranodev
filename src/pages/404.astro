@@ -1,19 +1,20 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 import MainLayout from '../layouts/MainLayout.astro';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <MainLayout
-    title="Page Not Found"
-    description="Oops! The page you're looking for could not be found"
+  title="Page Not Found"
+  description="Oops! The page you're looking for could not be found"
 >
-    <section class="flex flex-col justify-center items-center">
-        <h1 class="text-center text-xl text-indigo-700 dark:text-indigo-400">
-            Oops! The page you're looking for could not be found
-        </h1>
-        <img class="w-[15rem]" src="/404.png" alt="404 page not found" />
-        <p class="text-center">
-            Don't worry, you can browse our menu; maybe you'll find what you
-            were looking for there.
-        </p>
-    </section>
+  <section class="flex flex-col justify-center items-center gap-10">
+    <h1 class="text-center text-4xl text-indigo-700 dark:text-indigo-400">
+      {t('404.title')}
+    </h1>
+    <p class="text-center">
+      {t('404.text')}
+    </p>
+  </section>
 </MainLayout>

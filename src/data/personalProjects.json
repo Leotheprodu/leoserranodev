@@ -1,5 +1,36 @@
 [
   {
+    "title": "BeatHub",
+    "type": "Frontend / project manager",
+    "status": "MVP Completed",
+    "description": "BeatHub was created to provide artists with exclusive beats for their songs and to give music producers the opportunity to sell their beats at a very good price. The beats that are marketed are exclusive, which means that no one else will have the beat that the artist buys; once purchased, it is no longer available for sale.",
+    "technologiesUsed": [
+      { "name": "Next.js 13.5", "icon": "nextdotjs" },
+      { "name": "TypeScript 5.0", "icon": "typescript" },
+      { "name": "tanstack/react-query 5.0", "icon": "package" },
+      { "name": "Tailwind CSS 3.3", "icon": "tailwindcss" },
+      { "name": "framer-motion 10.1", "icon": "package" },
+      { "name": "NanoStores", "icon": "package" }
+    ],
+    "links": [
+      {
+        "text": "BeatHub (demo)",
+        "url": "https://beat-hub-app.vercel.app/"
+      },
+      {
+        "text": "GitHub (Frontend)",
+        "url": "https://github.com/Leotheprodu/BeatHub-app"
+      }
+    ],
+    "achievementsAsDeveloper": [
+      "Successfully led a team of 8 multidisciplinary developers to create an application in less than a month.",
+      "Ranked among the top 10 projects out of hundreds of participants."
+    ],
+    "achievementsAsBussines": [
+      "Created a platform for artists to buy exclusive beats and for producers to sell their beats at a competitive price."
+    ]
+  },
+  {
     "title": "Yehu.app",
     "type": "Full Stack",
     "status": "Beta",
