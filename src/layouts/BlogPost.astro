@@ -3,100 +3,106 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '@components/pages/blog/FormattedDate.astro';
 import MainLayout from '@/layouts/MainLayout.astro';
 import { generateCategoryData } from '@utils/helpers';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const {
-    title,
-    description,
-    pubDate,
-    updatedDate,
-    heroImage = '/leoserranodev.jpg',
-    categories,
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage = '/leoserranodev.jpg',
+  categories,
 } = Astro.props;
 
 const categoyData = categories && generateCategoryData(categories);
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <MainLayout title={title} description={description} image={heroImage}>
-    <article>
-        <div class="hero-image">
-            {
-                heroImage && (
-                    <img
-                        class=" object-cover object-center w-[1020px] h-[410px]"
-                        src={heroImage}
-                        alt={`image of article ${title}`}
-                    />
-                )
-            }
+  <article>
+    <div class="hero-image">
+      {
+        heroImage && (
+          <img
+            class=" object-cover object-center w-[1020px] h-[410px]"
+            src={heroImage}
+            alt={`image of article ${title}`}
+          />
+        )
+      }
+    </div>
+    <div class="prose">
+      <div class="title">
+        <div class="date">
+          <FormattedDate date={pubDate} />
+          {
+            updatedDate && (
+              <div class="last-updated-on">
+                {t('blogLayout.lastUpdate')}{' '}
+                <FormattedDate date={updatedDate} />
+              </div>
+            )
+          }
         </div>
-        <div class="prose">
-            <div class="title">
-                <div class="date">
-                    <FormattedDate date={pubDate} />
-                    {
-                        updatedDate && (
-                            <div class="last-updated-on">
-                                Last updated on{' '}
-                                <FormattedDate date={updatedDate} />
-                            </div>
-                        )
-                    }
-                </div>
-                {
-                    categories && (
-                        <div class="flex gap-1 justify-center items-center mb-4">
-                            <p>Category:</p>
-                            <div class="flex gap-1 justify-center items-center">
-                                {categoyData.map((category) => (
-                                    <a
-                                        href={`/blog/categories/${category.slug}`}
-                                        class="no-underline dark:bg-indigo-700 bg-indigo-300 p-1 rounded hover:bg-indigo-400 dark:hover:bg-indigo-800"
-                                    >
-                                        {category.name}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    )
-                }
-                <h1>{title}</h1>
-                <hr />
+        {
+          categories && (
+            <div class="flex gap-1 justify-center items-center mb-4">
+              <p>{t('blogLayout.category')}:</p>
+              <div class="flex gap-1 justify-center items-center">
+                {categoyData.map((category) => (
+                  <a
+                    href={`${lang === 'es' ? '/es' : ''}/blog/${
+                      lang === 'es' ? 'categorias' : 'categories'
+                    }/${category.slug}`}
+                    class="no-underline dark:bg-indigo-700 bg-indigo-300 p-1 rounded hover:bg-indigo-400 dark:hover:bg-indigo-800"
+                  >
+                    {category.name}
+                  </a>
+                ))}
+              </div>
             </div>
-            <div class="flex flex-col gap-7">
-                <slot />
-            </div>
-        </div>
-    </article>
+          )
+        }
+        <h1>{title}</h1>
+        <hr />
+      </div>
+      <div class="flex flex-col gap-7">
+        <slot />
+      </div>
+    </div>
+  </article>
 
-    <style>
-        .hero-image {
-            width: 100%;
-        }
-        .hero-image img {
-            display: block;
-            margin: 0 auto;
-            border-radius: 12px;
-        }
-        .prose {
-            margin: auto;
-            padding: 1em;
-        }
-        .title {
-            margin-bottom: 1em;
-            padding: 1em 0;
-            text-align: center;
-            line-height: 1;
-        }
-        .title h1 {
-            margin: 0 0 0.5em 0;
-        }
-        .date {
-            margin-bottom: 0.5em;
-        }
-        .last-updated-on {
-            font-style: italic;
-        }
-    </style>
+  <style>
+    .hero-image {
+      width: 100%;
+    }
+    .hero-image img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
+    .prose {
+      margin: auto;
+      padding: 1em;
+    }
+    .title {
+      margin-bottom: 1em;
+      padding: 1em 0;
+      text-align: center;
+      line-height: 1;
+    }
+    .title h1 {
+      margin: 0 0 0.5em 0;
+    }
+    .date {
+      margin-bottom: 0.5em;
+    }
+    .last-updated-on {
+      font-style: italic;
+      color: rgb(111, 111, 111);
+    }
+  </style>
 </MainLayout>

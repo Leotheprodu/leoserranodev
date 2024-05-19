@@ -33,6 +33,8 @@ export const ui = {
     'contact.form-formStatus-verify': 'Please verify that you are a human!',
     'contact.form-formStatus-sending': '...Sending',
     'footer.text': 'Made by Leonardo Serrano with ❤️',
+    'blogLayout.lastUpdate': 'Last updated on',
+    'blogLayout.category': 'Category',
   },
   es: {
     'nav.home': 'Inicio',
@@ -61,5 +63,7 @@ export const ui = {
     'contact.form-formStatus-verify': 'Por favor verifica que eres un humano!',
     'contact.form-formStatus-sending': '...Enviando',
     'footer.text': 'Hecho por Leonardo Serrano con ❤️',
+    'blogLayout.lastUpdate': 'Última actualización el',
+    'blogLayout.category': 'Categoría',
   },
 } as const;

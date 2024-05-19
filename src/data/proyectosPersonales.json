@@ -60,7 +60,7 @@
       },
       {
         "text": "Read Me",
-        "url": "/blog/readme-yehu"
+        "url": "/es/blog/leeme-yehu"
       },
       {
         "text": "GitHub (Frontend)",
@@ -72,7 +72,7 @@
       },
       {
         "text": "Related Articles",
-        "url": "/blog/categories/yehu"
+        "url": "/es/blog/categorias/yehu"
       }
     ],
     "achievementsAsDeveloper": [
@@ -108,20 +108,12 @@
         "url": "https://flproductionscr.com/"
       },
       {
-        "text": "Read Me",
-        "url": "/blog/readme-flproductions"
-      },
-      {
         "text": "GitHub (Frontend)",
         "url": "https://github.com/Leotheprodu/flproductions-app"
       },
       {
         "text": "GitHub (Backend)",
         "url": "https://github.com/Leotheprodu/flproductions-server"
-      },
-      {
-        "text": "Related Articles",
-        "url": "/blog/categories/flproductions"
       }
     ],
     "achievementsAsDeveloper": [
@@ -152,16 +144,8 @@
     ],
     "links": [
       {
-        "text": "Read Me",
-        "url": "/blog/readme-leonardo-serrano-site"
-      },
-      {
         "text": "GitHub",
         "url": "https://github.com/Leotheprodu/leoserranodev"
-      },
-      {
-        "text": "Related Articles",
-        "url": "/blog/categories/leonardo-serrano-site"
       }
     ]
   }
