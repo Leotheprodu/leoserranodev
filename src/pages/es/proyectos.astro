@@ -1,37 +1,29 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import personalProjects from '@data/personalProjects.json';
+import proyectosPersonales from '@data/proyectosPersonales.json';
 /* import clientProjects from '@data/clientProjects.json'; */
 import ProjectCard from '@components/pages/projects/ProjectCard.astro';
 ---
 
 <MainLayout
-    title="Projects | Leonardo Serrano's Portfolio"
-    description="Projects of Leonardo Serrano, a fullstack web developer from Costa Rica."
+  title="Proyectos | Portafolio de Leonardo Serrano"
+  description="Proyectos de Leonardo Serrano, desarrollador fullstack de Costa Rica"
 >
-    <section class="flex flex-col gap-20">
-        <div class="flex flex-col gap-4">
-            <h1>Projects</h1>
+  <section class="flex flex-col gap-20">
+    <div class="flex flex-col gap-4">
+      <h1>Proyectos</h1>
 
-            <p>
-                Dive into my portfolio to explore a curated selection of
-                flagship projects that underscore my professional approach and
-                passion for innovation. These projects exemplify my commitment
-                to excellence and demonstrate my ability to deliver impactful
-                solutions. Welcome to a showcase of meaningful endeavors.
-            </p>
-        </div>
-        <div class="flex flex-col gap-12">
-            <h2>Personal Projects</h2>
-            {
-                personalProjects.map((project) => (
-                    <ProjectCard project={project} />
-                ))
-            }
-        </div>
-        <!-- <div class="flex flex-col gap-12">
-            <h2>Client Projects</h2>
-            {clientProjects.map((project) => <ProjectCard project={project} />)}
-        </div> -->
-    </section>
+      <p>
+        Echa un vistazo a mi portafolio para descubrir una selección de mis
+        proyectos favoritos que reflejan mi estilo y pasión por la innovación.
+        Estos trabajos muestran mi dedicación a la excelencia y cómo me gusta
+        crear soluciones que realmente marcan la diferencia. ¡Bienvenido a una
+        muestra de mis proyectos más significativos!
+      </p>
+    </div>
+    <div class="flex flex-col gap-12">
+      <h2>Proyectos Personales</h2>
+      {proyectosPersonales.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
 </MainLayout>

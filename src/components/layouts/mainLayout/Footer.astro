@@ -1,16 +1,12 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <footer
-    class="flex lg:z-20 justify-center items-center dark:bg-neutral-800 bg-neutral-50 bottom-0 text-neutral-500 dark:text-neutral-500 h-14 mt-1 w-full"
+  class="flex lg:z-20 justify-center items-center dark:bg-neutral-800 bg-neutral-50 bottom-0 text-neutral-500 dark:text-neutral-500 h-14 mt-1 w-full"
 >
-    <small class="flex gap-1">
-        Copyright &copy; <span id="copyright"></span> | All rights reserved
-    </small>
+  <small class="flex gap-1">{t('footer.text')}</small>
 </footer>
-<script>
-    document.querySelector('#copyright').textContent = new Date()
-        .getFullYear()
-        .toString();
-</script>

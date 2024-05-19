@@ -32,6 +32,7 @@ export const ui = {
     'contact.form-formStatus-error': 'Failed to send message',
     'contact.form-formStatus-verify': 'Please verify that you are a human!',
     'contact.form-formStatus-sending': '...Sending',
+    'footer.text': 'Made by Leonardo Serrano with ❤️',
   },
   es: {
     'nav.home': 'Inicio',
@@ -59,5 +60,6 @@ export const ui = {
     'contact.form-formStatus-error': 'Error al enviar mensaje',
     'contact.form-formStatus-verify': 'Por favor verifica que eres un humano!',
     'contact.form-formStatus-sending': '...Enviando',
+    'footer.text': 'Hecho por Leonardo Serrano con ❤️',
   },
 } as const;

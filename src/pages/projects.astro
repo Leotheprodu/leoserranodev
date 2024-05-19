@@ -6,32 +6,24 @@ import ProjectCard from '@components/pages/projects/ProjectCard.astro';
 ---
 
 <MainLayout
-    title="Projects | Leonardo Serrano's Portfolio"
-    description="Projects of Leonardo Serrano, a fullstack web developer from Costa Rica."
+  title="Projects | Leonardo Serrano's Portfolio"
+  description="Projects of Leonardo Serrano, a fullstack web developer from Costa Rica."
 >
-    <section class="flex flex-col gap-20">
-        <div class="flex flex-col gap-4">
-            <h1>Projects</h1>
+  <section class="flex flex-col gap-20">
+    <div class="flex flex-col gap-4">
+      <h1>Projects</h1>
 
-            <p>
-                Dive into my portfolio to explore a curated selection of
-                flagship projects that underscore my professional approach and
-                passion for innovation. These projects exemplify my commitment
-                to excellence and demonstrate my ability to deliver impactful
-                solutions. Welcome to a showcase of meaningful endeavors.
-            </p>
-        </div>
-        <div class="flex flex-col gap-12">
-            <h2>Personal Projects</h2>
-            {
-                personalProjects.map((project) => (
-                    <ProjectCard project={project} />
-                ))
-            }
-        </div>
-        <!-- <div class="flex flex-col gap-12">
-            <h2>Client Projects</h2>
-            {clientProjects.map((project) => <ProjectCard project={project} />)}
-        </div> -->
-    </section>
+      <p>
+        Take a look at my portfolio to discover a selection of my favorite
+        projects that reflect my style and passion for innovation. These works
+        show my dedication to excellence and how I love creating solutions that
+        truly make a difference. Welcome to a showcase of my most meaningful
+        projects!
+      </p>
+    </div>
+    <div class="flex flex-col gap-12">
+      <h2>Personal Projects</h2>
+      {personalProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
 </MainLayout>

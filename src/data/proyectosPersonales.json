@@ -1,9 +1,9 @@
 [
   {
     "title": "BeatHub",
-    "type": "Frontend / project manager",
-    "status": "MVP Completed",
-    "description": "BeatHub was created to provide artists with exclusive beats for their songs and to give music producers the opportunity to sell their beats at a very good price. The beats that are marketed are exclusive, which means that no one else will have the beat that the artist buys; once purchased, it is no longer available for sale.",
+    "type": "Frontend / Project Manager",
+    "status": "MVP Completado",
+    "description": "BeatHub fue creado para proporcionar a los artistas beats exclusivos para sus canciones y dar a los productores musicales la oportunidad de vender sus beats a muy buen precio. Los beats que se comercializan son exclusivos, lo que significa que nadie más tendrá el ritmo que el artista compre; es decir una vez comprado el beat, ya no estará disponible para la venta.",
     "technologiesUsed": [
       { "name": "Next.js 13.5", "icon": "nextdotjs" },
       { "name": "TypeScript 5.0", "icon": "typescript" },
@@ -22,23 +22,23 @@
         "url": "https://github.com/Leotheprodu/BeatHub-app"
       },
       {
-        "text": "Project Presentation (Spanish)",
+        "text": "Presentación del Proyecto",
         "url": "https://www.youtube.com/live/I00UpuZse0o?si=Cu6hpwaY-8B6cJrE&t=3539"
       }
     ],
     "achievementsAsDeveloper": [
-      "Successfully led a team of 8 multidisciplinary developers to create an application in less than a month.",
-      "Ranked among the top 10 projects out of hundreds of participants."
+      "Lideré con éxito un equipo de 8 desarrolladores multidisciplinarios para crear una aplicación en menos de un mes.",
+      "Clasificado entre los 10 mejores proyectos de cientos de participantes en No Country, Mayo 2024."
     ],
     "achievementsAsBussines": [
-      "Created a platform for artists to buy exclusive beats and for producers to sell their beats at a competitive price."
+      "Creamos una plataforma para que los artistas compren beats exclusivos y para que los productores vendan sus beats a un precio competitivo."
     ]
   },
   {
     "title": "Yehu.app",
     "type": "Full Stack",
     "status": "Beta",
-    "description": "This is a very ambitious project, it is a application that will allow you to control the when a client buy/pay a product/service, the application will allow you to control the inventory, the clients, the products, the services, the sales, the expenses, the incomes, the taxes, the reports, the payments, the debts, the credits, and let your client check the status of their orders, invoices, payment options, and much more.",
+    "description": "Este es un proyecto muy ambicioso, es una aplicación que te permitirá controlar cuándo un cliente compra/paga un producto/servicio. La aplicación te permitirá controlar el inventario, los clientes, los productos, los servicios, las ventas, los gastos, los ingresos, los impuestos, los informes, los pagos, las deudas, los créditos y permitirá a tus clientes verificar el estado de sus pedidos, facturas, opciones de pago y mucho más.",
     "technologiesUsed": [
       { "name": "NextJS 13.5", "icon": "nextdotjs" },
       { "name": "Tailwind 3.3", "icon": "tailwindcss" },
@@ -76,21 +76,20 @@
       }
     ],
     "achievementsAsDeveloper": [
-      "Implement components with one single responsibility, and hooks for separate logic from the components.",
-      "This is my first project thinked for the future, easy to scale, easy to add new features, easy to maintain.",
-      "First project using POO in javascript.",
-      "My First big side project with a lot of features."
+      "Implementé componentes con una sola responsabilidad y hooks para separar la lógica de los componentes.",
+      "Este es mi primer proyecto pensado para el futuro: fácil de escalar, fácil de añadir nuevas funciones, fácil de mantener.",
+      "Primer proyecto usando POO en JavaScript.",
+      "Mi primer gran proyecto paralelo con muchas funciones."
     ],
-
     "achievementsAsBussines": [
-      "This is my first project thinking for make money, I will sell this application as a service."
+      "Este es mi primer proyecto pensado para ganar dinero, estoy vendiendo esta aplicación como un servicio."
     ]
   },
   {
     "title": "FLProductions",
     "type": "Full Stack",
-    "status": "Production",
-    "description": "This is the website of my recording studio, featuring a robust Express-based backend handling user authentication, following the MVC architecture, and carefully validating every request. It also includes a paginated API, full CRUD operations, and utilizes Next.js on the frontend. Users can register, manage their profiles, share, and listen to songs from visiting artists, with many more improvements in the pipeline!",
+    "status": "Producción",
+    "description": "Este es el sitio web de mi estudio de grabación, con un backend robusto basado en Express que maneja la autenticación de usuarios, siguiendo la arquitectura MVC y validando cuidadosamente cada solicitud. También incluye una API paginada, operaciones CRUD completas y utiliza Next.js en el frontend. Los usuarios pueden registrarse, gestionar sus perfiles, compartir y escuchar canciones de artistas visitantes, ¡con muchas más mejoras en camino!",
     "technologiesUsed": [
       { "name": "NextJS 13.3", "icon": "nextdotjs" },
       { "name": "Tailwind 3.3", "icon": "tailwindcss" },
@@ -126,24 +125,23 @@
       }
     ],
     "achievementsAsDeveloper": [
-      "Designed and developed the entire website from scratch, including the backend, frontend, and database.",
-      "I have learned how to migrate an entire WordPress website to vanilla javascript, then to react with vite, then to typescript, then to NextJS.",
-      "Implemented a robust authentication system, including email verification, password reset, and user profile management.",
-      "Created a paginated API with full CRUD operations, including a search feature.",
-      "Implemented a React-based frontend, including Redux for state management, and Next.js for Server Side Rendering.",
-      "Created a complete database schema, including many-to-many relationships, and implemented it using Sequelize."
+      "Diseñé y desarrollé todo el sitio web desde cero, incluyendo el backend, frontend y la base de datos.",
+      "He aprendido a migrar un sitio web completo de WordPress a JavaScript puro, luego a React con Vite, luego a TypeScript, y luego a NextJS.",
+      "Implementé un sistema de autenticación robusto, incluyendo verificación por correo electrónico, restablecimiento de contraseña y gestión de perfiles de usuario.",
+      "Creé una API paginada con operaciones CRUD completas, incluyendo una función de búsqueda.",
+      "Implementé un frontend basado en React, incluyendo Redux para la gestión del estado y Next.js para el renderizado del lado del servidor.",
+      "Creé un esquema completo de base de datos, incluyendo relaciones muchos a muchos, y lo implementé utilizando Sequelize."
     ],
-
     "achievementsAsBussines": [
-      "Top 3 in search engines in my country.",
-      "Most of 80% of my clients have come to me through my website, It has brought me hundreds of clients for more than 10 years."
+      "Top 3 en motores de búsqueda en mi país.",
+      "Más del 80% de mis clientes han llegado a mí a través de mi sitio web, que me ha traído cientos de clientes durante más de 10 años."
     ]
   },
   {
-    "title": "This Website",
-    "type": "front end",
-    "status": "Production",
-    "description": "This website is a project in its own right. I'm utilizing it for multiple purposes, including mastering Astro, a modern static site generator, and delving into Tailwind CSS, a utility-first CSS framework. Additionally, it serves as a platform for improving both my content writing and coding skills, along with enhancing my documentation abilities.",
+    "title": "Este Sitio Web",
+    "type": "Frontend",
+    "status": "Producción",
+    "description": "Este sitio web es un proyecto en sí mismo. Lo estoy utilizando para múltiples propósitos, incluyendo dominar Astro, un moderno generador de sitios estáticos, y profundizar en Tailwind CSS, un framework CSS basado en utilidades. Además, sirve como plataforma para mejorar tanto mis habilidades de escritura de contenido como de codificación, junto con mejorar mis habilidades de documentación.",
     "technologiesUsed": [
       { "name": "Astro 3.1", "icon": "astro" },
       { "name": "React 18.2", "icon": "react" },
