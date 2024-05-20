@@ -35,6 +35,10 @@ export const ui = {
     'footer.text': 'Made by Leonardo Serrano with ❤️',
     'blogLayout.lastUpdate': 'Last updated on',
     'blogLayout.category': 'Category',
+    'projectCard.stack': 'Tech Stack',
+    'projectCard.businessAchievements': 'Achievements as business',
+    'projectCard.devAchievements': 'Achievements as developer',
+    'projectCard.projectLink': 'Project Links',
   },
   es: {
     'nav.home': 'Inicio',
@@ -65,5 +69,9 @@ export const ui = {
     'footer.text': 'Hecho por Leonardo Serrano con ❤️',
     'blogLayout.lastUpdate': 'Última actualización el',
     'blogLayout.category': 'Categoría',
+    'projectCard.stack': 'Tecnologías',
+    'projectCard.businessAchievements': 'Logros como negocio',
+    'projectCard.devAchievements': 'Logros como desarrollador',
+    'projectCard.projectLink': 'Enlaces del proyecto',
   },
 } as const;
