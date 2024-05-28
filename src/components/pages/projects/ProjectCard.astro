@@ -25,10 +25,10 @@ const t = useTranslations(lang);
 ---
 
 <div
-  class="dark:bg-slate-900 rounded-md p-5 border relative dark:border-slate-700/25 shadow-md flex flex-col gap-4 overflow-hidden"
+  class="dark:bg-primario bg-secundario rounded-md p-5 relative shadow-md flex flex-col gap-4 overflow-hidden"
 >
   <h3>{project.title}</h3>
-  <span class="text-xs uppercase text-neutral-500"
+  <span class="text-xs uppercase text-primario/50 dark:text-secundario/50"
     >{project.type}, {project.status}</span
   >
   <p>{project.description}</p>
@@ -37,13 +37,8 @@ const t = useTranslations(lang);
     <ul class="flex gap-5 flex-wrap justify-center items-center">
       {
         project.technologiesUsed.map((technology) => (
-          <li class=" text-indigo-900 dark:text-indigo-500 flex flex-col justify-center items-center">
-            <Icon
-              class="fill-slate-600 dark:fill-slate-300 transition-all ease-out duration-500 "
-              name={technology.icon}
-              width={20}
-              height={20}
-            />
+          <li class="  flex flex-col justify-center items-center">
+            <Icon class="" name={technology.icon} width={20} height={20} />
             <p>{technology.name}</p>
           </li>
         ))
@@ -56,7 +51,7 @@ const t = useTranslations(lang);
         <h4 class="text-center">{t('projectCard.businessAchievements')}</h4>
         <ul class="flex gap-2 flex-wrap">
           {project.achievementsAsBussines.map((achievement) => (
-            <li class=" text-indigo-950 dark:text-indigo-200 flex gap-2">
+            <li class=" flex gap-2">
               <span>🎉</span>
               <p class="">{achievement}</p>
             </li>
@@ -71,7 +66,7 @@ const t = useTranslations(lang);
         <h4 class="text-center">{t('projectCard.devAchievements')}</h4>
         <ul class="flex gap-2 flex-wrap items-center justify-center">
           {project.achievementsAsDeveloper.map((achievement) => (
-            <li class=" text-indigo-950 dark:text-indigo-200 flex w-[15rem] h-[10rem] p-2 rounded-xl gap-2">
+            <li class=" flex w-[15rem] h-[10rem] p-2 rounded-xl gap-2">
               <span>✔️</span>
               <p>{achievement}</p>
             </li>
@@ -86,14 +81,10 @@ const t = useTranslations(lang);
     <div class="flex gap-5 flex-wrap items-center justify-center">
       {
         project.links.map((link) => (
-          <a
-            target="_blank"
-            class="border-b border-transparent hover:border-indigo-700 transition-all duration-300 relative"
-            href={link.url}
-          >
+          <a target="_blank" class="relative" href={link.url}>
             {link.text}
 
-            <span class="absolute bottom-0 left-0 w-0 bg-indigo-700 h-0 border-t-2 border-indigo-700 transition-all duration-300" />
+            <span class="absolute bottom-0 left-0 w-0 h-0 border-t-2 border-primario dark:border-secundario transition-all duration-300" />
           </a>
         ))
       }

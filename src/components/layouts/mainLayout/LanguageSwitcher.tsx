@@ -3,18 +3,14 @@ export const LanguageSwitcher = ({ lang }: { lang: 'es' | 'en' }) => {
     <div className="flex gap-2">
       <a href="/">
         <small
-          className={`${
-            lang === 'en' ? 'text-indigo-700' : 'text-slate-700'
-          } text-xs`}
+          className={`${lang === 'en' ? 'opacity-100' : 'opacity-50'} text-xs`}
         >
           English
         </small>
       </a>
       <a href="/es">
         <small
-          className={`${
-            lang === 'es' ? 'text-indigo-700' : 'text-slate-700'
-          } text-xs`}
+          className={`${lang === 'es' ? 'opacity-100' : 'opacity-50'} text-xs`}
         >
           Español
         </small>

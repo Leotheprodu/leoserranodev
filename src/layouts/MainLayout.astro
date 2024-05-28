@@ -26,10 +26,10 @@ const { currentLocale } = Astro;
   </head>
 
   <body
-    class="dark:bg-neutral-800 bg-neutral-50 flex flex-col h-full w-full justify-center items-center"
+    class="font-code dark:bg-primario bg-secundario text-primario dark:text-secundario flex flex-col h-full w-full justify-center items-center"
   >
     <header
-      class="dark:bg-neutral-800 bg-neutral-50 grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 top-0 fixed lg:static"
+      class="bg-secundario dark:bg-primario grid grid-cols-2 lg:grid-cols-3 grid-rows-1 w-full h-[4rem] items-center z-50 top-0 fixed lg:static"
     >
       <div class="visible lg:invisible h-full col-start-1 col-end-2">
         <ResponsiveNavButton client:only="react" />
@@ -41,16 +41,16 @@ const { currentLocale } = Astro;
     </header>
     <main class="flex flex-col h-full w-full m-auto items-center relative">
       <div
-        class="flex mt-[4rem] lg:mt-0 w-full h-full lg:max-w-[80rem] lg:h-[50rem] border-neutral-400 dark:border-slate-100 dark:text-neutral-300 bg-white dark:bg-neutral-900 shadow-md dark:shadow-2xl"
+        class="flex mt-[4rem] lg:mt-0 w-full h-full lg:max-w-[80rem] lg:h-[50rem]"
       >
         <section
           id="sectionNav"
-          class="fixed z-10 hidden mt-[4rem] lg:mt-0 lg:block left-0 top-0 lg:static h-full w-full lg:w-[25rem] dark:bg-neutral-800/70 backdrop-blur-sm lg:backdrop-blur-none border-r border-r-neutral-200 dark:border-r-neutral-900"
+          class="fixed z-10 hidden mt-[4rem] lg:mt-0 lg:block left-0 top-0 lg:static h-full w-full lg:w-[25rem] backdrop-blur-sm lg:backdrop-blur-none"
         >
           <Nav />
         </section>
         <section
-          class="main-section w-full h-full lg:px-44 py-28 overflow-y-scroll px-6 sm:px-24 overflow-x-hidden"
+          class="bg-secundario dark:bg-primario scroll w-full h-full lg:px-44 py-28 overflow-y-auto px-6 sm:px-24 overflow-x-hidden"
         >
           <slot />
         </section>
@@ -58,10 +58,10 @@ const { currentLocale } = Astro;
     </main>
     <Footer />
 
-    <style>
+    <!-- <style>
       .dark .main-section::-webkit-scrollbar {
         background-color: rgba(23, 23, 23, 0.3);
       }
-    </style>
+    </style> -->
   </body>
 </html>

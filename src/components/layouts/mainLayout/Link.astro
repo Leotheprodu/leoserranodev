@@ -13,18 +13,19 @@ const { path, name, icon, newWindow = false } = Astro.props as Props;
 
 <a
   target={newWindow ? '_blank' : undefined}
-  class={` no-underline group transition-all ease-out duration-500 flex gap-2 items-center text-neutral-600 dark:text-neutral-400 dark:hover:text-indigo-500 hover:text-indigo-700`}
+  class={`no-underline flex gap-2 items-center relative`}
   href={path}
 >
-  {
-    icon && (
-      <Icon
-        class="fill-neutral-600 dark:fill-neutral-400 transition-all ease-out duration-500 group-hover:fill-indigo-700 dark:group-hover:fill-indigo-500 "
-        name={icon}
-        width={20}
-        height={20}
-      />
-    )
+  {icon && <Icon class="" name={icon} width={20} height={20} />}
+  {name}
+  <span
+    class="absolute bottom-0 left-0 w-0 h-0 border-t-2 border-primario dark:border-secundario transition-all duration-300"
+  ></span>
+</a>
+
+<style>
+  a:hover .absolute {
+    width: 50%;
+    height: 2px;
   }
-  {name}</a
->
+</style>

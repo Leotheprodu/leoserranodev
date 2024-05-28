@@ -40,7 +40,7 @@ export function ContactForm({ lang }: { lang: 'es' | 'en' }) {
       <div className=" max-w-[900px]">
         {!statusenviado && (
           <form
-            className="dark:bg-slate-800 shadow-xl flex flex-col gap-3 justify-center items-center w-full p-10 rounded-2xl"
+            className="shadow-xl flex flex-col gap-3 justify-center items-center w-full p-10 rounded-xl"
             onSubmit={onSubmit}
           >
             <div className="flex flex-col gap-1 w-full">
@@ -48,7 +48,7 @@ export function ContactForm({ lang }: { lang: 'es' | 'en' }) {
                 {t('contact.form-name')}
               </label>
               <input
-                className="text-neutral-900 dark:text-neutral-200 border-none rounded dark:bg-slate-900 bg-slate-100 px-3 py-2 focus:outline-1 focus:outline-neutral-200 dark:focus:outline-none"
+                className="border-none rounded-sm shadow-md dark:bg-primario bg-secundario px-3 py-2"
                 type="text"
                 name="name"
                 required
@@ -61,7 +61,7 @@ export function ContactForm({ lang }: { lang: 'es' | 'en' }) {
                 {t('contact.form-email')}
               </label>
               <input
-                className="text-neutral-900 dark:text-neutral-200 border-none rounded dark:bg-slate-900 bg-slate-100 px-3 py-2 focus:outline-1 focus:outline-neutral-200 dark:focus:outline-none"
+                className="border-none rounded-sm shadow-md dark:bg-primario bg-secundario px-3 py-2"
                 type="email"
                 name="email"
                 required
@@ -74,7 +74,7 @@ export function ContactForm({ lang }: { lang: 'es' | 'en' }) {
                 {t('contact.form-message')}
               </label>
               <textarea
-                className="text-neutral-900 dark:text-neutral-200 border-none rounded dark:bg-slate-900 bg-slate-100 px-3 py-2 focus:outline-1 focus:outline-neutral-200 dark:focus:outline-none"
+                className="border-none rounded-sm shadow-md dark:bg-primario bg-secundario px-3 py-2"
                 required
                 value={form.message}
                 name="message"
