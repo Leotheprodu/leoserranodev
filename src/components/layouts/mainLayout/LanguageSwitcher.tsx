@@ -1,6 +1,6 @@
 export const LanguageSwitcher = ({ lang }: { lang: 'es' | 'en' }) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-col sm:flex-row">
       <a href="/">
         <small
           className={`${lang === 'en' ? 'opacity-100' : 'opacity-50'} text-xs`}
