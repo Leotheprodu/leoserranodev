@@ -1043,7 +1043,7 @@ astro-eslint-parser@^0.15.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-icon@^1.1.0:
+astro-icon@1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/astro-icon/-/astro-icon-1.1.0.tgz"
   integrity sha512-Nksc09p7UuHeMcPNS9w1pKqRw3+wEmmh0A3FJW+FNXvqaeWI4RLvD1MCWErpY3Z5Cvad317rvLdik/Hg8GEk8Q==

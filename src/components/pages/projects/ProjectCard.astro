@@ -64,9 +64,9 @@ const t = useTranslations(lang);
     project.achievementsAsDeveloper && (
       <div class="flex flex-col gap-5">
         <h4 class="text-center">{t('projectCard.devAchievements')}</h4>
-        <ul class="flex gap-2 flex-wrap items-center justify-center">
+        <ul class="flex gap-2 flex-wrap justify-center">
           {project.achievementsAsDeveloper.map((achievement) => (
-            <li class=" flex w-[15rem] h-[10rem] p-2 rounded-xl gap-2">
+            <li class=" flex w-[15rem] p-2 rounded-xl gap-2">
               <span>✔️</span>
               <p>{achievement}</p>
             </li>
