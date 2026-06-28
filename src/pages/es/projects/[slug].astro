@@ -5,34 +5,42 @@ import Card from '@components/ui/Card.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
+import { projects as projectsData } from '@data/projects';
+import { useTranslations } from '@/i18n/utils';
 
-const allProjects = await getCollection('projects');
-const current = allProjects.find((p) => p.data.slug === 'flproductions');
-
-if (!current) {
-  return Astro.redirect('/projects');
+export async function getStaticPaths() {
+  const allProjects = await getCollection('projects');
+  return allProjects.map((p) => ({
+    params: { slug: p.data.slug },
+    props: { entry: p },
+  }));
 }
 
-const { Content } = await render(current);
+const { entry } = Astro.props;
+const { Content } = await render(entry);
 
+const lang = 'es' as const;
+const t = useTranslations(lang);
+
+const allProjects = await getCollection('projects');
 const others = allProjects
-  .filter((p) => p.data.slug !== 'flproductions')
+  .filter((p) => p.data.slug !== entry.data.slug)
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <CaseStudyLayout
-  title={`${current.data.title} — Case Study`}
-  description={current.data.tagline}
-  tagline={current.data.tagline}
-  type={current.data.type}
-  status={current.data.status}
+  title={`${entry.data.title} — Case Study`}
+  description={entry.data.tagline}
+  tagline={entry.data.tagline}
+  type={entry.data.type}
+  status={entry.data.status}
   statusVariant="live"
-  liveUrl={current.data.liveUrl}
-  githubUrl={current.data.githubUrl}
-  stack={current.data.stack}
-  metrics={current.data.metrics}
-  highlights={current.data.highlights}
-  publishedAt={current.data.publishedAt}
+  liveUrl={entry.data.liveUrl}
+  githubUrl={entry.data.githubUrl}
+  stack={entry.data.stack}
+  metrics={entry.data.metrics}
+  highlights={entry.data.highlights}
+  publishedAt={entry.data.publishedAt}
 >
   <Content />
 
@@ -43,7 +51,7 @@ const others = allProjects
           variant="bento"
           padding="md"
           hover="border"
-          href={`/projects/${p.data.slug}`}
+          href={`/es/projects/${p.data.slug}`}
         >
           <div class="flex flex-col gap-2">
             <Badge variant="default" size="sm">
@@ -59,8 +67,8 @@ const others = allProjects
             <p class="text-sm text-text-soft line-clamp-2">
               {p.data.tagline}
             </p>
-            <Button variant="link" size="sm" href={`/projects/${p.data.slug}`}>
-              Read case study →
+            <Button variant="link" size="sm" href={`/es/projects/${p.data.slug}`}>
+              {t('common.readCaseStudy')} →
             </Button>
           </div>
         </Card>

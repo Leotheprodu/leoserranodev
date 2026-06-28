@@ -1,5 +1,7 @@
 ---
 import ThemeToggle from '@components/ui/ThemeToggle.astro';
+import LanguageSwitcher from '@components/ui/LanguageSwitcher.astro';
+import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
 
 interface Props {
   activeSection?: 'home' | 'projects' | 'stats' | 'stack' | 'about' | 'contact';
@@ -7,15 +9,20 @@ interface Props {
 
 const { activeSection } = Astro.props as Props;
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const isHome = !activeSection || activeSection === 'home';
 
 const navItems = [
-  { id: 'projects', label: 'Projects', href: '/projects' },
-  { id: 'stats', label: 'Numbers', href: '/#stats' },
-  { id: 'stack', label: 'Stack', href: '/#stack' },
-  { id: 'about', label: 'About', href: '/#about' },
-  { id: 'contact', label: 'Contact', href: '/#contact' },
+  { id: 'projects', label: t('nav.projects'), href: getLocalizedPath('/projects', lang) },
+  { id: 'stats', label: t('nav.numbers'), href: `${getLocalizedPath('/', lang)}#stats` },
+  { id: 'stack', label: t('nav.stack'), href: `${getLocalizedPath('/', lang)}#stack` },
+  { id: 'about', label: t('nav.about'), href: `${getLocalizedPath('/', lang)}#about` },
+  { id: 'contact', label: t('nav.contact'), href: `${getLocalizedPath('/', lang)}#contact` },
 ];
+
+const homeHref = getLocalizedPath('/', lang);
+const localizedHome = lang === defaultLanguage ? '/' : `/${lang}/`;
 ---
 
 <header
@@ -25,7 +32,7 @@ const navItems = [
     class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10"
   >
     <a
-      href="/"
+      href={homeHref}
       class="flex items-center gap-2 text-sm font-bold tracking-tight"
     >
       <span
@@ -52,16 +59,19 @@ const navItems = [
         ))
       }
       {
-        !isHome && (
+        !isHome && lang === defaultLanguage && (
           <a
-            href="/"
+            href={localizedHome}
             class="ml-1 hidden rounded-md bg-bg-soft px-3 py-1.5 text-sm font-medium text-text transition hover:border-secundario hover:text-secundario md:inline-flex"
           >
-            ← Home
+            ← {t('nav.home')}
           </a>
         )
       }
       <div class="ml-2">
+        <LanguageSwitcher />
+      </div>
+      <div class="ml-1">
         <ThemeToggle />
       </div>
     </nav>

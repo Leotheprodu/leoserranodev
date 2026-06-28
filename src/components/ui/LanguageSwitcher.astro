@@ -1,0 +1,35 @@
+---
+import { languages, getLangFromUrl, getLocalizedPath, supportedLanguages, type Language } from '@/i18n/utils';
+
+interface Props {
+  currentPath?: string;
+  class?: string;
+}
+
+const { currentPath, class: className = '' } = Astro.props as Props;
+
+const currentLang: Language = getLangFromUrl(Astro.url);
+const path = currentPath ?? Astro.url.pathname;
+
+const otherLangs = (supportedLanguages as Language[]).filter(
+  (l) => l !== currentLang
+);
+---
+
+<div class:list={['flex items-center gap-1', className]}>
+  {
+    otherLangs.map((lang) => (
+      <a
+        href={getLocalizedPath(path, lang)}
+        hreflang={lang}
+        aria-label={`Switch to ${languages[lang]}`}
+        class:list={[
+          'inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-xs font-bold uppercase tracking-wider transition',
+          'border border-border bg-bg-soft text-text-soft hover:border-secundario hover:text-secundario',
+        ]}
+      >
+        {lang}
+      </a>
+    ))
+  }
+</div>

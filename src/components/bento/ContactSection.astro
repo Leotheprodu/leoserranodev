@@ -4,7 +4,10 @@ import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
 import Icon from '@components/ui/Icon.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const email = 'hola@leonardoserrano.site';
 
 const socials = [
@@ -37,15 +40,14 @@ const socials = [
   class="text-center"
 >
   <div class="flex flex-col items-center gap-6">
-    <Badge variant="highlight" size="sm">Get in touch</Badge>
+    <Badge variant="highlight" size="sm">{t('contact.eyebrow')}</Badge>
 
     <Heading as="h2" size="5xl" class="text-bg">
-      Let's build something <span class="text-gradient">real</span>
+      {t('contact.title')}<span class="text-gradient">{t('contact.titleHighlight')}</span>
     </Heading>
 
     <p class="max-w-xl text-base text-bg/80">
-      Open to interesting projects, contract work, and full-time roles where
-      the team ships production software with care.
+      {t('contact.subtitle')}
     </p>
 
     <div class="mt-4 flex flex-wrap items-center justify-center gap-3">

@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css';
+import { getLangFromUrl, defaultLanguage } from '@/i18n/utils';
 
 interface Props {
   title?: string;
@@ -12,10 +13,13 @@ const {
   title = 'Leonardo Serrano — Full-Stack Engineer',
   description = 'Building production systems that scale. 3 active projects, ~159K lines of code, real users in production.',
   image = '/og-default.png',
-  lang = 'en',
+  lang: langProp,
 } = Astro.props as Props;
 
+const detectedLang = getLangFromUrl(Astro.url);
+const lang = langProp ?? detectedLang;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
 ---
 
 <!doctype html>
@@ -34,6 +38,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

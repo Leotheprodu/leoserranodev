@@ -1,4 +1,8 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const year = new Date().getFullYear();
 ---
 
@@ -7,9 +11,8 @@ const year = new Date().getFullYear();
     class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs text-text-muted md:flex-row md:px-10"
   >
     <p>
-      © {year} Leonardo Serrano. Built with Astro 5 + Tailwind 4 + Framer
-      Motion.
+      © {year} Leonardo Serrano. {t('footer.tagline')}
     </p>
-    <p>Heredia, Costa Rica</p>
+    <p>{t('footer.location')}</p>
   </div>
 </footer>

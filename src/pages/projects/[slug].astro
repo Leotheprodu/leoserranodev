@@ -6,6 +6,7 @@ import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
 import { projects as projectsData } from '@data/projects';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 export async function getStaticPaths() {
   const allProjects = await getCollection('projects');
@@ -18,6 +19,9 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const allProjects = await getCollection('projects');
 const projectData = projectsData.find((p) => p.slug === entry.data.slug);
 const others = allProjects
@@ -26,7 +30,7 @@ const others = allProjects
 ---
 
 <CaseStudyLayout
-  title={`${entry.data.title} — Case Study`}
+  title={`${entry.data.title} — ${lang === 'es' ? 'Case Study' : 'Case Study'}`}
   description={entry.data.tagline}
   tagline={entry.data.tagline}
   type={entry.data.type}
@@ -65,7 +69,7 @@ const others = allProjects
               {p.data.tagline}
             </p>
             <Button variant="link" size="sm" href={`/projects/${p.data.slug}`}>
-              Read case study →
+              {t('common.readCaseStudy')} →
             </Button>
           </div>
         </Card>

@@ -28,7 +28,7 @@ highlights:
   - 'WebSocket gateway load-tested to 500 concurrent users on production'
   - 'Multi-tenant: Bands × Churches × 13 church roles composed in 6 guards'
   - 'Two distinct live views: projector (lyrics) vs musician (chords)'
-  - 'Login via WhatsApp bot + Google OAuth + JWT with auto-refresh'
+  - 'Login with Google OAuth + JWT with auto-refresh'
   - 'Song has 4 attached content types (lyrics, chords, video, copies) atomic in one transaction'
 publishedAt: 2026-06-20
 ---
@@ -172,17 +172,17 @@ resolves them with `Reflector.getAllAndOverride` and delegates to
 pure functions in `src/auth/utils/`. No `if` chains in the
 controller, no logic duplication.
 
-## Login via WhatsApp
+## Login with Google OAuth
 
-No passwords. New users send a WhatsApp message to the bot number
-(`+50663017707`) with a special format
-(`registro-adorador:<token>`). The bot confirms the email or phone
-and the user is in. Forgot password? Same flow.
+Google sign-in is the only authentication path. Phone/email
+verification happens on the first login; the user is in. Forgot
+password is a Google-side flow — we don't store passwords.
 
-Three dedicated docs cover the migration:
-`WHATSAPP_AUTH_MIGRATION.md`, `WHATSAPP_AUTH_FRONTEND.md`,
-`WHATSAPP_ERROR_FIX.md`. Plus Google OAuth as a second path for
-musicians who already have an account.
+The integration uses `google-auth-library` with a custom
+`google-auth.service.ts` that handles OAuth2 token exchange, email
+auto-link (if a user signs in with Google using an email already in
+our DB, the accounts are merged), and a `@nestjs/passport` strategy
+that the JWT guard reads on every request.
 
 ## JWT auto-refresh that survives cold starts
 
