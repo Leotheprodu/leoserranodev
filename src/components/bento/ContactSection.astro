@@ -42,11 +42,11 @@ const socials = [
   <div class="flex flex-col items-center gap-6">
     <Badge variant="highlight" size="sm">{t('contact.eyebrow')}</Badge>
 
-    <Heading as="h2" size="5xl" class="text-bg">
+    <Heading as="h2" size="5xl" class="!text-white">
       {t('contact.title')}<span class="text-gradient">{t('contact.titleHighlight')}</span>
     </Heading>
 
-    <p class="max-w-xl text-base text-bg/80">
+    <p class="max-w-xl text-base !text-white/80">
       {t('contact.subtitle')}
     </p>
 
@@ -55,7 +55,7 @@ const socials = [
         href={`mailto:${email}`}
         variant="primary"
         size="lg"
-        class="!bg-bg !text-primario hover:!bg-bg/90"
+        class="!bg-white !text-[#0a0a0a] hover:!bg-white/90"
       >
         <span slot="icon-left" aria-hidden="true">
           <Icon name="mdi:email-outline" size={18} ariaLabel="Email" />
@@ -73,13 +73,13 @@ const socials = [
             href={s.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="group flex flex-col items-center gap-2 rounded-lg border border-bg/20 bg-bg/5 p-4 transition hover:border-highlight hover:bg-bg/10"
+            class="group flex flex-col items-center gap-2 rounded-lg border border-white/20 bg-white/5 p-4 transition hover:border-highlight hover:bg-white/10"
           >
-            <span class="grid h-10 w-10 place-items-center rounded-md bg-bg/10 text-bg transition group-hover:bg-highlight group-hover:text-primario">
+            <span class="grid h-10 w-10 place-items-center rounded-md bg-white/10 text-white transition group-hover:bg-highlight group-hover:text-[#0a0a0a]">
               <Icon name={s.icon} size={20} ariaLabel={s.label} />
             </span>
-            <span class="text-sm font-semibold text-bg">{s.label}</span>
-            <span class="text-xs text-bg/60">{s.handle}</span>
+            <span class="text-sm font-semibold !text-white">{s.label}</span>
+            <span class="text-xs !text-white/60">{s.handle}</span>
           </a>
         ))
       }

@@ -1,7 +1,14 @@
 ---
 import Card from '@components/ui/Card.astro';
 import { AnimatedCounter } from '@components/motion/AnimatedCounter';
-import type { Stat } from '@data/stats';
+
+interface Stat {
+  value: string;
+  suffix?: string;
+  label: string;
+  description?: string;
+  highlight?: boolean;
+}
 
 interface Props {
   stat: Stat;

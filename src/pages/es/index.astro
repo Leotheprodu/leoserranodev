@@ -17,7 +17,7 @@ import BentoGrid from '@components/bento/BentoGrid.astro';
 import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
 import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
-import { headlineStats } from '@data/stats';
+import { headlineStats, localizeStat } from '@data/stats';
 import { stack } from '@data/stack';
 import { useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
 
@@ -74,7 +74,7 @@ const projectsByOrder = allProjects
       </Reveal>
 
       <BentoGrid cols={3} gap="md">
-        {headlineStats.map((stat) => <StatCard stat={stat} size="md" />)}
+        {headlineStats.map((s) => <StatCard stat={localizeStat(s, 'es')} size="md" highlight={s.highlight} />)}
       </BentoGrid>
     </Section>
 
