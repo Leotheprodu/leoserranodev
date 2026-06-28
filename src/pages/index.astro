@@ -12,8 +12,12 @@ import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
 import Section from '@components/ui/Section.astro';
 import ThemeToggle from '@components/ui/ThemeToggle.astro';
+import Icon from '@components/ui/Icon.astro';
+import Reveal from '@components/motion/Reveal.astro';
+import StaggerChildren from '@components/motion/StaggerChildren.astro';
 import { projectsByOrder } from '@data/projects';
 import { headlineStats } from '@data/stats';
+import { stack } from '@data/stack';
 ---
 
 <BaseLayout
@@ -23,54 +27,56 @@ import { headlineStats } from '@data/stats';
   <header
     class="sticky top-0 z-50 w-full border-b border-border/60 bg-bg/80 backdrop-blur-md"
   >
-    <div
-      class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10"
-    >
-      <a
-        href="/"
-        class="flex items-center gap-2 text-sm font-bold tracking-tight"
+    <Reveal direction="down" speed="fast" distance={-8} as="div" class="contents">
+      <div
+        class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10"
       >
-        <span
-          class="grid h-7 w-7 place-items-center rounded-md bg-primario text-bg"
-        >
-          L
-        </span>
-        <span>Leonardo Serrano</span>
-      </a>
-      <nav class="flex items-center gap-2">
         <a
-          href="#projects"
-          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          href="/"
+          class="flex items-center gap-2 text-sm font-bold tracking-tight"
         >
-          Projects
+          <span
+            class="grid h-7 w-7 place-items-center rounded-md bg-primario text-bg"
+          >
+            L
+          </span>
+          <span>Leonardo Serrano</span>
         </a>
-        <a
-          href="#stats"
-          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
-        >
-          Numbers
-        </a>
-        <a
-          href="#stack"
-          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
-        >
-          Stack
-        </a>
-        <a
-          href="#about"
-          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
-        >
-          About
-        </a>
-        <a
-          href="#contact"
-          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
-        >
-          Contact
-        </a>
-        <ThemeToggle />
-      </nav>
-    </div>
+        <nav class="flex items-center gap-2">
+          <a
+            href="#projects"
+            class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          >
+            Projects
+          </a>
+          <a
+            href="#stats"
+            class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          >
+            Numbers
+          </a>
+          <a
+            href="#stack"
+            class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          >
+            Stack
+          </a>
+          <a
+            href="#about"
+            class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          >
+            About
+          </a>
+          <a
+            href="#contact"
+            class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+          >
+            Contact
+          </a>
+          <ThemeToggle />
+        </nav>
+      </div>
+    </Reveal>
   </header>
 
   <main>
@@ -84,7 +90,7 @@ import { headlineStats } from '@data/stats';
     />
 
     <Section id="stats" container="wide" background="soft" spacing="lg">
-      <div class="mb-12 flex flex-col items-center gap-3 text-center">
+      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
         <Badge variant="default" size="sm">Numbers</Badge>
         <Heading as="h2" size="4xl" gradient>
           What 13 years of shipping looks like
@@ -92,7 +98,7 @@ import { headlineStats } from '@data/stats';
         <p class="max-w-2xl text-text-soft">
           Real metrics from production codebases, not vanity numbers.
         </p>
-      </div>
+      </Reveal>
 
       <BentoGrid cols={3} gap="md">
         {headlineStats.map((stat) => <StatCard stat={stat} size="md" />)}
@@ -100,7 +106,7 @@ import { headlineStats } from '@data/stats';
     </Section>
 
     <Section id="projects" container="wide" background="default" spacing="lg">
-      <div class="mb-12 flex flex-col items-center gap-3 text-center">
+      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
         <Badge variant="default" size="sm">Featured</Badge>
         <Heading as="h2" size="4xl" gradient>
           What I'm shipping right now
@@ -109,27 +115,87 @@ import { headlineStats } from '@data/stats';
           Four production systems, each one a different domain, all built from
           scratch.
         </p>
-      </div>
+      </Reveal>
 
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <StaggerChildren
+        as="div"
+        stagger={120}
+        initialDelay={100}
+        class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
         {projectsByOrder.map((project, i) => (
           <ProjectCard
             project={project}
             variant={i === 0 ? 'wide' : 'default'}
           />
         ))}
-      </div>
+      </StaggerChildren>
     </Section>
 
-    <StackSection />
+    <Section id="stack" container="wide" background="soft" spacing="lg">
+      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+        <Badge variant="default" size="sm">Stack</Badge>
+        <Heading as="h2" size="4xl" gradient>
+          What I work with
+        </Heading>
+        <p class="max-w-2xl text-text-soft">
+          Tools I've shipped to production. Grouped by layer, ordered by how
+          much I've used them.
+        </p>
+      </Reveal>
+
+      <StaggerChildren
+        as="div"
+        stagger={80}
+        initialDelay={0}
+        class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {stack.map((category) => (
+          <div class="rounded-lg border border-border bg-surface p-6">
+            <div class="mb-4 flex items-center gap-3">
+              <span class="grid h-9 w-9 place-items-center rounded-md bg-secundario/10 text-secundario">
+                <Icon name={category.icon} size={18} ariaLabel={category.title} />
+              </span>
+              <h3 class="text-base font-bold text-text">{category.title}</h3>
+            </div>
+            <ul class="flex flex-col gap-2">
+              {category.items.map((item) => (
+                <li class="flex items-center justify-between gap-2 text-sm">
+                  <span class="text-text">{item.name}</span>
+                  <div class="flex items-center gap-1.5">
+                    {item.years && (
+                      <span class="text-xs text-text-muted">{item.years}y</span>
+                    )}
+                    {item.level && (
+                      <Badge variant="outline" size="sm">
+                        {item.level === 'expert'
+                          ? 'Expert'
+                          : item.level === 'proficient'
+                            ? 'Proficient'
+                            : 'Learning'}
+                      </Badge>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </StaggerChildren>
+    </Section>
 
     <Section id="about" container="narrow" background="default" spacing="lg">
-      <div class="flex flex-col items-center gap-6 text-center">
+      <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-6 text-center">
         <Badge variant="default" size="sm">About</Badge>
         <Heading as="h2" size="4xl">
           Building software that <span class="text-gradient">puts food on the table</span>
         </Heading>
-        <div class="max-w-2xl space-y-4 text-left text-lg text-text-soft">
+        <StaggerChildren
+          as="div"
+          stagger={120}
+          initialDelay={100}
+          class="max-w-2xl space-y-4 text-left text-lg text-text-soft"
+        >
           <p>
             I'm Leo, a full-stack engineer from Heredia, Costa Rica. I run
             <strong class="text-text">FLProductions</strong>, a recording
@@ -148,22 +214,26 @@ import { headlineStats } from '@data/stats';
             architectures, and developer experience. I write the kind of docs
             I'd want to read — 4,000+ lines across the 3 projects.
           </p>
-        </div>
-      </div>
+        </StaggerChildren>
+      </Reveal>
     </Section>
 
-    <ContactSection />
+    <Reveal direction="up" speed="normal">
+      <ContactSection />
+    </Reveal>
   </main>
 
-  <footer class="border-t border-border py-8">
-    <div
-      class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs text-text-muted md:flex-row md:px-10"
-    >
-      <p>
-        © {new Date().getFullYear()} Leonardo Serrano. Built with Astro 5 +
-        Tailwind 4 + Framer Motion.
-      </p>
-      <p>Heredia, Costa Rica</p>
-    </div>
-  </footer>
+  <Reveal direction="up" speed="fast" distance={8}>
+    <footer class="border-t border-border py-8">
+      <div
+        class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs text-text-muted md:flex-row md:px-10"
+      >
+        <p>
+          © {new Date().getFullYear()} Leonardo Serrano. Built with Astro 5 +
+          Tailwind 4 + Framer Motion.
+        </p>
+        <p>Heredia, Costa Rica</p>
+      </div>
+    </footer>
+  </Reveal>
 </BaseLayout>

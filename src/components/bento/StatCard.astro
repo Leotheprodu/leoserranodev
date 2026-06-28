@@ -1,14 +1,16 @@
 ---
 import Card from '@components/ui/Card.astro';
+import { AnimatedCounter } from '@components/motion/AnimatedCounter';
 import type { Stat } from '@data/stats';
 
 interface Props {
   stat: Stat;
   size?: 'sm' | 'md' | 'lg';
   class?: string;
+  animate?: boolean;
 }
 
-const { stat, size = 'md', class: className = '' } = Astro.props as Props;
+const { stat, size = 'md', class: className = '', animate = true } = Astro.props as Props;
 
 const valueSize = {
   sm: 'text-3xl md:text-4xl',
@@ -31,8 +33,18 @@ const valueSize = {
         stat.highlight && 'text-gradient',
       ]}
     >
-      {stat.value}
-      {stat.suffix && <span>{stat.suffix}</span>}
+      {
+        animate ? (
+          <AnimatedCounter
+            client:visible
+            value={stat.value}
+            duration={1.6}
+          />
+        ) : (
+          stat.value
+        )
+      }
+      {stat.suffix}
     </span>
     <span class="text-sm font-semibold uppercase tracking-wider text-text-soft">
       {stat.label}

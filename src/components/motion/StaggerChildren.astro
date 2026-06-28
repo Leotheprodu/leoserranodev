@@ -1,0 +1,110 @@
+---
+import Reveal from '@components/motion/Reveal.astro';
+
+interface Props {
+  stagger?: number;
+  initialDelay?: number;
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  distance?: number;
+  speed?: 'slow' | 'normal' | 'fast';
+  as?: 'div' | 'section' | 'ul' | 'ol';
+  class?: string;
+  itemClass?: string;
+}
+
+const {
+  stagger = 80,
+  initialDelay = 0,
+  direction = 'up',
+  distance = 16,
+  speed = 'normal',
+  as: Tag = 'div',
+  class: className = '',
+  itemClass = '',
+} = Astro.props as Props;
+
+const speedMap = { slow: 900, normal: 600, fast: 350 } as const;
+const duration = speedMap[speed];
+const transformMap = {
+  up: `translate3d(0, ${distance}px, 0)`,
+  down: `translate3d(0, -${distance}px, 0)`,
+  left: `translate3d(${distance}px, 0, 0)`,
+  right: `translate3d(-${distance}px, 0, 0)`,
+  none: 'translate3d(0, 0, 0)',
+} as const;
+---
+
+<Tag
+  data-stagger
+  data-stagger-step={stagger}
+  data-stagger-initial={initialDelay}
+  class:list={[className]}
+  style={`--stagger-step: ${stagger}ms; --stagger-initial: ${initialDelay}ms; --stagger-duration: ${duration}ms; --stagger-transform: ${transformMap[direction]};`}
+>
+  <slot />
+</Tag>
+
+<style>
+  [data-stagger] > :global(*) {
+    opacity: 0;
+    transform: var(--stagger-transform);
+    transition:
+      opacity var(--stagger-duration) cubic-bezier(0.22, 1, 0.36, 1),
+      transform var(--stagger-duration) cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-stagger].is-visible > :global(*) {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-stagger] > :global(*) {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initStagger() {
+    const groups = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-stagger]')
+    );
+    if (groups.length === 0) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      groups.forEach((g) => g.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const group = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            const step = parseInt(group.dataset.staggerStep ?? '80', 10);
+            const initial = parseInt(group.dataset.staggerInitial ?? '0', 10);
+            const children = Array.from(group.children) as HTMLElement[];
+            children.forEach((child, i) => {
+              child.style.transitionDelay = `${initial + i * step}ms`;
+            });
+            group.classList.add('is-visible');
+            observer.unobserve(group);
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
+    );
+
+    groups.forEach((g) => observer.observe(g));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStagger);
+  } else {
+    initStagger();
+  }
+</script>
