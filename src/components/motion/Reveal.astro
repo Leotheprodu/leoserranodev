@@ -123,9 +123,6 @@ const transformMap: Record<Direction, string> = {
     els.forEach((el) => observer.observe(el));
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initReveal);
-  } else {
-    initReveal();
-  }
+  document.addEventListener('astro:page-load', initReveal);
+  if (document.readyState !== 'loading') initReveal();
 </script>

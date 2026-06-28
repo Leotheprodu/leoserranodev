@@ -111,9 +111,6 @@ const valueSize = {
     els.forEach((el) => observer.observe(el));
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initStatPop);
-  } else {
-    initStatPop();
-  }
+  document.addEventListener('astro:page-load', initStatPop);
+  if (document.readyState !== 'loading') initStatPop();
 </script>

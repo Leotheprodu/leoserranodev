@@ -34,13 +34,16 @@ const localizedHome = lang === defaultLanguage ? '/' : `/${lang}/`;
     <a
       href={homeHref}
       class="flex items-center gap-2 text-sm font-bold tracking-tight"
+      aria-label="Home"
     >
       <span
         class="grid h-7 w-7 place-items-center rounded-md bg-primario text-bg"
+        transition:name="site-logo"
+        transition:animate="fade"
       >
         L
       </span>
-      <span>Leonardo Serrano</span>
+      <span transition:name="site-name" transition:animate="fade">Leonardo Serrano</span>
     </a>
     <nav class="flex items-center gap-1">
       {

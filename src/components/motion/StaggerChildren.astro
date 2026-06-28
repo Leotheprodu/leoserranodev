@@ -107,9 +107,6 @@ const transformMap = {
     groups.forEach((g) => observer.observe(g));
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initStagger);
-  } else {
-    initStagger();
-  }
+  document.addEventListener('astro:page-load', initStagger);
+  if (document.readyState !== 'loading') initStagger();
 </script>
