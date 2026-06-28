@@ -21,11 +21,11 @@ stack:
   - 'OpenAI'
 metrics:
   - { value: '13+', label: 'años live' }
-  - { value: '~74K', label: 'LoC' }
+  - { value: '~68K', label: 'LoC' }
   - { value: '28', label: 'Prisma models' }
   - { value: '202', label: 'endpoints' }
 highlights:
-  - 'Sitio público + portal de artistas + e-commerce de beats en un solo monorepo'
+  - 'Sitio público + portal de artistas privado en un solo monorepo'
   - 'Sistema de reactividad en tiempo real: cualquier mutación actualiza todas las pestañas abiertas'
   - 'Wallet con 5% cashback y vault con precios diferenciados (estándar vs VIP)'
   - 'AI chat con GPT-4o-mini que interpreta español costarricense y agenda citas'
@@ -40,15 +40,19 @@ the years the website evolved from a static HTML page to a full-blown
 production platform. The thing that brings in **80% of my clients** and
 has put food on my table for over a decade.
 
-The system has three cooperating apps in a single monorepo:
+The platform is a NestJS + Next.js monorepo with two cooperating apps:
 
 - **`server/`** — NestJS 10 API, Prisma 5, Socket.IO, JWT, 30 modules
 - **`app-new/`** — Next.js 15 public site + studio management (admin, portal, blog)
-- **`ackeeBeats/`** — Next.js 15 e-commerce for selling beats with PayPal
 
-Together they ship **~74,000 lines of code** across 865 files. Every single
+Together they ship **~68,000 lines of code** across 781 files. Every single
 client interaction, payment, audio upload, revision comment, and CRM lead
 flows through code I wrote.
+
+> **Note**: the same monorepo also contains a third sub-package
+> (`ackeeBeats/`) — but I treat **Ackee Beats** as a separate commercial
+> project. See its own case study at
+> [`/projects/ackeebeats`](/projects/ackeebeats).
 
 ## The architecture
 

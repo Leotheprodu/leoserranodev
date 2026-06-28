@@ -46,6 +46,11 @@ const transformMap = {
 
 <style>
   [data-stagger] > :global(*) {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-ready [data-stagger]:not(.is-visible) > :global(*) {
     opacity: 0;
     transform: var(--stagger-transform);
     transition:
@@ -53,13 +58,13 @@ const transformMap = {
       transform var(--stagger-duration) cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  [data-stagger].is-visible > :global(*) {
+  html.js-ready [data-stagger].is-visible > :global(*) {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-stagger] > :global(*) {
+    html.js-ready [data-stagger] > :global(*) {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;

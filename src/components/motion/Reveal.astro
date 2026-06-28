@@ -55,6 +55,11 @@ const transformMap: Record<Direction, string> = {
 
 <style>
   .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-ready .reveal:not(.is-visible) {
     opacity: 0;
     transform: var(--reveal-transform);
     transition:
@@ -65,13 +70,13 @@ const transformMap: Record<Direction, string> = {
     will-change: opacity, transform;
   }
 
-  .reveal.is-visible {
+  html.js-ready .reveal.is-visible {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal {
+    html.js-ready .reveal {
       opacity: 1;
       transform: none;
       transition: none;
@@ -83,6 +88,9 @@ const transformMap: Record<Direction, string> = {
   type RevealEl = HTMLElement;
 
   function initReveal() {
+    const html = document.documentElement;
+    html.classList.add('js-ready');
+
     const els = Array.from(
       document.querySelectorAll<RevealEl>('[data-reveal]')
     );

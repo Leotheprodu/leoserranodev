@@ -7,8 +7,10 @@ interface Props {
 
 const { activeSection } = Astro.props as Props;
 
+const isHome = !activeSection || activeSection === 'home';
+
 const navItems = [
-  { id: 'projects', label: 'Projects', href: '/#projects' },
+  { id: 'projects', label: 'Projects', href: '/projects' },
   { id: 'stats', label: 'Numbers', href: '/#stats' },
   { id: 'stack', label: 'Stack', href: '/#stack' },
   { id: 'about', label: 'About', href: '/#about' },
@@ -48,6 +50,16 @@ const navItems = [
             {item.label}
           </a>
         ))
+      }
+      {
+        !isHome && (
+          <a
+            href="/"
+            class="ml-1 hidden rounded-md bg-bg-soft px-3 py-1.5 text-sm font-medium text-text transition hover:border-secundario hover:text-secundario md:inline-flex"
+          >
+            ← Home
+          </a>
+        )
       }
       <div class="ml-2">
         <ThemeToggle />

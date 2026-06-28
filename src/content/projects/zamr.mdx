@@ -1,0 +1,41 @@
+---
+slug: 'zamr'
+title: 'Zamr'
+tagline: 'Gestión profesional para grupos de alabanza'
+type: 'saas'
+status: 'live'
+order: 2
+featured: true
+liveUrl: 'https://www.zamr.app'
+stack:
+  - 'NestJS 10'
+  - 'Prisma 5'
+  - 'Next.js 15'
+  - 'Socket.IO'
+  - 'MySQL'
+  - 'HeroUI'
+metrics:
+  - { value: '500+', label: 'canciones' }
+  - { value: '100+', label: 'eventos live' }
+  - { value: '500', label: 'WS users' }
+  - { value: '156', label: 'test files' }
+highlights:
+  - 'WebSocket gateway load-tested to 500 concurrent users'
+  - 'Multi-tenant: Bands × Churches × 13 church roles'
+  - 'Two distinct live views: projector (lyrics) vs musician (chords)'
+  - 'WhatsApp bot auth + Google OAuth + JWT auto-refresh'
+publishedAt: 2026-06-20
+---
+
+# Coming soon
+
+This case study is in progress. The next session will cover:
+
+- The 1,023-line WebSocket gateway with rate limiting + 60% message compression
+- The 7-step declarative `PermissionsGuard`
+- The "Mounted Guard" SSR-safe pattern
+- JWT refresh with shared-promise dedup
+- The 4-service chat conversion pipeline
+- Load testing infrastructure (5 profiles up to 500 users)
+
+In the meantime, see the live product at [zamr.app](https://www.zamr.app).
