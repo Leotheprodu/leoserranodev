@@ -1,0 +1,199 @@
+@import 'tailwindcss';
+
+/*
+ * Costa Rica Sunset palette
+ * Primario:   #0A0A0A  (negro casi puro, modo dark base)
+ * Secundario: #22D0C9  (turquesa — el color de la marca)
+ * Acento:     #FF6B6B  (coral, para CTAs y highlights)
+ * Acento-2:   #FFD93D  (amarillo, badges y energía)
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primario: #0a0a0a;
+  --color-primario-50: #f6f6f6;
+  --color-primario-100: #e7e7e7;
+  --color-primario-200: #c4c4c4;
+  --color-primario-300: #9a9a9a;
+  --color-primario-400: #6e6e6e;
+  --color-primario-500: #4a4a4a;
+  --color-primario-600: #2e2e2e;
+  --color-primario-700: #1f1f1f;
+  --color-primario-800: #141414;
+  --color-primario-900: #0a0a0a;
+  --color-primario-950: #050505;
+
+  --color-secundario: #22d0c9;
+  --color-secundario-50: #ecfdfc;
+  --color-secundario-100: #cffaf7;
+  --color-secundario-200: #a5f4f0;
+  --color-secundario-300: #6eeae4;
+  --color-secundario-400: #3cdcd5;
+  --color-secundario-500: #22d0c9;
+  --color-secundario-600: #1ba8a3;
+  --color-secundario-700: #167e7a;
+  --color-secundario-800: #0f5a57;
+  --color-secundario-900: #093836;
+  --color-secundario-950: #052221;
+
+  --color-acento: #ff6b6b;
+  --color-acento-50: #fff5f5;
+  --color-acento-100: #ffe3e3;
+  --color-acento-200: #ffc9c9;
+  --color-acento-300: #ffa8a8;
+  --color-acento-400: #ff8787;
+  --color-acento-500: #ff6b6b;
+  --color-acento-600: #fa5252;
+  --color-acento-700: #f03e3e;
+  --color-acento-800: #c73232;
+  --color-acento-900: #9b2c2c;
+  --color-acento-950: #641818;
+
+  --color-highlight: #ffd93d;
+  --color-highlight-50: #fffbeb;
+  --color-highlight-100: #fef3c7;
+  --color-highlight-200: #fde68a;
+  --color-highlight-300: #fcd34d;
+  --color-highlight-400: #fbbf24;
+  --color-highlight-500: #ffd93d;
+  --color-highlight-600: #d97706;
+  --color-highlight-700: #b45309;
+  --color-highlight-800: #92400e;
+  --color-highlight-900: #78350f;
+  --color-highlight-950: #451a03;
+
+  --color-bg: #fafafa;
+  --color-bg-soft: #f4f4f5;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-text: #18181b;
+  --color-text-soft: #52525b;
+  --color-text-muted: #a1a1aa;
+
+  --font-sans: 'Inter', 'Andale Mono', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'JetBrainsMonoNL', ui-monospace, monospace;
+  --font-display: 'Cal Sans', 'Inter', system-ui, sans-serif;
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 3rem;
+
+  --shadow-glow: 0 0 0 1px var(--color-secundario), 0 8px 30px -8px var(--color-secundario);
+  --shadow-glow-acento: 0 0 0 1px var(--color-acento), 0 8px 30px -8px var(--color-acento);
+
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+  --animate-marquee: marquee 30s linear infinite;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --color-bg: #0a0a0a;
+    --color-bg-soft: #111111;
+    --color-surface: #18181b;
+    --color-border: #27272a;
+    --color-text: #fafafa;
+    --color-text-soft: #a1a1aa;
+    --color-text-muted: #71717a;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+
+  ::selection {
+    background-color: var(--color-secundario);
+    color: var(--color-primario);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  a {
+    transition: color 0.2s ease;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-soft: var(--color-bg-soft);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-soft: var(--color-text-soft);
+  --color-text-muted: var(--color-text-muted);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

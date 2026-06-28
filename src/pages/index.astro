@@ -1,45 +1,50 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 ---
 
-<MainLayout
-  title="Home | Leonardo Serrano's Portfolio"
-  description="Portfolio of Leonardo Serrano, a fullstack web developer from Costa Rica."
+<BaseLayout
+  title="Leonardo Serrano — Full-Stack Engineer"
+  description="Building production systems that scale. 3 active projects, ~159K lines of code, real users in production."
 >
-  <div class="flex flex-col gap-4">
-    <h4 class="text-2xl">Hi, I’m Leonardo Serrano A.</h4>
+  <main class="container-narrow flex min-h-screen flex-col items-center justify-center gap-12 py-24">
+    <span
+      class="inline-flex items-center gap-2 rounded-full border border-border bg-bg-soft px-3 py-1 text-xs font-medium text-text-soft"
+    >
+      <span class="h-2 w-2 animate-pulse rounded-full bg-secundario"></span>
+      Portfolio v2 — coming soon
+    </span>
 
-    <p>
-      I'm a Costa Rican programmer with over 4 years of web development
-      experience. Currently, I'm working with Next.js/Astro, Tailwind, and
-      TypeScript On the server side, I'm using Node.js, MySQL, and Express. I
-      really enjoy creating reusable code and usually adhere to the SOLID
-      principles and the MVC design pattern for the backend.
+    <h1
+      class="text-balance text-center text-5xl font-bold tracking-tight md:text-7xl"
+    >
+      Leonardo <span class="text-gradient">Serrano</span>
+    </h1>
+
+    <p
+      class="max-w-2xl text-balance text-center text-lg text-text-soft md:text-xl"
+    >
+      Full-stack engineer from Costa Rica. Building production systems that
+      scale — recording studios, multi-tenant SaaS, real-time platforms.
     </p>
 
-    <p>
-      I also have extensive experience with CSS, SASS, Jest, Strapi, WordPress,
-      Git, GitHub, and continuous deployments with GitHub Actions on Netlify,
-      Vercel, and hosting with Cpanel and Google Cloud.
-    </p>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="#projects"
+        class="inline-flex items-center gap-2 rounded-md bg-primario px-5 py-3 text-sm font-semibold text-bg transition hover:bg-primario/90"
+      >
+        See the work
+        <span aria-hidden="true">→</span>
+      </a>
+      <a
+        href="mailto:hola@leonardoserrano.site"
+        class="inline-flex items-center gap-2 rounded-md border border-border bg-bg-soft px-5 py-3 text-sm font-semibold transition hover:border-secundario hover:text-secundario"
+      >
+        Get in touch
+      </a>
+    </div>
 
-    <h4 class="text-2xl">I consider myself an Explorer!</h4>
-
-    <p>
-      Because I am passionate about learning and testing new technologies. For
-      example, I am currently learning Python to automate my daily tasks. I've
-      been experimenting with the ChatGPT API, using NestJs for backend
-      development (which I really enjoy), and exploring Bun just to test its
-      speed (although I still use Node.js). Next, I plan to try Playwright for
-      automated testing, as it seems incredible, and Rust because it is fast and
-      intuitive! I believe this language will gain significant traction.
-      Finally, I think understanding networks is crucial, so I am currently
-      studying with CISCO to get certified in CCNA 1, 2 and 3.
+    <p class="mt-8 text-xs text-text-muted">
+      Stack: Astro 5 · React 19 · Tailwind 4 · Framer Motion
     </p>
-
-    <p>
-      These are just a few examples, as I strive to learn something new every
-      day.
-    </p>
-  </div>
-</MainLayout>
+  </main>
+</BaseLayout>

@@ -1,5 +1,5 @@
 {
-    "extends": "astro/tsconfigs/base",
+    "extends": "astro/tsconfigs/strict",
     "compilerOptions": {
         "strictNullChecks": false,
         "jsx": "react-jsx",
@@ -12,7 +12,11 @@
             "@styles/*": ["styles/*"],
             "@stores/*": ["stores/*"],
             "@data/*": ["data/*"],
-            "@icons/*": ["icons/*"]
+            "@icons/*": ["icons/*"],
+            "@content/*": ["content/*"],
+            "@layouts/*": ["layouts/*"]
         }
-    }
+    },
+    "include": [".astro/types.d.ts", "**/*"],
+    "exclude": ["dist", "node_modules"]
 }
