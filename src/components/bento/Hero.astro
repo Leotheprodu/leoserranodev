@@ -4,7 +4,6 @@ import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 
 interface Props {
-  eyebrow?: string;
   title: string;
   subtitle?: string;
   primaryCta?: { label: string; href: string; target?: '_blank' };
@@ -14,7 +13,6 @@ interface Props {
 }
 
 const {
-  eyebrow = 'Building in public',
   title,
   subtitle,
   primaryCta,
@@ -55,17 +53,6 @@ const {
         variant === 'centered' ? 'items-center' : 'items-start',
       ]}
     >
-      <Badge variant="secundario" size="md">
-        <span class="relative flex h-2 w-2">
-          <span
-            class="absolute inline-flex h-full w-full animate-ping rounded-full bg-secundario opacity-75"
-          ></span>
-          <span class="relative inline-flex h-2 w-2 rounded-full bg-secundario"
-          ></span>
-        </span>
-        {eyebrow}
-      </Badge>
-
       <Heading
         as="h1"
         size="6xl"
