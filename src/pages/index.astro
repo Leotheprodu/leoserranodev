@@ -10,6 +10,7 @@ import StatCard from '@components/bento/StatCard.astro';
 import BentoGrid from '@components/bento/BentoGrid.astro';
 import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
+import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
 import Section from '@components/ui/Section.astro';
 import ThemeToggle from '@components/ui/ThemeToggle.astro';
 import Icon from '@components/ui/Icon.astro';
@@ -183,6 +184,8 @@ import { stack } from '@data/stack';
         ))}
       </StaggerChildren>
     </Section>
+
+    <SnippetsShowcase />
 
     <Section id="about" container="narrow" background="default" spacing="lg">
       <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-6 text-center">

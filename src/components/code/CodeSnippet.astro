@@ -1,0 +1,83 @@
+---
+import { Code } from 'astro:components';
+import Badge from '@components/ui/Badge.astro';
+import type { Snippet, SnippetProject } from '@data/snippets';
+
+interface Props {
+  snippet: Snippet;
+  showFile?: boolean;
+  class?: string;
+}
+
+const { snippet, showFile = true, class: className = '' } = Astro.props as Props;
+
+const projectMeta: Record<
+  SnippetProject,
+  { name: string; variant: 'secundario' | 'acento' | 'highlight' }
+> = {
+  flproductions: { name: 'FLProductions', variant: 'secundario' },
+  zamr: { name: 'Zamr', variant: 'acento' },
+  mejormenu: { name: 'MejorMenu', variant: 'highlight' },
+};
+
+const meta = projectMeta[snippet.project];
+const lineCount = snippet.code.split('\n').length;
+---
+
+<article
+  class:list={[
+    'group relative overflow-hidden rounded-lg border border-border bg-surface',
+    className,
+  ]}
+  data-snippet={snippet.id}
+>
+  <header
+    class="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-bg-soft/50 px-4 py-3"
+  >
+    <div class="flex items-center gap-2">
+      <Badge variant={meta.variant} size="sm">{meta.name}</Badge>
+      {snippet.tags.slice(0, 2).map((tag) => (
+        <Badge variant="outline" size="sm">{tag}</Badge>
+      ))}
+    </div>
+    <div class="flex items-center gap-2 text-xs text-text-muted">
+      <span>{lineCount} lines</span>
+      {showFile && (
+        <span class="hidden font-mono sm:inline">· {snippet.file}</span>
+      )}
+    </div>
+  </header>
+
+  <div class="p-5">
+    <h3 class="mb-2 text-lg font-bold tracking-tight text-text">
+      {snippet.title}
+    </h3>
+    <p class="mb-4 text-sm leading-relaxed text-text-soft">
+      {snippet.description}
+    </p>
+
+    {snippet.highlights && snippet.highlights.length > 0 && (
+      <ul class="mb-4 flex flex-col gap-1.5 text-xs text-text-soft">
+        {
+          snippet.highlights.map((h) => (
+            <li class="flex items-start gap-2">
+              <span class="mt-1 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-secundario" />
+              <span>{h}</span>
+            </li>
+          ))
+        }
+      </ul>
+    )}
+
+    <div
+      class="overflow-hidden rounded-md border border-border bg-primario"
+    >
+      <Code
+        code={snippet.code}
+        lang={snippet.language}
+        theme="github-dark"
+        class="astro-code text-xs"
+      />
+    </div>
+  </div>
+</article>
