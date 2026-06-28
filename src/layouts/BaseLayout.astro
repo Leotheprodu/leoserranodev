@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title = 'Leonardo Serrano — Full-Stack Engineer',
-  description = 'Building production systems that scale. 3 active projects, ~159K lines of code, real users in production.',
+  description = 'Building production systems that scale. 4 live products, ~159K lines of code, real users in production.',
   image = '/og-default.png',
   lang: langProp,
 } = Astro.props as Props;
@@ -20,6 +20,59 @@ const detectedLang = getLangFromUrl(Astro.url);
 const lang = langProp ?? detectedLang;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Leonardo Serrano',
+  givenName: 'Leonardo',
+  familyName: 'Serrano',
+  jobTitle: 'Full-Stack Engineer',
+  url: Astro.site?.toString() ?? 'https://leonardoserrano.site',
+  email: 'mailto:leovpc@gmail.com',
+  sameAs: [
+    'https://github.com/Leotheprodu',
+    'https://www.linkedin.com/in/leonardoserranodev',
+    'https://www.youtube.com/channel/UCAVKw7wP-yKPGSbCd1BJ7mw',
+  ],
+  knowsAbout: [
+    'TypeScript',
+    'Node.js',
+    'NestJS',
+    'Next.js',
+    'React',
+    'Astro',
+    'Prisma',
+    'PostgreSQL',
+    'MySQL',
+    'Socket.IO',
+    'WebSockets',
+    'Tailwind CSS',
+    'OpenAI',
+    'Google Gemini',
+  ],
+  worksFor: [
+    {
+      '@type': 'Organization',
+      name: 'FLProductions',
+      url: 'https://www.flproductionscr.com',
+    },
+  ],
+  knowsLanguage: ['en', 'es'],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Leonardo Serrano — Portfolio',
+  url: Astro.site?.toString() ?? 'https://leonardoserrano.site',
+  inLanguage: ['en', 'es'],
+  author: { '@id': '#person' },
+  publisher: {
+    '@type': 'Person',
+    name: 'Leonardo Serrano',
+  },
+};
 ---
 
 <!doctype html>
@@ -33,6 +86,11 @@ const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
+    <meta name="theme-color" content="#22d0c9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="format-detection" content="telephone=no" />
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
@@ -40,6 +98,7 @@ const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
     <meta property="og:image" content={new URL(image, Astro.site)} />
     <meta property="og:locale" content={ogLocale} />
     <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
+    <meta property="og:site_name" content="Leonardo Serrano — Portfolio" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -47,6 +106,9 @@ const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
     <meta name="twitter:image" content={new URL(image, Astro.site)} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang="en" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="es" href={new URL('/es/', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
 
     <script is:inline>
       (function () {
@@ -56,11 +118,20 @@ const ogLocale = lang === 'es' ? 'es_ES' : 'en_US';
         if (theme === 'dark') document.documentElement.classList.add('dark');
       })();
     </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
   </head>
 
   <body
     class="min-h-screen bg-bg text-text antialiased selection:bg-secundario selection:text-primario"
   >
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primario focus:px-4 focus:py-2 focus:text-bg"
+    >
+      Skip to main content
+    </a>
     <slot />
   </body>
 </html>

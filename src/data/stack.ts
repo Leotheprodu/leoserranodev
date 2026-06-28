@@ -86,7 +86,6 @@ export const stack: TechCategory[] = [
       { name: 'Git / GitHub', level: 'expert', since: yearsAgo(9) },
       { name: 'VS Code', level: 'expert', since: yearsAgo(8) },
       { name: 'Jest / Vitest', level: 'proficient', since: yearsAgo(4) },
-      { name: 'Playwright', level: 'learning', since: yearsAgo(1) },
     ],
   },
 ];

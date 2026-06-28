@@ -33,23 +33,26 @@ export function AnimatedCounter({
   const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
   const { num, prefix, suffix } = parseValue(value);
   const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => formatNumber(latest, value));
-  const [display, setDisplay] = useState(() => formatNumber(0, value));
+  const [display, setDisplay] = useState(() => formatNumber(num, value));
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || hasAnimated) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
       setDisplay(formatNumber(num, value));
+      setHasAnimated(true);
       return;
     }
+    count.set(0);
     const controls = animate(count, num, {
       duration,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (latest) => setDisplay(formatNumber(latest, value)),
+      onComplete: () => setHasAnimated(true),
     });
     return () => controls.stop();
-  }, [isInView, num, value, duration, count]);
+  }, [isInView, num, value, duration, count, hasAnimated]);
 
   return (
     <motion.span ref={ref} className={className} aria-label={value}>
