@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 
 interface AnimatedCounterProps {
   value: string;
@@ -26,33 +26,31 @@ function formatNumber(n: number, original: string): string {
 
 export function AnimatedCounter({
   value,
-  duration = 1.6,
+  duration = 2,
   className,
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
   const { num, prefix, suffix } = parseValue(value);
-  const count = useMotionValue(0);
-  const [display, setDisplay] = useState(() => formatNumber(num, value));
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [display, setDisplay] = useState(() => formatNumber(0, value));
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    if (!isInView || hasAnimated) return;
+    if (!isInView || hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
+
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
       setDisplay(formatNumber(num, value));
-      setHasAnimated(true);
       return;
     }
-    count.set(0);
-    const controls = animate(count, num, {
+    const controls = animate(0, num, {
       duration,
       ease: [0.22, 1, 0.36, 1],
       onUpdate: (latest) => setDisplay(formatNumber(latest, value)),
-      onComplete: () => setHasAnimated(true),
     });
     return () => controls.stop();
-  }, [isInView, num, value, duration, count, hasAnimated]);
+  }, [isInView, num, value, duration]);
 
   return (
     <motion.span ref={ref} className={className} aria-label={value}>
