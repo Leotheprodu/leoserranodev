@@ -1,7 +1,7 @@
 ---
 slug: 'mejormenu'
 title: 'MejorMenu'
-tagline: 'Tu menú digital al alcance de un click'
+tagline: 'Digital menus for local restaurants, orders via WhatsApp'
 type: 'saas'
 status: 'live'
 order: 3
@@ -11,32 +11,529 @@ stack:
   - 'NestJS 11'
   - 'Prisma 6'
   - 'Next.js 16'
+  - 'React 19'
   - 'MySQL'
+  - 'HeroUI v2'
+  - 'TanStack Query'
+  - 'Nanostores'
   - 'Google Gemini'
-  - 'Tailwind'
+  - 'Tailwind CSS'
+  - 'Leaflet'
 metrics:
   - { value: '21', label: 'módulos' }
   - { value: '27', label: 'modelos' }
   - { value: '84', label: 'endpoints' }
   - { value: '3', label: 'clientes live' }
 highlights:
-  - 'Multi-tenant SaaS for restaurants in Costa Rica'
-  - 'AI image generation with Google Gemini (gemini-2.5-flash-image)'
-  - 'Timezone-aware business hours (Intl.DateTimeFormat)'
-  - 'WhatsApp deep-link on every successful order'
+  - 'Multi-tenant SaaS for restaurants in Costa Rica (Heredia, Siquirres, Limón)'
+  - 'Each business gets its own public page at /[slug] with SEO and JSON-LD'
+  - 'AI image generation with Gemini 2.5 Flash Image (3 context types)'
+  - 'Timezone-aware business hours with Intl.DateTimeFormat (server + client mirror)'
+  - 'Bulk menu import from plain text (Categoria: | item | price | desc)'
+  - 'Subscription lifecycle ACTIVE → GRACE → EXPIRED with daily cron'
 publishedAt: 2026-06-25
 ---
 
-# Coming soon
+## The story
 
-This case study is in progress. The next session will cover:
+MejorMenu is my new project. A multi-tenant SaaS for local restaurants
+in Costa Rica. The pitch is simple: a restaurant owner pastes their
+menu as plain text, picks a photo, and 5 minutes later they have a
+public page at `mejormenu.com/mangos-ethan` with their menu, hours,
+location on a map, and an order button that opens WhatsApp with a
+pre-formatted message.
 
-- Multi-tenant with `user_businesses` join table
-- `catchHandle` — the 41-line pattern that shaped every controller
-- Custom decorators (`@CheckLoginStatus`, `@AppRole`, `@CheckUserId`)
-- `PostData` with declarative cache invalidation
-- `useSocketSync` — WebSocket → TanStack Query dispatcher
-- Timezone-aware business hours util
-- Bulk menu import from plain text
+No POS. No app. No website. Just a public page and a WhatsApp deep-link.
 
-In the meantime, see the live product at [mejormenu.com](https://www.mejormenu.com).
+**3 clients live in the first weeks.** Mangos Ethan, Medusa, and
+Yesmary in Heredia de Siquirres, Limón. Growing.
+
+> From the constants: *"Plataforma de menus digitales para
+> restaurantes locales. Mira el menu y ordena rapido por
+> WhatsApp."*
+
+## The architecture
+
+Two cooperating packages, ~27,000 lines of code:
+
+- **`server-mejormenu/`** — NestJS 11 API + Prisma 6 + MySQL
+- **`app-mejormenu/`** — Next.js 16 + React 19 + HeroUI v2 + TanStack Query + Nanostores
+
+The numbers:
+
+- **21 NestJS modules** (auth, businesses, menus, categories,
+  menu-items, option-groups, option-templates, combos, orders,
+  addresses, business-hours, plans, subscriptions, storage, ai,
+  reports, setup-progress, public, views, admin, sync, types)
+- **19 controllers** (84 REST endpoints)
+- **23 services** (incl. 3 cron services)
+- **1 WebSocket gateway** (`SyncGateway`) for real-time order updates
+- **27 Prisma models** with 5 enums
+- **3 cron jobs** (subscription daily 02:00, reports monthly 03:00,
+  orphan cleanup monthly 00:00)
+- **12 migrations** with full version-controlled history
+
+## The 41-line pattern that shaped every controller
+
+This is the single most-copied file in the codebase. Every
+controller in the project has the same shape because of this
+one utility:
+
+```typescript
+export const catchHandle = (e: unknown): never => {
+  console.error(e);
+
+  if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+  }
+
+  if (e instanceof Prisma.PrismaClientValidationError) {
+    throw new HttpException('Data Validation Error', HttpStatus.BAD_REQUEST);
+  }
+
+  if (e instanceof HttpException) {
+    const response = e.getResponse();
+    if (typeof response === 'object' && response !== null) {
+      const msg = (response as HttpExceptionResponse).message;
+      if (typeof msg === 'string') {
+        throw new HttpException(msg, e.getStatus());
+      }
+    }
+    throw new HttpException(
+      typeof response === 'string' ? response : 'Internal server error',
+      e.getStatus()
+    );
+  }
+
+  throw new HttpException(
+    'Internal server error',
+    HttpStatus.INTERNAL_SERVER_ERROR
+  );
+};
+```
+
+Result: every controller looks like this. No boilerplate, no
+duplication:
+
+```typescript
+@Post()
+@CheckLoginStatus('public')
+async create(
+  @Res() res: Response,
+  @Body() dto: CreateOrderDto,
+  @GetUser('sub') userId?: number,
+) {
+  try {
+    const order = await this.ordersService.create(dto, userId);
+    res.status(HttpStatus.CREATED).json(order);
+  } catch (error: unknown) {
+    catchHandle(error);
+  }
+}
+```
+
+## Deny-by-default permissions
+
+Every route composes 3+ custom decorators. The decorator library
+itself is 16 lines:
+
+```typescript
+export const CheckUserId = (param: CheckUserIdType) =>
+  SetMetadata(CHECK_USER_ID_KEY, param);
+
+export const CheckLoginStatus = (condition: CheckLoginStatusType) =>
+  SetMetadata(CHECK_LOGIN_STATUS, condition);
+
+export const AppRole = (...roles: AppRoleType) =>
+  SetMetadata(APP_ROLE_KEY, roles);
+```
+
+The guard refuses requests without `@CheckLoginStatus` (Deny by Default).
+The handler reads identity with `@GetUser('sub')` instead of touching
+the request object.
+
+## PostData with declarative cache invalidation
+
+The single source of truth for "this action changed this data":
+
+```typescript
+export const PostData = <TResponse, TData = undefined>({
+  key, url, method = 'POST', isFormData, skipAuth = false, invalidates, transformBody,
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation<TResponse, Error, TData>({
+    mutationKey: [key],
+    mutationFn: async (data: TData) => {
+      const finalUrl = typeof url === 'function' ? url(data) : url;
+      const body = transformBody ? transformBody(data) : data;
+      return await fetchAPI<TResponse>({
+        url: finalUrl, method, body, isFormData, skipAuth,
+      });
+    },
+    onSuccess: () => {
+      if (invalidates && invalidates.length > 0) {
+        invalidates.forEach((group) => {
+          const keys = GROUP_MAPPING[group];
+          if (keys) {
+            keys.forEach((queryKey) => {
+              queryClient.invalidateQueries({
+                queryKey: [queryKey], exact: false, refetchType: 'all',
+              });
+            });
+          } else {
+            console.warn(`[HandleAPI] Invalid sync group: ${group}`);
+          }
+        });
+      }
+    },
+  });
+};
+```
+
+A mutation that invalidates 4 groups, e.g. `['MENUS',
+'PUBLIC_MENU', 'MENU_ITEMS', 'CATEGORIES']`, automatically refetches
+every screen that depends on any of them. The same registry drives
+WebSocket events.
+
+## Real-time sync dispatcher
+
+Socket events arrive → registry maps them to groups → every queryKey
+in the group is invalidated. The same map for HTTP and WebSocket:
+
+```typescript
+export function useSocketSync(businessId: number | undefined) {
+  const queryClient = useQueryClient();
+  const socketRef = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    if (!businessId || !Server1API) return;
+    const baseUrl = Server1API.replace(/\/+$/, '');
+    const socket = io(baseUrl, {
+      auth: (cb) => {
+        const t = getTokens();
+        cb({ token: t?.accessToken || '' });
+      },
+      transports: ['websocket', 'polling'],
+    });
+    socketRef.current = socket;
+
+    socket.on('connect_error', (err) =>
+      console.warn('[SocketSync] Error:', err.message)
+    );
+
+    for (const [event, groups] of Object.entries(SOCKET_EVENT_MAPPING)) {
+      socket.on(event, () => {
+        for (const group of groups) {
+          const keys = GROUP_MAPPING[group];
+          if (keys) {
+            for (const key of keys) {
+              queryClient.invalidateQueries({
+                queryKey: [key], exact: false, refetchType: 'all',
+              });
+            }
+          }
+        }
+      });
+    }
+
+    return () => { socket.disconnect(); };
+  }, [businessId, queryClient]);
+}
+```
+
+Mounted in the dashboard layout via a 10-line component. Every page
+in the dashboard receives the right invalidations automatically.
+
+## Multi-tenant with hard isolation
+
+Every business-scoped query checks `user_businesses` via the
+`user_businesses` join table:
+
+```typescript
+// Pattern repeated in businesses, menus, categories, menu-items,
+// business-hours, setup-progress, orders services
+return this.prisma.businesses.findMany({
+  where: {
+    user_businesses: { some: { userId } },
+    deletedAt: null,
+  },
+});
+```
+
+The 3-level role system:
+- `admin` (id=1) — full access
+- `restaurant_owner` (id=2) — scoped to their businesses
+- `user` (id=3) — regular customers
+
+Plans are tiered:
+- `STANDARD` (₡5,000/mo, 0 AI images, 0 AI texts, 0 gallery, 30 trial days)
+- `PREMIUM` (₡8,000/mo, 30 AI images, unlimited AI texts, monthly report, 5 gallery)
+
+The two payment-status enums work in parallel:
+`EstadoCuenta` on `businesses` (activo | atrasado | suspendido) and
+`SubscriptionStatus` on `subscriptions` (ACTIVE | GRACE | EXPIRED |
+CANCELLED).
+
+## AI integration with Google Gemini
+
+Two models, three contexts:
+
+- **`gemini-2.5-flash`** for text (4 curated Spanish styles: apetitoso,
+  profesional, breve, casual — each a hand-tuned prompt)
+- **`gemini-2.5-flash-image`** for image generation (3 context types:
+  `menu_item`, `logo`, `cover` — each with its own prompt template
+  for lighting/composition/mood)
+
+Credits are consumed **before** each call. Admin can pass
+`useOwnerCredits` to act on behalf of a tenant.
+
+AI-driven monthly reports write 4 short paragraphs of business
+advice in Spanish — explicitly told *"NADA de tablas, nada de
+porcentajes complejos, nada de 'KPIs' ni 'ROI'. Habla como persona
+normal."* With a `fallbackAdvice()` method if Gemini fails.
+
+## Timezone-aware business hours
+
+Timezone math is non-trivial. The `computeScheduleStatus` util
+handles it correctly using `Intl.DateTimeFormat`:
+
+```typescript
+export function computeScheduleStatus(
+  schedule: ScheduleInput[] | null | undefined,
+  timezone: string,
+  now: Date = new Date(),
+): ScheduleStatus {
+  if (!schedule || schedule.length === 0) {
+    return { isOpenNow: true, closesAt: null, nextOpenAt: null, hasSchedule: false };
+  }
+
+  const today = dayInTimezone(now, timezone);
+  const nowMin = minutesInTimezone(now, timezone);
+  const todayEntry = schedule.find((s) => s.dayOfWeek === today);
+
+  if (todayEntry?.isActive && todayEntry.openTime && todayEntry.closeTime) {
+    const open = toMinutes(todayEntry.openTime);
+    const close = toMinutes(todayEntry.closeTime);
+    if (nowMin >= open && nowMin < close) {
+      return {
+        isOpenNow: true,
+        closesAt: buildDateInTimezone(now, today, close, timezone),
+        nextOpenAt: null, hasSchedule: true,
+      };
+    }
+  }
+
+  for (let offset = 0; offset < 7; offset += 1) {
+    const day = (today + offset) % 7;
+    const entry = schedule.find((s) => s.dayOfWeek === day);
+    if (entry?.isActive && entry.openTime && entry.closeTime) {
+      const open = toMinutes(entry.openTime);
+      if (offset === 0) { if (nowMin >= open) continue; }
+      return {
+        isOpenNow: false, closesAt: null,
+        nextOpenAt: buildDateInTimezone(now, day, open, timezone),
+        hasSchedule: true,
+      };
+    }
+  }
+  return { isOpenNow: false, closesAt: null, nextOpenAt: null, hasSchedule: true };
+}
+```
+
+The client mirrors the same logic in `schedule.util.ts` with Spanish
+labels (`"abrimos a las 7:00 p. m."`, `"abrimos mañana a las 11:00
+a. m."`, `"abrimos el lunes a las 9:00 a. m."`). The order endpoint
+refuses with HTTP 422 + `BUSINESS_CLOSED` payload if `!isOpenNow &&
+hasSchedule`.
+
+## Bulk menu import from plain text
+
+Restaurant owners paste this:
+
+```
+Categoria: Pizzas
+Pizza Margarita | 5000 | Masa artesanal, albahaca
+Pizza Pepperoni | 5500
+Categoria: Bebidas
+Coca Cola | 1000
+Agua Mineral | 800
+```
+
+… and `bulkCreate` parses it into categories + items in a single
+transaction:
+
+```typescript
+async bulkCreate(businessId: number, raw: string) {
+  const parsed = this.parseBulkText(raw);
+  if (parsed.length === 0) {
+    return { total: 0, created: 0, errors: ['No items found in text'] };
+  }
+
+  const errors: string[] = [];
+  let created = 0;
+
+  await this.prisma.$transaction(async (tx) => {
+    let menu = await tx.menus.findFirst({
+      where: { businessId },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (!menu) {
+      menu = await tx.menus.create({
+        data: { name: 'Menu General', businessId },
+      });
+    }
+
+    const categoryCache = new Map<string, number>();
+    for (const group of parsed) {
+      let categoryId = categoryCache.get(group.categoryName);
+      if (!categoryId) {
+        let cat = await tx.categories.findFirst({
+          where: { menuId: menu.id, name: group.categoryName },
+        });
+        if (!cat) {
+          cat = await tx.categories.create({
+            data: { name: group.categoryName, menuId: menu.id },
+          });
+        }
+        categoryId = cat.id;
+        categoryCache.set(group.categoryName, categoryId);
+      }
+      for (const item of group.items) {
+        try {
+          await tx.menu_items.create({
+            data: {
+              name: item.name,
+              description: item.description,
+              price: item.price,
+              item_categories: { create: { categoryId } },
+            },
+          });
+          created++;
+        } catch (e: unknown) {
+          errors.push(
+            `${group.categoryName} / ${item.name}: ${(e as Error).message}`
+          );
+        }
+      }
+    }
+  });
+
+  return {
+    total: parsed.reduce((s, g) => s + g.items.length, 0),
+    created, errors,
+  };
+}
+```
+
+A restaurant can go from "I have a menu in a Word document" to "I
+have a live, searchable, mobile-friendly digital menu" in under 5
+minutes.
+
+## WhatsApp deep-link — the killer UX
+
+When a customer places an order, the app formats a pre-filled
+WhatsApp message and opens WhatsApp with it:
+
+```typescript
+let msg = `*Nuevo Pedido #${order.friendlyId}*\n` +
+  `—————————————————————\n`;
+for (const item of items) {
+  msg += `* ${item.quantity}x ${item.name} — ${formatCRC(item.itemTotal)}\n`;
+  for (const group of item.selectedGroups) {
+    for (const opt of group.options) {
+      msg += `  + ${opt.name}${Number(opt.price) > 0 ? ` (+${formatCRC(Number(opt.price))})` : ''}\n`;
+    }
+  }
+  if (item.notes) msg += `  _${item.notes}_\n`;
+}
+msg += `—————————————————————\n`;
+msg += `*Total: ${formatCRC(total)}*\n\n`;
+msg += `*Nombre:* ${orderData.customerName}\n`;
+msg += `*Tipo:* ${orderData.orderType === 'pickup' ? 'Para recoger en el local' : 'Express (a domicilio)'}\n`;
+if (deliveryInfo) msg += `*Entrega:* ${deliveryInfo}\n`;
+if (orderData.customerPhone) msg += `*Telefono:* ${orderData.customerPhone}\n`;
+if (hasLocation) {
+  msg += `*Ver ubicacion:* https://www.google.com/maps?q=${lat},${lng}\n`;
+} else if (orderData.addressText) {
+  msg += `*Direccion:* ${orderData.addressText}\n`;
+}
+if (orderData.notes) msg += `*Notas del pedido:* ${orderData.notes}\n`;
+
+const waPhone = formatPhoneForWhatsApp(phone);
+if (waPhone) {
+  window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+```
+
+Customer orders in-app → server registers the order + emits WS
+event → customer gets WhatsApp deep link with the full formatted
+order → restaurant receives it on WhatsApp. **One-click handoff.**
+
+## Subscription lifecycle
+
+`subscriptions.cron.service.ts` runs daily at `0 2 * * *`:
+
+```typescript
+// Phase 1: ACTIVE → GRACE when nextPaymentDate < now(), 3-day grace
+// Phase 2: GRACE → EXPIRED when graceEndDate < now()
+// Then: business.estadoCuenta = 'suspendido', menus.isActive = false
+// All in $transaction([...]) for atomicity
+```
+
+A `DRY_RUN` env var audits before going live. The `getCapabilities()`
+method returns a structured object (`canEnhanceImages`,
+`canEnhanceTexts`, `imageCreditsRemaining`, `maxGalleryImages`,
+`status`, `planType`, `reasons`) that the frontend uses to decide
+what to show.
+
+## SEO-ready public pages
+
+`src/app/[slug]/page.tsx` is a Server Component that:
+1. Uses React `cache()` to dedupe the API fetch between
+   `generateMetadata` and the page body
+2. Calls `generateMetadata` server-side for SEO (title, description,
+   OG image, canonical, JSON-LD `Restaurant` + `BreadcrumbList`
+   schema)
+3. Renders the business JSON-LD inline
+
+Plus `robots.ts` and `sitemap.ts` auto-generated from active
+businesses. A new restaurant shows up in Google the same day it
+goes live.
+
+## What I learned shipping MejorMenu
+
+- **Patterns > clever code.** The `catchHandle` + custom decorators +
+  PostData pattern repeats across 19 controllers. Every new
+  controller looks the same. That's the win.
+- **Multi-tenant doesn't need multi-database.** A `user_businesses`
+  join table + `where: { user_businesses: { some: { userId } } }`
+  in every business-scoped query is enough.
+- **AI credits are a product surface, not a backend detail.**
+  Consuming credits **before** the call, with a clear
+  `useOwnerCredits` admin override, means the UI can show
+  "0 credits remaining" before the user wastes a click.
+- **WhatsApp is the OS in Costa Rica.** Every restaurant already
+  uses it for orders. The app doesn't replace that — it bridges
+  to it. The deep-link UX is what makes the product work.
+
+## Numbers
+
+| Module | Count |
+| --- | ---: |
+| NestJS modules | 21 |
+| Prisma models | 27 |
+| REST endpoints | 84 |
+| Controllers | 19 |
+| Services | 23 |
+| Cron jobs | 3 |
+| Plans | 2 (STANDARD, PREMIUM) |
+| Migration files | 12 |
+| Live clients | 3 |
+| Roles | 3 (admin, restaurant_owner, user) |
+| AI models used | 2 (Gemini Flash + Flash Image) |
+
+## Links
+
+- **Live**: [mejormenu.com](https://www.mejormenu.com)
+- **Public page example**: [mejormenu.com/mangos-ethan](https://www.mejormenu.com/mangos-ethan)
+- **GitHub**: [github.com/Leotheprodu](https://github.com/Leotheprodu) (private)
