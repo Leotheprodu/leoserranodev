@@ -1,0 +1,27 @@
+/* TEAM */
+Built with care by: Leonardo Serrano
+Contact: leovpc@gmail.com
+From: Heredia, Costa Rica
+Site: https://leonardoserrano.site
+GitHub: https://github.com/Leotheprodu
+LinkedIn: https://www.linkedin.com/in/leonardoserranodev
+
+/* SITE */
+Last update: 2026/06/28
+Standards: HTML5, CSS3, ES2024
+Components: Astro 5, React 19, Tailwind 4
+Hosting: Vercel / Railway
+Ide: VS Code
+
+/* THANKS */
+Astro — the web framework that ships zero JS by default
+Tailwind CSS — utility-first CSS
+Framer Motion — animation library for React
+Vercel — hosting
+Shiki — syntax highlighting
+
+/* LIVE PRODUCTS */
+FLProductions — https://www.flproductionscr.com — 13+ years
+Zamr — https://www.zamr.app — 500+ songs, 100+ live events
+MejorMenu — https://www.mejormenu.com — 3 live clients in CR
+Ackee Beats — https://www.ackeebeats.com — beat marketplace

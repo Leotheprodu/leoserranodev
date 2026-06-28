@@ -1,0 +1,128 @@
+---
+type Direction = 'up' | 'down' | 'left' | 'right' | 'none';
+type Speed = 'slow' | 'normal' | 'fast';
+
+interface Props {
+  as?: 'div' | 'section' | 'article' | 'span' | 'li';
+  direction?: Direction;
+  delay?: number;
+  duration?: number;
+  distance?: number;
+  speed?: Speed;
+  once?: boolean;
+  threshold?: number;
+  class?: string;
+}
+
+const {
+  as: Tag = 'div',
+  direction = 'up',
+  delay = 0,
+  duration,
+  distance = 24,
+  speed = 'normal',
+  once = true,
+  threshold,
+  class: className = '',
+} = Astro.props as Props;
+
+const speedMap: Record<Speed, number> = {
+  slow: 900,
+  normal: 600,
+  fast: 350,
+};
+
+const finalDuration = duration ?? speedMap[speed];
+
+const transformMap: Record<Direction, string> = {
+  up: `translate3d(0, ${distance}px, 0)`,
+  down: `translate3d(0, -${distance}px, 0)`,
+  left: `translate3d(${distance}px, 0, 0)`,
+  right: `translate3d(-${distance}px, 0, 0)`,
+  none: 'translate3d(0, 0, 0)',
+};
+---
+
+<Tag
+  data-reveal
+  data-once={once ? 'true' : 'false'}
+  data-threshold={threshold ?? 0.15}
+  class:list={['reveal', className]}
+  style={`--reveal-duration: ${finalDuration}ms; --reveal-delay: ${delay}ms; --reveal-transform: ${transformMap[direction]};`}
+>
+  <slot />
+</Tag>
+
+<style>
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  html.js-ready .reveal:not(.is-visible) {
+    opacity: 0;
+    transform: var(--reveal-transform);
+    transition:
+      opacity var(--reveal-duration, 600ms) cubic-bezier(0.22, 1, 0.36, 1)
+        var(--reveal-delay, 0ms),
+      transform var(--reveal-duration, 600ms) cubic-bezier(0.22, 1, 0.36, 1)
+        var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  html.js-ready .reveal.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js-ready .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  type RevealEl = HTMLElement;
+
+  function initReveal() {
+    const html = document.documentElement;
+    html.classList.add('js-ready');
+
+    const els = Array.from(
+      document.querySelectorAll<RevealEl>('[data-reveal]')
+    );
+    if (els.length === 0) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduced || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as RevealEl;
+          if (entry.isIntersecting) {
+            el.classList.add('is-visible');
+            if (el.dataset.once === 'true') {
+              observer.unobserve(el);
+            }
+          } else if (el.dataset.once !== 'true') {
+            el.classList.remove('is-visible');
+          }
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+    );
+
+    els.forEach((el) => observer.observe(el));
+  }
+
+  document.addEventListener('astro:page-load', initReveal);
+  if (document.readyState !== 'loading') initReveal();
+</script>

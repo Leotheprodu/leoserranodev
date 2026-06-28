@@ -1,0 +1,116 @@
+---
+import Card from '@components/ui/Card.astro';
+
+interface Stat {
+  value: string;
+  suffix?: string;
+  label: string;
+  description?: string;
+  highlight?: boolean;
+  hero?: boolean;
+}
+
+interface Props {
+  stat: Stat;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { stat, size = 'md', class: className = '' } = Astro.props as Props;
+
+const valueSize = {
+  sm: 'text-3xl md:text-4xl',
+  md: 'text-4xl md:text-5xl',
+  lg: 'text-5xl md:text-6xl',
+};
+---
+
+<Card
+  variant="stat"
+  padding="md"
+  class:list={['group', className]}
+  hover={stat.highlight ? 'glow' : 'border'}
+>
+  <div class="flex flex-col gap-1.5">
+    <span
+      class:list={[
+        'font-black tracking-tighter text-text stat-value',
+        valueSize[size],
+        stat.highlight && 'text-gradient',
+      ]}
+      data-value={stat.value}
+      data-suffix={stat.suffix ?? ''}
+    >
+      {stat.value}{stat.suffix}
+    </span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-text-soft">
+      {stat.label}
+    </span>
+    {stat.description && (
+      <span class="text-xs text-text-muted">{stat.description}</span>
+    )}
+  </div>
+</Card>
+
+<style>
+  .stat-value {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) .stat-value {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  :global(html.js-ready) .stat-value.is-popped {
+    transform: scale(1);
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stat-value {
+      transition: none;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+  }
+</style>
+
+<script>
+  function initStatPop() {
+    const html = document.documentElement;
+    if (!html.classList.contains('js-ready')) {
+      html.classList.add('js-ready');
+    }
+    const els = document.querySelectorAll<HTMLElement>('.stat-value');
+    if (els.length === 0) return;
+
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-popped'));
+      return;
+    }
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      els.forEach((el) => el.classList.add('is-popped'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const idx = Array.from(els).indexOf(el);
+            el.style.transitionDelay = `${idx * 80}ms`;
+            el.classList.add('is-popped');
+            observer.unobserve(el);
+          }
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    els.forEach((el) => observer.observe(el));
+  }
+
+  document.addEventListener('astro:page-load', initStatPop);
+  if (document.readyState !== 'loading') initStatPop();
+</script>

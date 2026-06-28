@@ -1,0 +1,89 @@
+---
+interface Props {
+  class?: string;
+  label?: string;
+}
+
+const { class: className = '', label = 'Toggle theme' } = Astro.props as Props;
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  data-theme-toggle
+  class:list={[
+    'inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-bg-soft text-text-soft transition-all hover:border-secundario hover:text-secundario',
+    className,
+  ]}
+  aria-label={label}
+  title={label}
+>
+  <svg
+    class="hidden h-5 w-5 dark:block"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+  <svg
+    class="block h-5 w-5 dark:hidden"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<script>
+  const STORAGE_KEY = 'theme';
+
+  function applyTheme(theme: 'light' | 'dark') {
+    const root = document.documentElement;
+    if (theme === 'dark') root.classList.add('dark');
+    else root.classList.remove('dark');
+  }
+
+  function getTheme(): 'light' | 'dark' {
+    const stored = localStorage.getItem(STORAGE_KEY) as 'light' | 'dark' | null;
+    if (stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+
+  function toggleTheme() {
+    const next = getTheme() === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(STORAGE_KEY, next);
+    applyTheme(next);
+  }
+
+  function init() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>(
+      '[data-theme-toggle]'
+    );
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', toggleTheme);
+    });
+  }
+
+  document.addEventListener('astro:page-load', init);
+  if (document.readyState !== 'loading') init();
+</script>

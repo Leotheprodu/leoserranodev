@@ -1,0 +1,164 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Icon from '@components/ui/Icon.astro';
+import { stack } from '@data/stack';
+import { getLangFromUrl } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const currentYear = new Date().getFullYear();
+
+const levelVariant = {
+  expert: 'secundario',
+  proficient: 'default',
+  learning: 'outline',
+} as const;
+
+const levelLabel = {
+  en: { expert: 'Expert', proficient: 'Proficient', learning: 'Learning' },
+  es: { expert: 'Experto', proficient: 'Competente', learning: 'Aprendiendo' },
+} as const;
+---
+
+<Section id="stack" container="wide" background="default" spacing="lg">
+  <div class="mb-12 flex flex-col items-center gap-3 text-center">
+    <Heading as="h2" size="4xl" gradient>
+      What I work with
+    </Heading>
+    <p class="max-w-2xl text-text-soft">
+      Tools I've shipped to production. Grouped by layer, ordered by how
+      much I've used them.
+    </p>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      stack.map((category, catIdx) => (
+        <div
+          class="stack-card rounded-lg border border-border bg-surface p-6"
+          data-cat-idx={catIdx}
+        >
+          <div class="mb-4 flex items-center gap-3 stack-item">
+            <span class="stack-icon grid h-9 w-9 place-items-center rounded-md bg-secundario/10 text-secundario">
+              <Icon name={category.icon} size={18} ariaLabel={category.title} />
+            </span>
+            <h3 class="text-base font-bold text-text">{category.title}</h3>
+          </div>
+          <ul class="flex flex-col gap-2">
+            {category.items.map((item) => (
+              <li class="stack-item flex items-center justify-between gap-2 text-sm">
+                <span class="text-text">{item.name}</span>
+                <div class="flex items-center gap-1.5">
+                  {item.since && (
+                    <span class="text-xs text-text-muted">
+                      {currentYear - item.since}y
+                    </span>
+                  )}
+                  {item.level && (
+                    <Badge variant={levelVariant[item.level]} size="sm">
+                      {levelLabel[lang][item.level]}
+                    </Badge>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .stack-card {
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) .stack-card {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  :global(html.js-ready) .stack-card.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .stack-item {
+    transition:
+      opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) .stack-card.is-revealed .stack-item {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  :global(html.js-ready) .stack-card.is-revealed .stack-item.is-item-shown {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .stack-icon {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) .stack-card.is-revealed .stack-item.is-item-shown .stack-icon {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stack-card,
+    .stack-item,
+    .stack-icon {
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initStackStagger() {
+    const cards = document.querySelectorAll<HTMLElement>('.stack-card');
+    if (cards.length === 0) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      cards.forEach((c) => {
+        c.classList.add('is-revealed');
+        c.querySelectorAll<HTMLElement>('.stack-item').forEach((i) =>
+          i.classList.add('is-item-shown')
+        );
+      });
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach((c) => c.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const card = entry.target as HTMLElement;
+            const cardIdx = parseInt(card.dataset.catIdx ?? '0', 10);
+            card.style.transitionDelay = `${cardIdx * 100}ms`;
+            card.classList.add('is-revealed');
+
+            const items = card.querySelectorAll<HTMLElement>('.stack-item');
+            items.forEach((item, i) => {
+              item.style.transitionDelay = `${cardIdx * 100 + 200 + i * 40}ms`;
+              item.classList.add('is-item-shown');
+            });
+            observer.unobserve(card);
+          }
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -5% 0px' }
+    );
+
+    cards.forEach((c) => observer.observe(c));
+  }
+
+  document.addEventListener('astro:page-load', initStackStagger);
+  if (document.readyState !== 'loading') initStackStagger();
+</script>

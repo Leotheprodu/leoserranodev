@@ -1,0 +1,427 @@
+---
+slug: 'zamr'
+title: 'Zamr'
+tagline: 'Real-time worship management for bands and churches'
+description: 'Multi-tenant SaaS for worship bands and churches. Leader controls the service from a tablet, projector shows the lyrics animated, every musician sees the chords in sync. All under 100 ms via a 1,023-line WebSocket gateway load-tested to 500 concurrent users.'
+type: 'saas'
+status: 'live'
+order: 2
+featured: true
+liveUrl: 'https://www.zamr.app'
+stack:
+  - 'NestJS 10'
+  - 'Prisma 5'
+  - 'Next.js 15'
+  - 'Socket.IO'
+  - 'MySQL'
+  - 'HeroUI v2'
+  - 'TanStack Query'
+  - 'Nanostores'
+  - 'JWT'
+  - 'Google OAuth'
+metrics:
+  - { value: '500+', label: 'songs' }
+  - { value: '100+', label: 'live events' }
+  - { value: '500', label: 'WS users' }
+  - { value: '156', label: 'test files' }
+highlights:
+  - 'WebSocket gateway load-tested to 500 concurrent users on production'
+  - 'Multi-tenant: Bands × Churches × 13 church roles composed in 6 guards'
+  - 'Two distinct live views: projector (lyrics) vs musician (chords)'
+  - 'Login with Google OAuth + JWT with auto-refresh'
+  - 'Song has 4 attached content types (lyrics, chords, video, copies) atomic in one transaction'
+esTagline: 'Gestión de alabanza en tiempo real para bandas e iglesias'
+esDescription: 'SaaS multi-tenant para bandas e iglesias. El líder controla el servicio desde una tablet, el proyector muestra las letras animadas, cada músico ve los acordes en sync. Todo bajo 100 ms vía un WebSocket gateway de 1,023 líneas load-tested a 500 usuarios concurrentes.'
+esHighlights:
+  - 'WebSocket gateway load-tested a 500 usuarios concurrentes en producción'
+  - 'Multi-tenant: Bandas × Iglesias × 13 roles eclesiásticos en 6 guards'
+  - 'Dos vistas en vivo: proyector (letras) vs músicos (acordes)'
+  - 'Login con Google OAuth + JWT con auto-refresh'
+  - 'Canción con 4 tipos de contenido (letras, acordes, video, copias) atómicos en una transacción'
+publishedAt: 2026-06-20
+---
+
+## The story
+
+Worship bands in Costa Rica coordinate services over WhatsApp, group
+texts, and printed sheets. The band leader advances lyrics on a
+projector with one hand, scrolls on a tablet with the other, and hopes
+the musicians are following. There's no real-time system for the lyrics
+**and** the chords **and** the timing.
+
+**Zamr** solves that. One platform where the band leader controls
+everything from a tablet, the projection screen shows the lyrics
+animated, and the musicians' devices show the chords in sync. All in
+under 100 ms.
+
+The name comes from Hebrew *Zamar* (זָמַר) — "to praise God with
+instruments and voices". Exactly what the users do, but with modern
+tech.
+
+## The architecture
+
+Three packages, ~58,000 lines of code:
+
+- **`adorador-backend/`** — NestJS 10 API + Prisma 5 + MySQL + Socket.IO
+- **`adorador-frontend/`** — Next.js 15 (App Router + Turbopack) + React 18 + HeroUI
+- **`load-testing/`** — Custom Node.js + socket.io-client load testing framework
+
+The numbers tell part of the story:
+
+- **18 NestJS modules** (auth, bands, churches, events, feed, songs, songs-chords, songs-lyrics, song-video-lyrics, memberships, notifications, saved-songs, subscriptions, temporal-token-pool, users, church-roles, church-member-roles, email)
+- **20 controllers** + **23 services** + **3 WebSocket gateways** (events, feed, notifications)
+- **28 Prisma models** with **7 enums**
+- **131 REST endpoints** with **16 Swagger decorator bundles**
+- **6 guards** composed declaratively on every route
+- **156 test files** with **≥80% coverage required** by convention
+- **37,000+ lines** of internal documentation across 12 markdown files
+
+## The WebSocket gateway
+
+The single most impressive file in the project:
+`adorador-backend/src/events/events.gateway.ts` — **1,023 lines** that
+solve every hard problem in live event sync:
+
+```typescript
+// JWT auth in handshake — token from auth.token, Authorization, or query
+// Guest mode for unauthenticated viewers (so the congregation doesn't need accounts)
+// Per-user rate limiting: 30 msgs/min + 5 msgs/2s burst
+// Message cache: last message per event stored 1h for instant replay
+// Event-manager cache: Map<eventId, CachedManager> 5min TTL
+// Subscription cache: 10min TTL
+// Priority preemption: if maxPeoplePerEvent hit by auth user → evict a guest
+// Optimized message format: single-letter keys → 60% payload reduction
+// Periodic cleanup timers (60s rate limits, 120s manager cache, etc.)
+// Per-event metrics: total clients, rate-limit stats, cache sizes
+```
+
+A single checkRateLimit call that I had to write 60 lines to make work
+right:
+
+```typescript
+private checkRateLimit(userId: number, eventId: number, messageType: string): boolean {
+  const key = `${userId}:${eventId}`;
+  const now = Date.now();
+  let rateLimitInfo = this.rateLimits.get(key);
+
+  if (!rateLimitInfo) {
+    rateLimitInfo = { count: 1, resetTime: now + 60000, lastMessageTime: now };
+    this.rateLimits.set(key, rateLimitInfo);
+    return true;
+  }
+
+  if (now >= rateLimitInfo.resetTime) {
+    rateLimitInfo.count = 1;
+    rateLimitInfo.resetTime = now + 60000;
+    rateLimitInfo.lastMessageTime = now;
+    return true;
+  }
+
+  // Burst window
+  const timeSinceLastMessage = now - rateLimitInfo.lastMessageTime;
+  if (timeSinceLastMessage < this.burstWindow) {
+    if (rateLimitInfo.count >= this.burstLimit) {
+      this.logger.warn(`Rate limit (burst) applied to user ${userId} on event ${eventId}`);
+      return false;
+    }
+  }
+
+  if (rateLimitInfo.count >= this.maxMessagesPerMinute) {
+    this.logger.warn(`Rate limit (per minute) applied to user ${userId} on event ${eventId}`);
+    return false;
+  }
+
+  rateLimitInfo.count++;
+  rateLimitInfo.lastMessageTime = now;
+
+  if (rateLimitInfo.count >= this.maxMessagesPerMinute * 0.8) {
+    this.logger.warn(`User ${userId} near rate limit: ${rateLimitInfo.count}/${this.maxMessagesPerMinute}`);
+  }
+  return true;
+}
+```
+
+**60% payload reduction** via single-letter keys:
+
+```typescript
+export interface OptimizedLyricMessage {
+  p: number;   // position
+  a: 'f' | 'b'; // action: forward | back
+}
+
+export interface BaseWebSocketMessage<T = any> {
+  e: string;   // eventId
+  m: T;        // message payload
+  u: string;   // userName
+  ts: number;  // timestamp
+}
+```
+
+Plus paired `toLegacyLyricFormat` / `fromLegacyLyricFormat` converters
+so old clients keep working.
+
+## The 7-step permissions guard
+
+Every route composes 3+ guards with custom decorators. The
+`PermissionsGuard` itself reflects 6 metadata keys and runs 7
+sequential checks:
+
+```typescript
+@UseGuards(PermissionsGuard, SubscriptionGuard)
+@CheckLoginStatus('loggedIn')
+@CheckUserMemberOfBand({ checkBy: 'paramBandId', key: 'bandId', isAdmin: true })
+@CheckSubscriptionLimit('maxEventsPerMonth')
+@Post()
+async create(@Body() dto: CreateEventDto, @Res() res: Response, ...) { ... }
+```
+
+Each `@CheckXxx` is a tiny `SetMetadata` decorator. The guard
+resolves them with `Reflector.getAllAndOverride` and delegates to
+pure functions in `src/auth/utils/`. No `if` chains in the
+controller, no logic duplication.
+
+## Login with Google OAuth
+
+Google sign-in is the only authentication path. Phone/email
+verification happens on the first login; the user is in. Forgot
+password is a Google-side flow — we don't store passwords.
+
+The integration uses `google-auth-library` with a custom
+`google-auth.service.ts` that handles OAuth2 token exchange, email
+auto-link (if a user signs in with Google using an email already in
+our DB, the accounts are merged), and a `@nestjs/passport` strategy
+that the JWT guard reads on every request.
+
+## JWT auto-refresh that survives cold starts
+
+The frontend runs on serverless. The access token is 30 min, refresh
+is 30 days. With serverless cold starts, naive refresh patterns break.
+
+The solution: a shared-promise dedup with exponential backoff:
+
+```typescript
+let isRefreshing = false;
+let refreshPromise: Promise<TokenStorage | null> | null = null;
+
+const getOrWaitForRefresh = async (): Promise<string | null> => {
+  if (isRefreshing && refreshPromise) {
+    const result = await refreshPromise;
+    return result ? result.accessToken : null;
+  }
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshPromise = refreshAccessToken();
+    try {
+      const newTokens = await refreshPromise;
+      return newTokens ? newTokens.accessToken : null;
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
+    }
+  }
+  return null;
+};
+```
+
+Plus `useTokenRefresh` runs on `visibilitychange` and `focus` so a
+tab backgrounded for hours comes back silently refreshed.
+
+## The "Mounted Guard" — SSR-safe hydration
+
+Next.js hydration mismatch is brutal when you depend on user state.
+The fix: render `null` on the server, read from the persistent
+nanostore on `useEffect`:
+
+```typescript
+export const UIGuard = ({ children, isLoggedIn, roles }: UiGuardProps) => {
+  const user = useStore($user);
+  const [mounted, setMounted] = React.useState(false);
+
+  const checkUserStatus = CheckUserStatus({ isLoggedIn, roles });
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Don't show loading state during SSR to avoid hydration mismatch
+  if (!mounted) return null;
+
+  if (isLoading && checkUserStatus) {
+    return <div className="fixed inset-0 z-[1000]"><Spinner /></div>;
+  }
+
+  if (checkUserStatus) return <>{children}</>;
+  return user.isLoggedIn ? <AccessDeniedView /> : <LoginRequiredView />;
+};
+```
+
+`AGENTS.md` calls this out by name: *"Patrón 'Mounted Guard'
+obligatorio en client components cuyo render dependa de isLoggedIn,
+stores de nanostores, isLoading/data de React Query, o
+window/localStorage."*
+
+## Song content polymorphism
+
+A `Song` entity has 4 distinct child types in the same Prisma schema:
+
+1. **`Songs_lyrics`** — timed lyrics with `startTime`, structure
+   markers linking to `Songs_Structures` (intro/verse/chorus/bridge)
+2. **`Songs_Chords`** — per-lyric chord engine with `rootNote`,
+   `chordQuality`, `slashChord`, `position`
+3. **`SongVideoLyrics`** — YouTube bindings with `usesVideoLyrics`,
+   `videoType` (instrumental/full), `priority`, `isPreferred`
+4. **`SongCopies`** — feed-driven cross-band duplication in a single
+   transaction
+
+The frontend has a dedicated sub-app for the chord/lyrics/beat
+mapping: `grupos/[bandId]/canciones/[songId]/herramientas/` with
+`BeatMapper.tsx`, `ChordsSidebar.tsx`, `LyricsSidebar.tsx`,
+`MetronomeControls.tsx`, `TimelineVisualizer.tsx`, plus 5 custom
+hooks (`useBeatMapper`, `useChordsMapper`, `useLyricsMapper`,
+`useTempoMapper`).
+
+## Real-time feed + cross-band song sharing
+
+A 1,493-line `feed.service.ts` implements a Reddit-style feed:
+posts (`SONG_REQUEST` | `SONG_SHARE`), nested comments with replies,
+`Blessings` (the project's "like" — translated to "bendecir"),
+`CommentBlessings`, `SongCopies` with full transactional song
+duplication (lyrics, chords, video-lyrics, all copied atomically),
+real-time gateway, cursor-based pagination.
+
+The atomic copy is the kind of thing that only works when you
+actually care about consistency:
+
+```typescript
+const result = await this.prisma.$transaction(async (tx) => {
+  const copiedSong = await tx.songs.create({
+    data: { ...originalSong, bandId: targetBandId, key: newKey || originalSong.key, tempo: newTempo || originalSong.tempo },
+  });
+
+  for (const lyric of originalSong.lyrics) {
+    const copiedLyric = await tx.songs_lyrics.create({
+      data: { songId: copiedSong.id, structureId: lyric.structureId,
+              lyrics: lyric.lyrics, position: lyric.position,
+              startTime: lyric.startTime || 0 },
+    });
+    for (const chord of lyric.chords) {
+      await tx.songs_Chords.create({
+        data: { lyricId: copiedLyric.id, rootNote: chord.rootNote,
+                chordQuality: chord.chordQuality, slashChord: chord.slashChord,
+                position: chord.position, startTime: chord.startTime || 0 },
+      });
+    }
+  }
+
+  if (originalSong.videoLyrics?.length > 0) {
+    for (const videoLyric of originalSong.videoLyrics) {
+      await tx.songVideoLyrics.create({ data: { /* ... */ } });
+    }
+  }
+
+  await tx.songCopies.create({ data: { /* audit trail */ } });
+  return copiedSong;
+});
+```
+
+## Load testing to 500 concurrent users
+
+The `load-testing/` package is its own thing. Five pre-canned
+profiles:
+
+```bash
+npm run test:light     # 25 sockets
+npm run test:medium    # 50
+npm run test:heavy     # 100
+npm run test:stress    # 200
+npm run test:extreme   # 500
+```
+
+Each test spawns connections every 100 ms, listens to 6+ event
+types, and auto-grades success rate, latency, and recv/send ratio.
+A live ANSI-colored monitor polls `/events-ws/metrics` for in-flight
+visibility.
+
+The README is explicit: *"No correr `:stress`/`:extreme` en
+producción sin coordinar — pueden disparar alertas en Railway."*
+
+## Subscription gating
+
+The `SubscriptionGuard` enforces plan limits (`maxMembers`,
+`maxSongs`, `maxEventsPerMonth`) per band. Four plans (TRIAL,
+BASIC, PROFESSIONAL, PREMIUM) with three payment methods (PAYPAL,
+SINPE_MOVIL, BANK_TRANSFER). Super-admin approval flow for offline
+payments.
+
+A nightly cron handles `TRIAL → EXPIRED` transitions in a
+multi-statement `$transaction`, deactivating the band's projects
+atomically.
+
+## The hero page
+
+`(public)/grupos/[bandId]/eventos/[eventId]/en-vivo/page.tsx` is the
+live-performance page used during the actual church service. Two
+distinct views gated by `$eventConfig` store:
+
+- **Projector mode** — big lyrics, animated backgrounds, what the
+  congregation sees
+- **Musician mode** — chords, dark background, what the band sees
+
+The leader's actions broadcast to both views in under 100 ms.
+
+## Documentation that scales
+
+Four architectural docs totaling ~4,000 lines:
+
+- `BACKEND_ARCHITECTURE.md` (1,860 lines) — module patterns, controller
+  anatomy, service patterns, DTOs, Swagger, best practices
+- `COMPONENT_ARCHITECTURE.md` (2,147 lines) — React component patterns,
+  hooks, services, `_components/_hooks/_services` convention
+- `WEBSOCKET_OPTIMIZATIONS.md` (394 lines) — full latency/throughput
+  improvement table
+- `JWT_MIGRATION_README.md` — full session-to-JWT migration
+
+Plus the `AGENTS.md` (134 lines) at the repo root that codifies the
+unwritten rules any new dev needs.
+
+## Numbers
+
+| Module | Count |
+| --- | ---: |
+| NestJS modules | 18 |
+| Prisma models | 28 |
+| REST endpoints | 131 |
+| WebSocket gateways | 3 |
+| Controllers | 20 |
+| Services | 23 |
+| Guards | 6 |
+| Swagger bundles | 16 |
+| Test files | 156 |
+| Required coverage | ≥80% |
+| Load test: extreme | 500 sockets |
+| WebSocket message reduction | 60% |
+| JWT access TTL | 30 min |
+| JWT refresh TTL | 30 days |
+| Lines of `BACKEND_ARCHITECTURE.md` | 1,860 |
+| Lines of `COMPONENT_ARCHITECTURE.md` | 2,147 |
+
+## What I learned building this
+
+- **WebSockets at scale are not a chat app problem.** They're a
+  permission + caching + rate limiting + reconnection problem.
+  The 1,023-line gateway is what it is because it has to handle all
+  four.
+- **Multi-tenant doesn't mean multi-database.** The same Prisma
+  schema serves every church; the `Bands × Churches × Roles` matrix
+  in `MembersofBands` + `Memberships` + `ChurchMemberRoles` is the
+  access control.
+- **Cold starts are the silent killer of session-based auth.** 30m
+  access + 30d refresh with shared-promise dedup was the only way
+  to make JWT work on Railway.
+- **The "Mounted Guard" pattern is not optional for any client
+  component that touches user state.** Hydration mismatches are
+  nasty and silent.
+
+## Links
+
+- **Live**: [zamr.app](https://www.zamr.app)
+- **Backend**: NestJS 10 + Prisma 5 + MySQL on Railway *(private — request access)*
+- **GitHub**: private

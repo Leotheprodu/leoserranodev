@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/layouts/Header.astro';
+import Footer from '@components/layouts/Footer.astro';
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import ProjectCard from '@components/bento/ProjectCard.astro';
+import Reveal from '@components/motion/Reveal.astro';
+import StaggerChildren from '@components/motion/StaggerChildren.astro';
+import { useTranslations } from '@/i18n/utils';
+
+const lang = 'es' as const;
+const t = useTranslations(lang);
+
+const allProjects = await getCollection('projectsEs');
+
+const projects = allProjects
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title,
+    tagline: p.data.esTagline ?? p.data.tagline,
+    description: p.data.esDescription ?? p.data.description!,
+    type: p.data.type,
+    status: p.data.status,
+    url: p.data.liveUrl,
+    liveLabel: p.data.liveUrl
+      ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
+      : undefined,
+    stack: p.data.stack,
+    highlights: p.data.esHighlights ?? p.data.highlights,
+    metrics: p.data.metrics,
+    featured: p.data.featured,
+    order: p.data.order,
+    caseStudySlug: p.data.slug,
+  }));
+---
+
+<BaseLayout
+  title="Proyectos — Leonardo Serrano"
+  description={t('projectsPage.subtitle')}
+>
+  <Header activeSection="projects" />
+
+  <main id="main">
+    <Section
+      container="wide"
+      background="default"
+      spacing="lg"
+      class="relative overflow-hidden"
+    >
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,var(--color-secundario)/8,transparent_50%),radial-gradient(circle_at_70%_80%,var(--color-acento)/8,transparent_50%)]"
+      >
+      </div>
+
+      <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-4 text-center">
+        <Heading as="h1" size="6xl" weight="black" gradient>
+          {t('projectsPage.title')}
+        </Heading>
+        <p class="max-w-2xl text-balance text-lg text-text-soft md:text-xl">
+          {t('projectsPage.subtitle')}
+        </p>
+      </Reveal>
+    </Section>
+
+    <Section container="wide" background="soft" spacing="lg">
+      <StaggerChildren
+        as="div"
+        stagger={120}
+        initialDelay={100}
+        class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {projects.map((project, i) => (
+          <ProjectCard
+            project={project}
+            variant={i === 0 ? 'wide' : 'default'}
+          />
+        ))}
+      </StaggerChildren>
+    </Section>
+  </main>
+
+  <Footer />
+</BaseLayout>

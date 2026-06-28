@@ -1,0 +1,77 @@
+---
+import { getCollection, render } from 'astro:content';
+import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
+import Card from '@components/ui/Card.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import { useTranslations } from '@/i18n/utils';
+
+export async function getStaticPaths() {
+  const allProjects = await getCollection('projectsEs');
+  return allProjects.map((p) => ({
+    params: { slug: p.data.slug },
+    props: { entry: p },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const lang = 'es' as const;
+const t = useTranslations(lang);
+
+const allProjects = await getCollection('projectsEs');
+const others = allProjects
+  .filter((p) => p.data.slug !== entry.data.slug)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<CaseStudyLayout
+  title={`${entry.data.title} — Case Study`}
+  description={entry.data.tagline}
+  tagline={entry.data.tagline}
+  type={entry.data.type}
+  status={entry.data.status}
+  statusVariant="live"
+  liveUrl={entry.data.liveUrl}
+  stack={entry.data.stack}
+  metrics={entry.data.metrics}
+  highlights={entry.data.highlights}
+  publishedAt={entry.data.publishedAt}
+>
+  <Content />
+
+  <Fragment slot="related">
+    {
+      others.map((p) => (
+        <Card
+          variant="bento"
+          padding="md"
+          hover="border"
+          href={`/es/projects/${p.data.slug}`}
+          class="block"
+        >
+          <div class="flex h-full flex-col gap-2">
+            <Badge variant="default" size="sm">
+              {p.data.type === 'saas'
+                ? 'SaaS'
+                : p.data.type === 'ecommerce'
+                  ? 'E-commerce'
+                  : p.data.type === 'studio'
+                    ? 'Studio'
+                    : 'Platform'}
+            </Badge>
+            <Heading as="h3" size="lg">{p.data.title}</Heading>
+            <p class="text-sm text-text-soft line-clamp-2">
+              {p.data.tagline}
+            </p>
+            <span class="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-secundario">
+              {t('common.readCaseStudy')}
+              <span aria-hidden="true">→</span>
+            </span>
+          </div>
+        </Card>
+      ))
+    }
+  </Fragment>
+</CaseStudyLayout>

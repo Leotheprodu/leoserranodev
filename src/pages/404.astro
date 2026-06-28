@@ -1,20 +1,24 @@
 ---
-import { getLangFromUrl, useTranslations } from '@/i18n/utils';
-import MainLayout from '../layouts/MainLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils';
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<MainLayout
-  title="Page Not Found"
-  description="Oops! The page you're looking for could not be found"
+<BaseLayout
+  title={lang === 'es' ? '404 — No encontrado' : 'Not found'}
+  description={t('notFound.description')}
 >
-  <section class="flex flex-col justify-center items-center gap-10">
-    <h1 class="text-center text-4xl text-indigo-700 dark:text-indigo-400">
-      {t('404.title')}
-    </h1>
-    <p class="text-center">
-      {t('404.text')}
-    </p>
-  </section>
-</MainLayout>
+  <main class="container-narrow flex min-h-screen flex-col items-center justify-center gap-6 py-24 text-center">
+    <span class="text-7xl font-bold text-gradient">404</span>
+    <h1 class="text-3xl font-bold">{t('notFound.title')}</h1>
+    <p class="text-text-soft">{t('notFound.description')}</p>
+    <a
+      href={getLocalizedPath('/', lang)}
+      class="mt-4 inline-flex items-center gap-2 rounded-md bg-primario px-5 py-3 text-sm font-semibold text-bg transition hover:bg-primario/90"
+    >
+      {t('notFound.backHome')}
+    </a>
+  </main>
+</BaseLayout>

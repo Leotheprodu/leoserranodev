@@ -1,0 +1,38 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import CodeSnippet from '@components/code/CodeSnippet.astro';
+import BentoGrid from '@components/bento/BentoGrid.astro';
+import Reveal from '@components/motion/Reveal.astro';
+import StaggerChildren from '@components/motion/StaggerChildren.astro';
+import { featuredSnippets } from '@data/snippets';
+
+const showcase = featuredSnippets.slice(0, 3);
+---
+
+<Section
+  id="snippets"
+  container="wide"
+  background="soft"
+  spacing="lg"
+>
+  <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+    <Heading as="h2" size="4xl" gradient>
+      Real code, real patterns
+    </Heading>
+    <p class="max-w-2xl text-text-soft">
+      A taste of what's inside the 3 codebases. No toy examples — patterns
+      shipping in production, extracted from the actual files.
+    </p>
+  </Reveal>
+
+  <StaggerChildren
+    as="div"
+    stagger={150}
+    initialDelay={0}
+    class="flex flex-col gap-6"
+  >
+    {showcase.map((snippet) => <CodeSnippet snippet={snippet} />)}
+  </StaggerChildren>
+</Section>

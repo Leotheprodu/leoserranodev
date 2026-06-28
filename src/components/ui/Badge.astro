@@ -1,0 +1,74 @@
+---
+type Variant =
+  | 'default'
+  | 'secundario'
+  | 'acento'
+  | 'highlight'
+  | 'outline'
+  | 'success'
+  | 'warning'
+  | 'live';
+type Size = 'sm' | 'md';
+
+interface Props {
+  variant?: Variant;
+  size?: Size;
+  href?: string;
+  class?: string;
+  id?: string;
+}
+
+const {
+  variant = 'default',
+  size = 'sm',
+  href,
+  class: className = '',
+  id,
+} = Astro.props as Props;
+
+const Tag = href ? 'a' : 'span';
+
+const base = 'inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap';
+
+const variants: Record<Variant, string> = {
+  default: 'bg-bg-soft text-text-soft border border-border',
+  secundario:
+    'bg-secundario/10 text-secundario border border-secundario/20',
+  acento: 'bg-acento/10 text-acento border border-acento/20',
+  highlight:
+    'bg-highlight/15 text-highlight-700 dark:text-highlight border border-highlight/30',
+  outline: 'border border-border text-text-soft',
+  success:
+    'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20',
+  warning:
+    'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
+  live: 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/30',
+};
+
+const sizes: Record<Size, string> = {
+  sm: 'px-2.5 py-0.5 text-xs',
+  md: 'px-3 py-1 text-sm',
+};
+
+const classes = [base, variants[variant], sizes[size], className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Tag
+  id={id}
+  class={classes}
+  href={href}
+  target={href ? '_blank' : undefined}
+  rel={href ? 'noopener noreferrer' : undefined}
+>
+  {
+    variant === 'live' && (
+      <span class="relative flex h-2 w-2">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+      </span>
+    )
+  }
+  <slot />
+</Tag>

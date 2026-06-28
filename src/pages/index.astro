@@ -1,45 +1,188 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Card from '@components/ui/Card.astro';
+import Hero from '@components/bento/Hero.astro';
+import ProjectCard from '@components/bento/ProjectCard.astro';
+import StatCard from '@components/bento/StatCard.astro';
+import StackSection from '@components/bento/StackSection.astro';
+import ContactSection from '@components/bento/ContactSection.astro';
+import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
+import NumbersSection from '@components/bento/NumbersSection.astro';
+import Section from '@components/ui/Section.astro';
+import Header from '@components/layouts/Header.astro';
+import Footer from '@components/layouts/Footer.astro';
+import Icon from '@components/ui/Icon.astro';
+import Reveal from '@components/motion/Reveal.astro';
+import StaggerChildren from '@components/motion/StaggerChildren.astro';
+import { stack } from '@data/stack';
+import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
+import avatarImg from '@/assets/avatar/avatar-256.png';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const homePath = getLocalizedPath('/', lang);
+
+const allProjects = await getCollection('projectsEn');
+const projectsByOrder = allProjects
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title,
+    tagline: lang === 'es' && p.data.esTagline ? p.data.esTagline : p.data.tagline,
+    description: lang === 'es' && p.data.esDescription ? p.data.esDescription : p.data.description!,
+    type: p.data.type,
+    status: p.data.status,
+    url: p.data.liveUrl,
+    liveLabel: p.data.liveUrl
+      ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
+      : undefined,
+    stack: p.data.stack,
+    highlights: lang === 'es' && p.data.esHighlights ? p.data.esHighlights : p.data.highlights,
+    metrics: p.data.metrics,
+    featured: p.data.featured,
+    order: p.data.order,
+  }));
 ---
 
-<MainLayout
-  title="Home | Leonardo Serrano's Portfolio"
-  description="Portfolio of Leonardo Serrano, a fullstack web developer from Costa Rica."
+<BaseLayout
+  title={lang === 'es'
+    ? 'Leonardo Serrano — Ingeniero Full-Stack de Costa Rica'
+    : 'Leonardo Serrano — Full-Stack Engineer from Costa Rica'}
+  description={t('hero.subtitle')}
 >
-  <div class="flex flex-col gap-4">
-    <h4 class="text-2xl">Hi, I’m Leonardo Serrano A.</h4>
+  <Header />
 
-    <p>
-      I'm a Costa Rican programmer with over 4 years of web development
-      experience. Currently, I'm working with Next.js/Astro, Tailwind, and
-      TypeScript On the server side, I'm using Node.js, MySQL, and Express. I
-      really enjoy creating reusable code and usually adhere to the SOLID
-      principles and the MVC design pattern for the backend.
-    </p>
+  <main id="main">
+    <Hero
+      eyebrow={t('hero.eyebrow')}
+      title={t('hero.title')}
+      subtitle={t('hero.subtitle')}
+      primaryCta={{ label: t('hero.primaryCta'), href: '#projects' }}
+      secondaryCta={{ label: t('hero.secondaryCta'), href: '#contact' }}
+      stack={['Next.js 15', 'React 19', 'Tailwind 4', 'NestJS 10', 'Prisma 6', 'Socket.IO']}
+    />
 
-    <p>
-      I also have extensive experience with CSS, SASS, Jest, Strapi, WordPress,
-      Git, GitHub, and continuous deployments with GitHub Actions on Netlify,
-      Vercel, and hosting with Cpanel and Google Cloud.
-    </p>
+    <NumbersSection />
 
-    <h4 class="text-2xl">I consider myself an Explorer!</h4>
+    <Section id="projects" container="wide" background="default" spacing="lg">
+      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+        <Heading as="h2" size="4xl" gradient>
+          {t('projects.title')}
+        </Heading>
+        <p class="max-w-2xl text-text-soft">{t('projects.subtitle')}</p>
+      </Reveal>
 
-    <p>
-      Because I am passionate about learning and testing new technologies. For
-      example, I am currently learning Python to automate my daily tasks. I've
-      been experimenting with the ChatGPT API, using NestJs for backend
-      development (which I really enjoy), and exploring Bun just to test its
-      speed (although I still use Node.js). Next, I plan to try Playwright for
-      automated testing, as it seems incredible, and Rust because it is fast and
-      intuitive! I believe this language will gain significant traction.
-      Finally, I think understanding networks is crucial, so I am currently
-      studying with CISCO to get certified in CCNA 1, 2 and 3.
-    </p>
+      <StaggerChildren
+        as="div"
+        stagger={120}
+        initialDelay={100}
+        class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {projectsByOrder.map((project, i) => (
+          <ProjectCard
+            project={project}
+            variant={i === 0 ? 'wide' : 'default'}
+          />
+        ))}
+      </StaggerChildren>
+    </Section>
 
-    <p>
-      These are just a few examples, as I strive to learn something new every
-      day.
-    </p>
-  </div>
-</MainLayout>
+    <Section id="stack" container="wide" background="soft" spacing="lg">
+      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+        <Heading as="h2" size="4xl" gradient>
+          {t('stack.title')}
+        </Heading>
+        <p class="max-w-2xl text-text-soft">{t('stack.subtitle')}</p>
+      </Reveal>
+
+      <StaggerChildren
+        as="div"
+        stagger={80}
+        initialDelay={0}
+        class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {stack.map((category) => (
+          <div class="rounded-lg border border-border bg-surface p-6">
+            <div class="mb-4 flex items-center gap-3">
+              <span class="grid h-9 w-9 place-items-center rounded-md bg-secundario/10 text-secundario">
+                <Icon name={category.icon} size={18} ariaLabel={category.title} />
+              </span>
+              <h3 class="text-base font-bold text-text">{category.title}</h3>
+            </div>
+            <ul class="flex flex-col gap-2">
+              {category.items.map((item) => (
+                <li class="flex items-center justify-between gap-2 text-sm">
+                  <span class="text-text">{item.name}</span>
+                  <div class="flex items-center gap-1.5">
+                    {item.years && (
+                      <span class="text-xs text-text-muted">
+                        {item.years}{t('common.yearsShort')}
+                      </span>
+                    )}
+                    {item.level && (
+                      <Badge variant="outline" size="sm">
+                        {item.level === 'expert'
+                          ? (lang === 'es' ? 'Experto' : 'Expert')
+                          : item.level === 'proficient'
+                            ? (lang === 'es' ? 'Competente' : 'Proficient')
+                            : (lang === 'es' ? 'Aprendiendo' : 'Learning')}
+                      </Badge>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </StaggerChildren>
+    </Section>
+
+    <SnippetsShowcase />
+
+    <Section id="about" container="narrow" background="default" spacing="lg">
+      <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-6 text-center">
+        <div class="about-avatar relative h-20 w-20 overflow-hidden rounded-full ring-2 ring-secundario/40 shadow-lg">
+          <Image
+            src={avatarImg}
+            alt="Leonardo Serrano"
+            width={80}
+            height={80}
+            loading="lazy"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <Heading as="h2" size="4xl">
+          {t('about.title')}<span class="text-gradient">{t('about.titleHighlight')}</span>
+        </Heading>
+        <StaggerChildren
+          as="div"
+          stagger={120}
+          initialDelay={100}
+          class="max-w-2xl space-y-4 text-left text-lg text-text-soft"
+        >
+          <p>
+            {t('about.p1')} <strong class="text-text">{t('about.p1Strong1')}</strong>{' '}
+            {t('about.p1Strong2')}
+          </p>
+          <p>
+            {t('about.p2')} <strong class="text-text">{t('about.p2Strong1')}</strong>{' '}
+            {t('about.p2Strong2')} <strong class="text-text">{t('about.p2Strong3')}</strong>{' '}
+            {t('about.p2Strong4')}
+          </p>
+          <p>{t('about.p3')}</p>
+        </StaggerChildren>
+      </Reveal>
+    </Section>
+
+    <Reveal direction="up" speed="normal">
+      <ContactSection />
+    </Reveal>
+  </main>
+
+  <Footer />
+</BaseLayout>

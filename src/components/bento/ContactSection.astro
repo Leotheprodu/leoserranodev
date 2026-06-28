@@ -1,0 +1,165 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Button from '@components/ui/Button.astro';
+import Icon from '@components/ui/Icon.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const email = 'leovpc@gmail.com';
+
+const socials = [
+  {
+    label: 'GitHub',
+    href: 'https://github.com/Leotheprodu',
+    icon: 'simple-icons:github',
+    handle: '@Leotheprodu',
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/leonardo-serrano-dev/',
+    icon: 'simple-icons:linkedin',
+    handle: 'leonardo-serrano-dev',
+  },
+  {
+    label: 'WhatsApp',
+    href: 'https://wa.me/50663017707',
+    icon: 'simple-icons:whatsapp',
+    handle: '+506 6301 7707',
+  },
+];
+---
+
+<Section
+  id="contact"
+  container="narrow"
+  background="primario"
+  spacing="lg"
+  class="text-center"
+>
+  <div class="flex flex-col items-center gap-6">
+    <Heading as="h2" size="5xl" class="!text-white">
+      {t('contact.title')}<span class="text-gradient">{t('contact.titleHighlight')}</span>
+    </Heading>
+
+    <p class="max-w-xl text-base !text-white/80">
+      {t('contact.subtitle')}
+    </p>
+
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+      <Button
+        href={`mailto:${email}`}
+        variant="primary"
+        size="lg"
+        class="!bg-white !text-[#0a0a0a] hover:!bg-white/90"
+      >
+        <span slot="icon-left" aria-hidden="true">
+          <Icon name="mdi:email-outline" size={18} ariaLabel="Email" />
+        </span>
+        {email}
+      </Button>
+    </div>
+
+    <div
+      class="contact-socials mt-10 grid w-full max-w-2xl gap-3 sm:grid-cols-3"
+    >
+      {
+        socials.map((s, i) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-social group flex flex-col items-center gap-2 rounded-lg border border-white/20 bg-white/5 p-4 transition hover:border-highlight hover:bg-white/10"
+            data-social-idx={i}
+          >
+            <span class="contact-social-icon grid h-10 w-10 place-items-center rounded-md bg-white/10 text-white transition group-hover:bg-highlight group-hover:text-[#0a0a0a]">
+              <Icon name={s.icon} size={20} ariaLabel={s.label} />
+            </span>
+            <span class="text-sm font-semibold !text-white">{s.label}</span>
+            <span class="text-xs !text-white/60">{s.handle}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Section>
+
+<style>
+  .contact-social {
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  :global(html.js-ready) .contact-social {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  :global(html.js-ready) .contact-social.is-revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .contact-social-icon {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) .contact-social.is-revealed:hover .contact-social-icon {
+    transform: rotate(-8deg) scale(1.15);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-social,
+    .contact-social-icon {
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initContactStagger() {
+    const socials = document.querySelectorAll<HTMLElement>('.contact-social');
+    if (socials.length === 0) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      socials.forEach((s) => s.classList.add('is-revealed'));
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      socials.forEach((s) => s.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const card = entry.target as HTMLElement;
+            const idx = parseInt(card.dataset.socialIdx ?? '0', 10);
+            card.style.transitionDelay = `${idx * 120}ms`;
+            card.classList.add('is-revealed');
+            observer.unobserve(card);
+          }
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    socials.forEach((s) => observer.observe(s));
+  }
+
+  function initAll() {
+    initContactStagger();
+  }
+
+  document.addEventListener('astro:page-load', initAll);
+  if (document.readyState !== 'loading') {
+    initAll();
+  } else {
+    document.addEventListener('DOMContentLoaded', initAll);
+  }
+</script>

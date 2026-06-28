@@ -1,0 +1,260 @@
+---
+slug: 'flproductions'
+title: 'FLProductions'
+tagline: '13 years turning ideas into mastertracks'
+description: 'Public site + private artist portal in a single monorepo. NestJS + Prisma + Next.js with real-time sync, wallet with cashback, and AI chat that parses Costa Rican Spanish. Auto-optimizes GCS storage costs by moving inactive files to Coldline after 30 days.'
+type: 'studio'
+status: 'live'
+order: 1
+featured: true
+liveUrl: 'https://www.flproductionscr.com'
+stack:
+  - 'NestJS 10'
+  - 'Prisma 5'
+  - 'Next.js 15'
+  - 'PostgreSQL'
+  - 'Socket.IO'
+  - 'Tailwind CSS'
+  - 'Google Cloud Storage'
+  - 'PayPal'
+  - 'Google Calendar'
+  - 'OpenAI'
+metrics:
+  - { value: '13+', label: 'years live' }
+  - { value: '~68K', label: 'LoC' }
+  - { value: '28', label: 'Prisma models' }
+  - { value: '202', label: 'endpoints' }
+highlights:
+  - 'Public site + private artist portal in a single monorepo'
+  - 'Real-time reactivity: any mutation updates all open tabs instantly'
+  - 'Wallet with 5% cashback + vault with tiered pricing (standard vs VIP)'
+  - 'AI chat with GPT-4o-mini that parses Costa Rican Spanish and books appointments'
+  - 'Cost optimization: files auto-move to Cloud Coldline after 30 days of inactivity'
+esTagline: '13 años transformando ideas en obras maestras'
+esDescription: 'Sitio público + portal privado de artistas en un solo monorepo. NestJS + Prisma + Next.js con sincronización real-time, wallet con cashback, y AI chat que interpreta español costarricense. Auto-optimiza costos de GCS moviendo archivos inactivos a Coldline después de 30 días.'
+esHighlights:
+  - 'Sitio público + portal de artistas privado en un solo monorepo'
+  - 'Reactividad en tiempo real: cualquier mutación actualiza todas las pestañas abiertas'
+  - 'Wallet con 5% cashback y vault con precios diferenciados (estándar vs VIP)'
+  - 'AI chat con GPT-4o-mini que interpreta español costarricense y agenda citas'
+  - 'Optimización de costos: archivos a Cloud Coldline tras 30 días sin uso'
+publishedAt: 2026-06-15
+---
+
+## The story
+
+FLProductions is my recording studio. It's been live since 2013, and over
+the years the website evolved from a static HTML page to a full-blown
+production platform. The thing that brings in **80% of my clients** and
+has put food on my table for over a decade.
+
+The platform is a NestJS + Next.js monorepo with two cooperating apps:
+
+- **`server/`** — NestJS 10 API, Prisma 5, Socket.IO, JWT, 30 modules
+- **`app-new/`** — Next.js 15 public site + studio management (admin, portal, blog)
+
+Together they ship **~68,000 lines of code** across 781 files. Every single
+client interaction, payment, audio upload, revision comment, and CRM lead
+flows through code I wrote.
+
+> **Note**: the same monorepo also contains a third sub-package
+> (`ackeeBeats/`) — but I treat **Ackee Beats** as a separate commercial
+> project. See its own case study at
+> [`/projects/ackeebeats`](/projects/ackeebeats).
+
+## The architecture
+
+The numbers tell part of the story:
+
+- **30 NestJS modules** organized by domain (auth, payments, projects, songs, chat, etc.)
+- **22 controllers**, **41 services**, **1 WebSocket gateway** (`AssetsGateway`)
+- **28 Prisma models** with 30 production migrations
+- **202 REST endpoints** + **41 real-time event listeners**
+- **18 sync groups** mapping to **40+ query keys** in the frontend cache
+- **50 DTOs** with class-validator, all documented in Swagger
+- **23 test files** in the backend, **13** in the frontend
+
+Three cron-based scheduled services run daily: coldline storage optimization,
+orphan file cleanup, and CRM client status (auto-VIP, AT_RISK, INACTIVE).
+
+## The real-time sync system
+
+The single biggest architectural decision: **a unified reactivity graph**
+shared between HTTP and WebSocket.
+
+When any mutation runs in any service, it emits a domain event:
+
+```typescript
+// In projects.service.ts
+this.eventEmitter.emit('project.updated', {
+  projectId, clientId, title, status,
+});
+```
+
+A single `SyncListener` with **41 `@OnEvent` handlers** fans out to the
+right WebSocket rooms — project room, client room, admin room — and the
+**same map** of `38 socket events → 18 sync groups → 40+ query keys` handles
+every cache invalidation in the app:
+
+```typescript
+// In useSync.ts (frontend)
+const SOCKET_EVENT_MAPPING: Record<string, SyncGroup[]> = {
+  'payment_status_updated': ['FINANCE', 'PROJECT_DETAILS', 'NOTIFICATIONS', 'WALLET'],
+  'songs_sync':             ['SONGS', 'ARTIST_PROFILES', 'FIRE_WINNERS'],
+  'chat.converted':         ['CHAT', 'CRM', 'CLIENTS', 'PROJECTS', 'NOTIFICATIONS'],
+  // ... 35 more
+};
+```
+
+Mount `useSync(projectId)` in any page and it receives every relevant
+event for that scope. **The same map** drives `PostData({ invalidates:
+['GROUP'] })` mutations, so HTTP and socket stay in lockstep.
+
+> "The real bug was a single missing entry: `FIRE_WINNERS` was not in the
+> `isGlobal*Group` condition in `useSync.ts`... A missing entry in a list
+> is a 1-line fix; a custom mutation is 60+ lines of new surface area."
+>
+> — From the team's post-mortem, now in `AGENTS.md`
+
+## The wallet, the cashback, the vault
+
+Every PayPal or manual payment triggers a 5% cashback in a single
+Prisma transaction. The balance updates across all connected devices via
+`wallet.updated` event in real-time:
+
+```typescript
+async addCashback(userId: number, amount: number, paymentId: number, description: string) {
+  const cashback = Math.floor(amount * 0.05);
+  if (cashback <= 0) return;
+
+  return await this.prisma.$transaction(async (tx) => {
+    const user = await tx.users.update({
+      where: { id: userId },
+      data: { balance: { increment: cashback } },
+    });
+    await tx.wallet_transactions.create({
+      data: { userId, amount: cashback, type: WalletTransactionType.CASHBACK, description, metadata: { paymentId, originalAmount: amount } },
+    });
+    this.eventEmitter.emit('wallet.updated', { userId, balance: user.balance });
+    return user;
+  });
+}
+```
+
+The **Vault** has tiered pricing: ₡5/MB standard (min ₡50), ₡10/MB VIP
+(min ₡100). VIP auto-unlocks the file permanently. Same service, same
+event system, same real-time updates.
+
+## Deny by default
+
+Every route must declare `@CheckLoginStatus('loggedIn' | 'public' | 'notLoggedIn')`,
+or the guard throws 403. "I forgot to add auth" becomes a compile-time-feeling error:
+
+```typescript
+if (!checkLoginStatus) {
+  this.logger.error(
+    `[PermissionsGuard] Security Violation: Missing @CheckLoginStatus in ${context.getClass().name}.${context.getHandler().name}`
+  );
+  throw new ForbiddenException(
+    'Access Denied: Missing mandatory @CheckLoginStatus decorator (Deny by Default)'
+  );
+}
+```
+
+## AI chat that speaks Costa Rican Spanish
+
+`ChatAiService` runs GPT-4o-mini with a **100-line prompt** that
+does CR-Spanish natural-language date/time parsing. When a visitor
+says "Jueves 4 de junio a las 3:30 pm", the AI:
+
+1. Parses the date (verified against day-of-week)
+2. Parses the time (handles "1 de la tarde" → 13:00, "3 y 30" → 15:30, "8 de la noche" → 20:00)
+3. Checks availability against Prisma appointments + Google Calendar
+4. Creates the appointment in a single transaction
+5. Emits `chat.converted` → handler dispatches to CRM, clients, projects, notifications
+
+All inside a 4-service pipeline (`ChatService` → `ChatAiService` →
+`ChatAvailabilityService` → `ChatConversionService`), with a `botPaused`
+flag in the session to hand off to a human when needed.
+
+## Cost engineering
+
+Two cron jobs keep the GCS bill down to a minimum:
+
+- **3 AM daily** — moves MP3_HQ / WAV / STEMS / BOUNCE / PROJECT_ZIP not
+  accessed in 30 days to `COLDLINE` storage class (~80% cost saving).
+- **4 AM daily** — restores any asset accessed in the last 24h back to `STANDARD`.
+
+Plus a **Sunday 2 AM** orphan cleanup that walks the GCS bucket and
+deletes files not referenced in `project_assets`, `beat_assets`,
+`payments.receiptUrl`, `artist_profiles.profileImage/coverImage`, or
+`blog_assets`. **DRY_RUN by default** for safety.
+
+## Audio feedback with seekable timestamps
+
+Clients pin comments to a specific point in a waveform. The admin clicks
+"Ir a 02:31" and the player seeks. The backend persists the version
+it belongs to (so revisions track the asset version, not just the latest):
+
+```typescript
+let assetVersion = '1.0';
+if (assetId) {
+  const asset = await this.prisma.project_assets.findUnique({
+    where: { id: assetId },
+    select: { version: true },
+  });
+  if (asset) assetVersion = asset.version || '1.0';
+}
+```
+
+Combined with a 673-line `MusicPlayer.tsx` (the largest frontend
+component) using WaveSurfer.js 7.12, the result is a Pro Tools-quality
+revision workflow accessible from any device.
+
+## Inbound email → auto-CRM lead
+
+Anyone emailing `leovpc@gmail.com` automatically becomes a CRM lead
+unless they're already a user/client. The `inbound-email.service.ts`
+consumes Resend's `email.received` webhook, parses the MIME body,
+auto-matches the sender, and emits `email_received` to the admin inbox.
+
+Real-time: the studio sees the email the moment it lands, with
+one-click reply (original sender becomes `Reply-To`).
+
+## Google Calendar 2-way sync
+
+The studio uses two auth paths transparently: user OAuth (with token
+rotation) and service-account fallback when OAuth fails. New
+appointments in the studio become events in the admin's Google Calendar
+in real-time. Expired OAuth emits `google_calendar.expired` so the UI
+can prompt re-link.
+
+## Image enhancer with 2 AI variants
+
+`image-enhancer.service.ts` charges the wallet, then runs **two parallel
+calls to Google Gemini** with the same image but different prompts
+(variation seed 42 and 77). The user picks the one they like. Uses
+both OpenAI and `@google/generative-ai` under the hood.
+
+## What I've learned shipping this for 13 years
+
+The boring lessons matter more than the clever ones:
+
+- **"Files should stay under 100 lines"** is documented in `AGENTS.md`,
+  and the codebase mostly complies (with documented exceptions like
+  the 709-line `sync.listener.ts` and 857-line `projects.service.ts`).
+- **"Use Prisma transactions for multi-record operations"** — every
+  cashback, every lead conversion, every payment is a `$transaction`.
+- **"Never `prisma db push`, never `prisma migrate dev` — the user
+  applies migrations manually"** — protects the migration history.
+- **"Every controller uses `catchHandle` and `@CheckLoginStatus`"** —
+  consistency at the file level makes the whole codebase scannable.
+
+The result: 13 years of uptime, hundreds of clients, and a single
+codebase I can still navigate at 3 AM when something breaks.
+
+## Links
+
+- **Live**: [flproductionscr.com](https://www.flproductionscr.com)
+- **GitHub (frontend)**: private
+- **Blog** (with the architecture write-ups): [flproductionscr.com/blog](https://www.flproductionscr.com/blog)

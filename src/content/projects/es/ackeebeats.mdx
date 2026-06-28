@@ -1,0 +1,66 @@
+---
+slug: 'ackeebeats'
+title: 'Ackee Beats'
+tagline: 'Estilo exótico, sonido Ackee'
+description: 'Marketplace de beats con licencias PayPal. Catálogo navegable con previews de YouTube, jerarquía de licencias (BASIC < PREMIUM < UNLIMITED) con audit trail, y PDF de licencia generado por compra vía pdf-lib. La extensión e-commerce de FLProductions.'
+type: 'ecommerce'
+status: 'live'
+order: 4
+featured: false
+liveUrl: 'https://www.ackeebeats.com'
+stack:
+  - 'Next.js 15'
+  - 'PayPal'
+  - 'pdf-lib'
+  - 'GCS'
+  - 'Tailwind'
+metrics:
+  - { value: '12+', label: 'beats live' }
+  - { value: '3', label: 'niveles de licencia' }
+  - { value: '1', label: 'integración PayPal' }
+highlights:
+  - 'Jerarquía de licencias BASIC < PREMIUM < UNLIMITED con audit trail'
+  - 'PDF generado por compra con pdf-lib'
+  - 'Integración de YouTube preview para cada beat'
+  - 'Extensión e-commerce de FLProductions (mismo estudio, otro canal)'
+publishedAt: 2026-06-10
+---
+
+## La historia
+
+Ackee Beats es la extensión e-commerce de FLProductions. Mientras FLProductions vende servicios del estudio (grabación, mezcla, masterización), Ackee Beats vende **beats** producidos en ese mismo estudio.
+
+Es un marketplace donde los artistas pueden:
+- Ver un catálogo de beats con previews de YouTube
+- Comprar licencias BASIC, PREMIUM o UNLIMITED vía PayPal
+- Recibir un PDF de licencia generado automáticamente por compra
+- Hacer upgrade de licencia (BASIC → PREMIUM → UNLIMITED) preservando el audit trail
+
+## La arquitectura
+
+Next.js 15 monorepo con tres apps:
+
+- **`server/`** — NestJS 10 API (compartido con FLProductions)
+- **`app-new/`** — Next.js 15 sitio público + portal de artista (compartido con FLProductions)
+- **`ackeeBeats/`** — Next.js 15 e-commerce dedicado con PayPal
+
+El sub-paquete `ackeeBeats/` es standalone pero reutiliza los modelos de Prisma del server compartido. La integración con PayPal es custom (no usa la SDK de PayPal Buttons), y la generación del PDF de licencia usa `pdf-lib` para crear el documento en runtime.
+
+## Stack
+
+- **Next.js 15** con App Router y Turbopack
+- **PayPal** para procesamiento de pagos
+- **pdf-lib** para generación de PDFs
+- **Google Cloud Storage** para hosting de archivos de audio
+- **Tailwind CSS** para styling
+
+## Lo que aprendí construyendo esto
+
+- **Las jerarquías de licencias necesitan audit trail.** BASIC < PREMIUM < UNLIMITED no es solo un campo; es un historial. Cada compra es una fila, cada upgrade es otra fila, y la fila actual es la que cuenta. El audit trail es lo que protege contra disputas.
+- **El PDF de licencia es la prueba legal.** Un email de confirmación no es suficiente. El PDF con watermark, fecha, y hash de la transacción es lo que el abogado del cliente va a pedir si hay disputa.
+- **YouTube como CDN de previews** es brillante. Cada beat tiene un YouTube ID, el frontend hace el embed, y el costo de hosting de previews es $0. El audio completo se sirve desde GCS solo después de la compra.
+
+## Links
+
+- **Live**: [ackeebeats.com](https://www.ackeebeats.com)
+- **Estudio principal**: [flproductionscr.com](https://www.flproductionscr.com)

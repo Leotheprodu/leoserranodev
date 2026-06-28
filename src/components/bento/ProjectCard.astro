@@ -1,0 +1,215 @@
+---
+import Card from '@components/ui/Card.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Button from '@components/ui/Button.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+type ProjectStatus = 'live' | 'beta' | 'building' | 'archived';
+type ProjectType = 'saas' | 'ecommerce' | 'studio' | 'platform';
+
+interface Project {
+  slug: string;
+  title: string;
+  tagline: string;
+  description: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  url?: string;
+  githubUrl?: string;
+  stack: string[];
+  highlights: string[];
+  metrics: Array<{ label: string; value: string }>;
+  featured?: boolean;
+  order: number;
+}
+
+interface Props {
+  project: Project;
+  variant?: 'default' | 'wide' | 'tall';
+  showMetrics?: boolean;
+}
+
+const { project, variant = 'default', showMetrics = true } = Astro.props as Props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const caseStudyPath =
+  lang === 'es' ? `/es/projects/${project.slug}` : `/projects/${project.slug}`;
+
+const statusVariant: Record<
+  ProjectStatus,
+  'live' | 'secundario' | 'default' | 'outline'
+> = {
+  live: 'live',
+  beta: 'secundario',
+  building: 'default',
+  archived: 'outline',
+};
+
+const statusLabel: Record<ProjectStatus, string> = {
+  live: 'Live',
+  beta: 'Beta',
+  building: 'Building',
+  archived: 'Archived',
+};
+
+const typeLabel: Record<Project['type'], string> = {
+  saas: 'SaaS',
+  ecommerce: 'E-commerce',
+  studio: 'Studio',
+  platform: 'Platform',
+};
+---
+
+<Card
+  variant="bento"
+  padding="lg"
+  hover="glow"
+  class={
+    variant === 'wide'
+      ? 'lg:col-span-2'
+      : variant === 'tall'
+        ? 'lg:row-span-2'
+        : ''
+  }
+  transition:name={`project-card-${project.slug}`}
+>
+  <div class="flex h-full flex-col gap-5" data-card-body>
+    <div class="card-item flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <Badge variant="default" size="sm">{typeLabel[project.type]}</Badge>
+        <Badge variant={statusVariant[project.status]} size="sm">
+          {statusLabel[project.status]}
+        </Badge>
+      </div>
+      {project.featured && (
+        <Badge variant="highlight" size="sm">{t('projects.featuredBadge')}</Badge>
+      )}
+    </div>
+
+    <div class="card-item flex flex-col gap-2">
+      <Heading as="h3" size="xl" weight="black">{project.title}</Heading>
+      <p class="text-sm text-text-soft">{project.tagline}</p>
+    </div>
+
+    <p class="card-item text-sm leading-relaxed text-text-soft">
+      {project.description}
+    </p>
+
+    {showMetrics && project.metrics.length > 0 && (
+      <div class="card-item grid grid-cols-2 gap-3 border-y border-border py-4 sm:grid-cols-4">
+        {project.metrics.map((m) => (
+          <div class="metric-item flex flex-col">
+            <span class="text-2xl font-black tracking-tight text-text">
+              {m.value}
+            </span>
+            <span class="text-xs text-text-muted">{m.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <ul class="card-list flex flex-col gap-1.5 text-sm text-text-soft">
+      {
+        project.highlights.slice(0, 3).map((h) => (
+          <li class="card-item flex items-start gap-2">
+            <span class="mt-1.5 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-secundario" />
+            <span>{h}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="card-item mt-auto flex flex-wrap gap-2 pt-2">
+      {project.url && (
+        <Button
+          href={project.url}
+          target="_blank"
+          variant="secundario"
+          size="sm"
+        >
+          {t('projects.liveCta')}
+          <span slot="icon-right" aria-hidden="true">↗</span>
+        </Button>
+      )}
+      <Button
+        href={caseStudyPath}
+        variant="outline"
+        size="sm"
+      >
+        {t('projects.caseStudyCta')}
+        <span slot="icon-right" aria-hidden="true">→</span>
+      </Button>
+    </div>
+  </div>
+</Card>
+
+<style>
+  [data-card-body] .card-item,
+  [data-card-body] .metric-item,
+  [data-card-body] .card-item,
+  [data-card-list] .card-item {
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  :global(html.js-ready) [data-card-body] .card-item,
+  :global(html.js-ready) [data-card-body] .metric-item {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  :global(html.js-ready) [data-card-body].is-revealed .card-item,
+  :global(html.js-ready) [data-card-body].is-revealed .metric-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js-ready) [data-card-body] .card-item,
+    :global(html.js-ready) [data-card-body] .metric-item {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initCardStagger() {
+    const cards = document.querySelectorAll<HTMLElement>('[data-card-body]');
+    if (cards.length === 0) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      cards.forEach((c) => c.classList.add('is-revealed'));
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach((c) => c.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const card = entry.target as HTMLElement;
+            const items = card.querySelectorAll<HTMLElement>('.card-item, .metric-item');
+            items.forEach((item, i) => {
+              item.style.transitionDelay = `${i * 80}ms`;
+            });
+            card.classList.add('is-revealed');
+            observer.unobserve(card);
+          }
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -5% 0px' }
+    );
+
+    cards.forEach((c) => observer.observe(c));
+  }
+
+  document.addEventListener('astro:page-load', initCardStagger);
+  if (document.readyState !== 'loading') initCardStagger();
+</script>

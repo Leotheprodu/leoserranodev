@@ -1,0 +1,82 @@
+---
+type Variant = 'primary' | 'ghost' | 'outline' | 'link' | 'subtle';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props {
+  variant?: Variant;
+  size?: Size;
+  href?: string;
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  rel?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  fullWidth?: boolean;
+  iconOnly?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  target,
+  rel,
+  type = 'button',
+  disabled = false,
+  fullWidth = false,
+  iconOnly = false,
+  class: className = '',
+  id,
+} = Astro.props as Props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secundario focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:cursor-not-allowed disabled:opacity-50';
+
+const variants: Record<Variant, string> = {
+  primary:
+    'bg-[#0a0a0a] text-white hover:bg-[#1f1f1f] active:scale-[0.98] shadow-sm hover:shadow-md',
+  ghost:
+    'bg-bg-soft text-text hover:bg-bg-soft/80 hover:text-secundario border border-transparent',
+  outline:
+    'border border-border bg-transparent text-text hover:border-secundario hover:text-secundario',
+  link: 'bg-transparent text-secundario underline-offset-4 hover:underline p-0',
+  subtle:
+    'bg-secundario/10 text-secundario hover:bg-secundario/20 border border-secundario/20',
+};
+
+const sizes: Record<Size, string> = {
+  sm: iconOnly ? 'h-8 w-8 text-sm' : 'h-9 px-3 text-sm',
+  md: iconOnly ? 'h-10 w-10 text-base' : 'h-11 px-5 text-sm',
+  lg: iconOnly ? 'h-12 w-12 text-lg' : 'h-12 px-6 text-base',
+};
+
+const classes = [
+  base,
+  variants[variant],
+  sizes[size],
+  fullWidth && 'w-full',
+  variant !== 'link' && 'rounded-md',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const isLink = typeof href === 'string';
+const Tag = isLink ? 'a' : 'button';
+---
+
+<Tag
+  id={id}
+  class={classes}
+  href={href}
+  target={isLink ? target : undefined}
+  rel={isLink ? (rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)) : undefined}
+  type={!isLink ? type : undefined}
+  disabled={!isLink ? disabled : undefined}
+  aria-disabled={disabled || undefined}
+>
+  <slot name="icon-left" />
+  <slot />
+  <slot name="icon-right" />
+</Tag>
