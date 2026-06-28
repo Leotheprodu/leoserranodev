@@ -9,7 +9,6 @@ import Badge from '@components/ui/Badge.astro';
 import ProjectCard from '@components/bento/ProjectCard.astro';
 import Reveal from '@components/motion/Reveal.astro';
 import StaggerChildren from '@components/motion/StaggerChildren.astro';
-import { projects as projectsSeed } from '@data/projects';
 import { useTranslations } from '@/i18n/utils';
 
 const lang = 'es' as const;
@@ -22,8 +21,8 @@ const projects = allProjects
   .map((p) => ({
     slug: p.data.slug,
     title: p.data.title,
-    tagline: p.data.tagline,
-    description: p.data.tagline,
+    tagline: p.data.esTagline ?? p.data.tagline,
+    description: p.data.esDescription ?? p.data.description!,
     type: p.data.type,
     status: p.data.status,
     url: p.data.liveUrl,
@@ -32,7 +31,7 @@ const projects = allProjects
       ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
       : undefined,
     stack: p.data.stack,
-    highlights: p.data.highlights,
+    highlights: p.data.esHighlights ?? p.data.highlights,
     metrics: p.data.metrics,
     featured: p.data.featured,
     order: p.data.order,

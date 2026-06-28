@@ -9,38 +9,33 @@ import Badge from '@components/ui/Badge.astro';
 import ProjectCard from '@components/bento/ProjectCard.astro';
 import Reveal from '@components/motion/Reveal.astro';
 import StaggerChildren from '@components/motion/StaggerChildren.astro';
-import { projects as projectsSeed } from '@data/projects';
-import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const allProjects = await getCollection('projects');
-
 const projects = allProjects
   .sort((a, b) => a.data.order - b.data.order)
-  .map((p) => {
-    const seed = projectsSeed.find((s) => s.slug === p.data.slug);
-    return {
-      slug: p.data.slug,
-      title: p.data.title,
-      tagline: p.data.tagline,
-      description: p.data.tagline,
-      type: p.data.type,
-      status: p.data.status,
-      url: p.data.liveUrl,
-      githubUrl: p.data.githubUrl,
-      liveLabel: p.data.liveUrl
-        ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
-        : undefined,
-      stack: p.data.stack,
-      highlights: p.data.highlights,
-      metrics: p.data.metrics,
-      featured: p.data.featured,
-      order: p.data.order,
-      caseStudySlug: p.data.slug,
-    };
-  });
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title,
+    tagline: lang === 'es' && p.data.esTagline ? p.data.esTagline : p.data.tagline,
+    description: lang === 'es' && p.data.esDescription ? p.data.esDescription : p.data.description!,
+    type: p.data.type,
+    status: p.data.status,
+    url: p.data.liveUrl,
+    githubUrl: p.data.githubUrl,
+    liveLabel: p.data.liveUrl
+      ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
+      : undefined,
+    stack: p.data.stack,
+    highlights: lang === 'es' && p.data.esHighlights ? p.data.esHighlights : p.data.highlights,
+    metrics: p.data.metrics,
+    featured: p.data.featured,
+    order: p.data.order,
+    caseStudySlug: p.data.slug,
+  }));
 ---
 
 <BaseLayout

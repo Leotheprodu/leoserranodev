@@ -7,6 +7,9 @@ const projects = defineCollection({
     slug: z.string(),
     title: z.string(),
     tagline: z.string(),
+    description: z.string().optional(),
+    esTagline: z.string().optional(),
+    esDescription: z.string().optional(),
     type: z.enum(['saas', 'ecommerce', 'studio', 'platform']),
     status: z.enum(['live', 'beta', 'building', 'archived']),
     order: z.number(),
@@ -21,6 +24,7 @@ const projects = defineCollection({
       })
     ),
     highlights: z.array(z.string()),
+    esHighlights: z.array(z.string()).optional(),
     publishedAt: z.coerce.date(),
   }),
 });

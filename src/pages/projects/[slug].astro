@@ -5,7 +5,6 @@ import Card from '@components/ui/Card.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
-import { projects as projectsData } from '@data/projects';
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 export async function getStaticPaths() {
@@ -23,16 +22,15 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const allProjects = await getCollection('projects');
-const projectData = projectsData.find((p) => p.slug === entry.data.slug);
 const others = allProjects
   .filter((p) => p.data.slug !== entry.data.slug)
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <CaseStudyLayout
-  title={`${entry.data.title} — ${lang === 'es' ? 'Case Study' : 'Case Study'}`}
-  description={entry.data.tagline}
-  tagline={entry.data.tagline}
+  title={`${entry.data.title} — Case Study`}
+  description={lang === 'es' && entry.data.esTagline ? entry.data.esTagline : entry.data.tagline}
+  tagline={lang === 'es' && entry.data.esTagline ? entry.data.esTagline : entry.data.tagline}
   type={entry.data.type}
   status={entry.data.status}
   statusVariant="live"
@@ -40,7 +38,7 @@ const others = allProjects
   githubUrl={entry.data.githubUrl}
   stack={entry.data.stack}
   metrics={entry.data.metrics}
-  highlights={entry.data.highlights}
+  highlights={lang === 'es' && entry.data.esHighlights ? entry.data.esHighlights : entry.data.highlights}
   publishedAt={entry.data.publishedAt}
 >
   <Content />
@@ -66,7 +64,7 @@ const others = allProjects
             </Badge>
             <Heading as="h3" size="lg">{p.data.title}</Heading>
             <p class="text-sm text-text-soft line-clamp-2">
-              {p.data.tagline}
+              {lang === 'es' && p.data.esTagline ? p.data.esTagline : p.data.tagline}
             </p>
             <Button variant="link" size="sm" href={`/projects/${p.data.slug}`}>
               {t('common.readCaseStudy')} →

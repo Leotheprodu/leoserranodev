@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
 import Heading from '@components/ui/Heading.astro';
@@ -16,7 +17,6 @@ import BentoGrid from '@components/bento/BentoGrid.astro';
 import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
 import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
-import { projectsByOrder } from '@data/projects';
 import { headlineStats } from '@data/stats';
 import { stack } from '@data/stack';
 import { useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
@@ -24,6 +24,28 @@ import { useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils
 const lang = 'es' as const;
 const t = useTranslations(lang);
 const homePath = getLocalizedPath('/', lang);
+
+const allProjects = await getCollection('projects');
+const projectsByOrder = allProjects
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title,
+    tagline: p.data.esTagline ?? p.data.tagline,
+    description: p.data.esDescription ?? p.data.description!,
+    type: p.data.type,
+    status: p.data.status,
+    url: p.data.liveUrl,
+    githubUrl: p.data.githubUrl,
+    liveLabel: p.data.liveUrl
+      ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
+      : undefined,
+    stack: p.data.stack,
+    highlights: p.data.esHighlights ?? p.data.highlights,
+    metrics: p.data.metrics,
+    featured: p.data.featured,
+    order: p.data.order,
+  }));
 ---
 
 <BaseLayout

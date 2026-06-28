@@ -3,7 +3,25 @@ import Card from '@components/ui/Card.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
-import type { Project, ProjectStatus } from '@data/projects';
+
+type ProjectStatus = 'live' | 'beta' | 'building' | 'archived';
+type ProjectType = 'saas' | 'ecommerce' | 'studio' | 'platform';
+
+interface Project {
+  slug: string;
+  title: string;
+  tagline: string;
+  description: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  url?: string;
+  githubUrl?: string;
+  stack: string[];
+  highlights: string[];
+  metrics: Array<{ label: string; value: string }>;
+  featured?: boolean;
+  order: number;
+}
 
 interface Props {
   project: Project;
@@ -36,6 +54,11 @@ const typeLabel: Record<Project['type'], string> = {
   studio: 'Studio',
   platform: 'Platform',
 };
+
+const hasLongDescription =
+  project.description &&
+  project.description.trim() !== '' &&
+  project.description.trim() !== project.tagline.trim();
 ---
 
 <Card
@@ -68,9 +91,13 @@ const typeLabel: Record<Project['type'], string> = {
       <p class="text-sm text-text-soft">{project.tagline}</p>
     </div>
 
-    <p class="text-sm leading-relaxed text-text-soft">
-      {project.description}
-    </p>
+    {
+      hasLongDescription && (
+        <p class="text-sm leading-relaxed text-text-soft">
+          {project.description}
+        </p>
+      )
+    }
 
     {showMetrics && project.metrics.length > 0 && (
       <div class="grid grid-cols-2 gap-3 border-y border-border py-4 sm:grid-cols-4">
