@@ -30,9 +30,9 @@ export const en: Dictionary = {
     title: "What I'm shipping right now",
     subtitle:
       'Four production systems, each one a different domain, all built from scratch.',
-    liveCta: 'Live',
-    githubCta: 'GitHub',
+    liveCta: 'Visit',
     caseStudyCta: 'Case study',
+    featuredBadge: 'Featured',
   },
   stack: {
     eyebrow: 'Stack',
@@ -44,7 +44,7 @@ export const en: Dictionary = {
     eyebrow: 'About',
     title: 'Building software that ',
     titleHighlight: 'puts food on the table',
-    p1: "I'm Leo, a full-stack engineer from Heredia, Costa Rica. I run",
+    p1: "I'm Leo, a full-stack engineer based in Herediana de Siquirres, Limón, Costa Rica. I run",
     p1Strong1: 'FLProductions',
     p1Strong2:
       ", a recording studio that's been live since 2013 and brings in 80% of its clients through the website.",
@@ -66,8 +66,9 @@ export const en: Dictionary = {
       'Open to interesting projects, contract work, and full-time roles where the team ships production software with care.',
   },
   footer: {
-    tagline: 'Built with Astro 5 + Tailwind 4 + Framer Motion.',
-    location: 'Heredia, Costa Rica',
+    tagline:
+      'Next.js · React · Tailwind · NestJS · Prisma · Socket.IO · TypeScript',
+    location: 'Limón, Costa Rica',
   },
   projectsPage: {
     title: '4 systems in production',

@@ -1,0 +1,201 @@
+---
+slug: 'flproductions'
+title: 'FLProductions'
+tagline: '13 años transformando ideas en obras maestras'
+description: 'Sitio público + portal de artistas privado en un solo monorepo. NestJS + Prisma + Next.js con sincronización real-time, wallet con cashback, y AI chat que interpreta español costarricense.'
+type: 'studio'
+status: 'live'
+order: 1
+featured: true
+liveUrl: 'https://www.flproductionscr.com'
+stack:
+  - 'NestJS 10'
+  - 'Prisma 5'
+  - 'Next.js 15'
+  - 'PostgreSQL'
+  - 'Socket.IO'
+  - 'Tailwind CSS'
+  - 'Google Cloud Storage'
+  - 'PayPal'
+  - 'Google Calendar'
+  - 'OpenAI'
+metrics:
+  - { value: '13+', label: 'años live' }
+  - { value: '~68K', label: 'LoC' }
+  - { value: '28', label: 'modelos Prisma' }
+  - { value: '202', label: 'endpoints' }
+highlights:
+  - 'Sitio público + portal de artistas privado en un solo monorepo'
+  - 'Reactividad en tiempo real: cualquier mutación actualiza todas las pestañas abiertas'
+  - 'Wallet con 5% cashback y vault con precios diferenciados (estándar vs VIP)'
+  - 'AI chat con GPT-4o-mini que interpreta español costarricense y agenda citas'
+  - 'Optimización de costos: archivos a Cloud Coldline tras 30 días sin uso'
+publishedAt: 2026-06-15
+---
+
+## La historia
+
+FLProductions es mi estudio de grabación. Lleva live desde 2013, y a lo largo de los años el sitio web evolucionó de una página HTML estática a una plataforma de producción completa. Es lo que trae al **80% de mis clientes** y lo que pone comida en mi mesa desde hace más de una década.
+
+La plataforma es un monorepo de NestJS + Next.js con dos apps que cooperan:
+
+- **`server/`** — NestJS 10 API, Prisma 5, Socket.IO, JWT, 30 módulos
+- **`app-new/`** — Next.js 15 sitio público + gestión del estudio (admin, portal, blog)
+
+Juntas suman **~68,000 líneas de código** en 781 archivos. Cada interacción con un cliente, pago, upload de audio, comentario de revisión y lead de CRM pasa por código que escribí.
+
+> **Nota**: el mismo monorepo también contiene un tercer sub-paquete (`ackeeBeats/`) — pero trato a **Ackee Beats** como un proyecto comercial separado. Tiene su propio case study en [`/es/projects/ackeebeats`](/es/projects/ackeebeats).
+
+## La arquitectura
+
+Los números cuentan parte de la historia:
+
+- **30 módulos NestJS** organizados por dominio (auth, payments, projects, songs, chat, etc.)
+- **22 controllers**, **41 services**, **1 WebSocket gateway** (`AssetsGateway`)
+- **28 modelos Prisma** con 30 migraciones de producción
+- **202 endpoints REST** + **41 listeners de eventos en tiempo real**
+- **18 grupos de sync** mapeando a **40+ query keys** en el frontend
+- **50 DTOs** con class-validator, todos documentados en Swagger
+- **23 archivos de tests** en el backend, **13** en el frontend
+
+Tres servicios programados corren a diario: optimización de almacenamiento Coldline, limpieza de archivos huérfanos, y estado de clientes del CRM (auto-VIP, AT_RISK, INACTIVE).
+
+## El sistema de reactividad en tiempo real
+
+La decisión arquitectónica más grande: **un grafo de reactividad unificado** compartido entre HTTP y WebSocket.
+
+Cuando cualquier mutación corre en cualquier service, emite un evento de dominio:
+
+```typescript
+// En projects.service.ts
+this.eventEmitter.emit('project.updated', {
+  projectId, clientId, title, status,
+});
+```
+
+Un único `SyncListener` con **41 handlers `@OnEvent`** hace fan-out a las salas WebSocket correctas — sala del proyecto, sala del cliente, sala de admin — y el **mismo mapa** de `38 socket events → 18 sync groups → 40+ query keys` maneja cada invalidación de caché en la app:
+
+```typescript
+// En useSync.ts (frontend)
+const SOCKET_EVENT_MAPPING: Record<string, SyncGroup[]> = {
+  'payment_status_updated': ['FINANCE', 'PROJECT_DETAILS', 'NOTIFICATIONS', 'WALLET'],
+  'songs_sync':             ['SONGS', 'ARTIST_PROFILES', 'FIRE_WINNERS'],
+  'chat.converted':         ['CHAT', 'CRM', 'CLIENTS', 'PROJECTS', 'NOTIFICATIONS'],
+  // ... 35 más
+};
+```
+
+Mountás `useSync(projectId)` en cualquier página y recibe cada evento relevante para ese scope. **El mismo mapa** maneja `PostData({ invalidates: ['GROUP'] })`, así que HTTP y socket se mantienen en lockstep.
+
+> "El bug real era una sola entrada faltante: `FIRE_WINNERS` no estaba en la condición `isGlobal*Group` en `useSync.ts`... Una entrada faltante en una lista es un fix de 1 línea; una mutación custom son 60+ líneas de superficie nueva."
+>
+> — Del post-mortem del equipo, ahora en `AGENTS.md`
+
+## El wallet, el cashback, el vault
+
+Cada pago de PayPal o manual dispara un 5% de cashback en una sola transacción de Prisma. El balance se actualiza en todos los dispositivos conectados vía el evento `wallet.updated` en tiempo real:
+
+```typescript
+async addCashback(userId: number, amount: number, paymentId: number, description: string) {
+  const cashback = Math.floor(amount * 0.05);
+  if (cashback <= 0) return;
+
+  return await this.prisma.$transaction(async (tx) => {
+    const user = await tx.users.update({
+      where: { id: userId },
+      data: { balance: { increment: cashback } },
+    });
+    await tx.wallet_transactions.create({
+      data: { userId, amount: cashback, type: WalletTransactionType.CASHBACK, description, metadata: { paymentId, originalAmount: amount } },
+    });
+    this.eventEmitter.emit('wallet.updated', { userId, balance: user.balance });
+    return user;
+  });
+}
+```
+
+El **Vault** tiene precios por niveles: ₡5/MB estándar (mín ₡50), ₡10/MB VIP (mín ₡100). VIP desbloquea el archivo permanentemente. Mismo service, mismo sistema de eventos, mismas actualizaciones en tiempo real.
+
+## Deny by default
+
+Cada ruta debe declarar `@CheckLoginStatus('loggedIn' | 'public' | 'notLoggedIn')`, o el guard lanza 403. "Olvidé agregar auth" se vuelve un error tipo compile-time:
+
+```typescript
+if (!checkLoginStatus) {
+  this.logger.error(
+    `[PermissionsGuard] Security Violation: Missing @CheckLoginStatus in ${context.getClass().name}.${context.getHandler().name}`
+  );
+  throw new ForbiddenException(
+    'Access Denied: Missing mandatory @CheckLoginStatus decorator (Deny by Default)'
+  );
+}
+```
+
+## AI chat que habla español costarricense
+
+`ChatAiService` corre GPT-4o-mini con un **prompt de 100 líneas** que hace parsing de fecha/hora en español natural de CR. Cuando un visitante dice "Jueves 4 de junio a las 3:30 pm", la AI:
+
+1. Parsea la fecha (verificada contra día de la semana)
+2. Parsea la hora (maneja "1 de la tarde" → 13:00, "3 y 30" → 15:30, "8 de la noche" → 20:00)
+3. Verifica disponibilidad contra appointments de Prisma + Google Calendar
+4. Crea el appointment en una sola transacción
+5. Emite `chat.converted` → el handler despacha a CRM, clients, projects, notifications
+
+Todo dentro de un pipeline de 4 services (`ChatService` → `ChatAiService` → `ChatAvailabilityService` → `ChatConversionService`), con un flag `botPaused` en la sesión para pasar a un humano cuando se necesita.
+
+## Ingeniería de costos
+
+Dos cron jobs mantienen la factura de GCS al mínimo:
+
+- **3 AM diario** — mueve MP3_HQ / WAV / STEMS / BOUNCE / PROJECT_ZIP no accedidos en 30 días a `COLDLINE` (~80% de ahorro en costo)
+- **4 AM diario** — restaura cualquier asset accedido en las últimas 24h a `STANDARD`
+
+Más un **Domingo 2 AM** orphan cleanup que recorre el bucket de GCS y borra archivos no referenciados en `project_assets`, `beat_assets`, `payments.receiptUrl`, `artist_profiles.profileImage/coverImage`, o `blog_assets`. **DRY_RUN por default** por seguridad.
+
+## Feedback de audio con timestamps navegables
+
+Los clientes pueden pinear un comentario a un punto específico del waveform. El admin hace click en "Ir a 02:31" y el player salta ahí. El backend persiste la versión a la que pertenece (así las revisiones siguen la versión del asset, no solo la última):
+
+```typescript
+let assetVersion = '1.0';
+if (assetId) {
+  const asset = await this.prisma.project_assets.findUnique({
+    where: { id: assetId },
+    select: { version: true },
+  });
+  if (asset) assetVersion = asset.version || '1.0';
+}
+```
+
+Combinado con un `MusicPlayer.tsx` de 673 líneas (el componente frontend más grande) usando WaveSurfer.js 7.12, el resultado es un workflow de revisión con calidad de Pro Tools accesible desde cualquier dispositivo.
+
+## Email entrante → lead automático del CRM
+
+Cualquiera que envíe un email a `leovpc@gmail.com` se convierte automáticamente en un lead del CRM a menos que ya sea un user/client. El `inbound-email.service.ts` consume el webhook `email.received` de Resend, parsea el body MIME, auto-matchea al sender, y emite `email_received` al inbox del admin.
+
+En tiempo real: el estudio ve el email en el momento que llega, con reply en un click (el sender original queda como `Reply-To`).
+
+## Sincronización 2-way con Google Calendar
+
+El estudio usa dos paths de auth transparentes: user OAuth (con rotación de tokens) y service-account fallback cuando OAuth falla. Nuevos appointments en el estudio se vuelven eventos en el Google Calendar del admin en tiempo real. OAuth expirado emite `google_calendar.expired` para que la UI pueda pedir re-link.
+
+## Image enhancer con 2 variantes AI
+
+`image-enhancer.service.ts` cobra el wallet, después corre **dos llamadas paralelas a Google Gemini** con la misma imagen pero prompts diferentes (semillas 42 y 77). El usuario elige la que le gusta. Usa OpenAI y `@google/generative-ai` por debajo.
+
+## Lo que aprendí shipping esto por 13 años
+
+Las lecciones aburridas importan más que las ingeniosas:
+
+- **"Los archivos deben mantenerse bajo 100 líneas"** está documentado en `AGENTS.md`, y el codebase mayormente cumple (con excepciones documentadas como el `sync.listener.ts` de 709 líneas y el `projects.service.ts` de 857 líneas)
+- **"Usar transacciones Prisma para operaciones multi-registro"** — cada cashback, cada lead conversion, cada pago es un `$transaction`
+- **"Nunca `prisma db push`, nunca `prisma migrate dev` — el usuario aplica las migraciones manualmente"** — protege el historial de migraciones
+- **"Cada controller usa `catchHandle` y `@CheckLoginStatus`"** — consistencia a nivel de archivo hace que todo el codebase sea navegable
+
+El resultado: 13 años de uptime, cientos de clientes, y un solo codebase que aún puedo navegar a las 3 AM cuando algo se rompe.
+
+## Links
+
+- **Live**: [flproductionscr.com](https://www.flproductionscr.com)
+- **GitHub (frontend)**: privado
+- **Blog** (con los write-ups de arquitectura): [flproductionscr.com/blog](https://www.flproductionscr.com/blog)

@@ -23,7 +23,7 @@ const lang = 'es' as const;
 const t = useTranslations(lang);
 const homePath = getLocalizedPath('/', lang);
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection('projectsEs');
 const projectsByOrder = allProjects
   .sort((a, b) => a.data.order - b.data.order)
   .map((p) => ({
@@ -34,7 +34,6 @@ const projectsByOrder = allProjects
     type: p.data.type,
     status: p.data.status,
     url: p.data.liveUrl,
-    githubUrl: p.data.githubUrl,
     liveLabel: p.data.liveUrl
       ? p.data.liveUrl.replace(/^https?:\/\/(www\.)?/, '')
       : undefined,
@@ -59,7 +58,7 @@ const projectsByOrder = allProjects
       subtitle={t('hero.subtitle')}
       primaryCta={{ label: t('hero.primaryCta'), href: '#projects' }}
       secondaryCta={{ label: t('hero.secondaryCta'), href: '#contact' }}
-      stack={['Astro 5', 'React 19', 'Tailwind 4', 'NestJS', 'Prisma', 'Socket.IO']}
+      stack={['Next.js 15', 'React 19', 'Tailwind 4', 'NestJS 10', 'Prisma 6', 'Socket.IO']}
     />
 
     <NumbersSection />

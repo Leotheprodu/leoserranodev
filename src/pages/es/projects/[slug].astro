@@ -4,12 +4,10 @@ import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
 import Card from '@components/ui/Card.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
-import Button from '@components/ui/Button.astro';
-import { projects as projectsData } from '@data/projects';
 import { useTranslations } from '@/i18n/utils';
 
 export async function getStaticPaths() {
-  const allProjects = await getCollection('projects');
+  const allProjects = await getCollection('projectsEs');
   return allProjects.map((p) => ({
     params: { slug: p.data.slug },
     props: { entry: p },
@@ -22,7 +20,7 @@ const { Content } = await render(entry);
 const lang = 'es' as const;
 const t = useTranslations(lang);
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection('projectsEs');
 const others = allProjects
   .filter((p) => p.data.slug !== entry.data.slug)
   .sort((a, b) => a.data.order - b.data.order);
@@ -36,7 +34,6 @@ const others = allProjects
   status={entry.data.status}
   statusVariant="live"
   liveUrl={entry.data.liveUrl}
-  githubUrl={entry.data.githubUrl}
   stack={entry.data.stack}
   metrics={entry.data.metrics}
   highlights={entry.data.highlights}
@@ -52,8 +49,9 @@ const others = allProjects
           padding="md"
           hover="border"
           href={`/es/projects/${p.data.slug}`}
+          class="block"
         >
-          <div class="flex flex-col gap-2">
+          <div class="flex h-full flex-col gap-2">
             <Badge variant="default" size="sm">
               {p.data.type === 'saas'
                 ? 'SaaS'
@@ -67,9 +65,10 @@ const others = allProjects
             <p class="text-sm text-text-soft line-clamp-2">
               {p.data.tagline}
             </p>
-            <Button variant="link" size="sm" href={`/es/projects/${p.data.slug}`}>
-              {t('common.readCaseStudy')} →
-            </Button>
+            <span class="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-secundario">
+              {t('common.readCaseStudy')}
+              <span aria-hidden="true">→</span>
+            </span>
           </div>
         </Card>
       ))

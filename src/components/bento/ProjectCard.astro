@@ -3,6 +3,7 @@ import Card from '@components/ui/Card.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Button from '@components/ui/Button.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 type ProjectStatus = 'live' | 'beta' | 'building' | 'archived';
 type ProjectType = 'saas' | 'ecommerce' | 'studio' | 'platform';
@@ -30,6 +31,11 @@ interface Props {
 }
 
 const { project, variant = 'default', showMetrics = true } = Astro.props as Props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const caseStudyPath =
+  lang === 'es' ? `/es/projects/${project.slug}` : `/projects/${project.slug}`;
 
 const statusVariant: Record<
   ProjectStatus,
@@ -78,7 +84,7 @@ const typeLabel: Record<Project['type'], string> = {
         </Badge>
       </div>
       {project.featured && (
-        <Badge variant="highlight" size="sm">Featured</Badge>
+        <Badge variant="highlight" size="sm">{t('projects.featuredBadge')}</Badge>
       )}
     </div>
 
@@ -123,16 +129,16 @@ const typeLabel: Record<Project['type'], string> = {
           variant="secundario"
           size="sm"
         >
-          Live
+          {t('projects.liveCta')}
           <span slot="icon-right" aria-hidden="true">↗</span>
         </Button>
       )}
       <Button
-        href={`/projects/${project.slug}`}
+        href={caseStudyPath}
         variant="outline"
         size="sm"
       >
-        Case study
+        {t('projects.caseStudyCta')}
         <span slot="icon-right" aria-hidden="true">→</span>
       </Button>
     </div>

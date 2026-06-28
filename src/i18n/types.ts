@@ -36,8 +36,8 @@ export interface Dictionary {
     title: string;
     subtitle: string;
     liveCta: string;
-    githubCta: string;
     caseStudyCta: string;
+    featuredBadge: string;
   };
   stack: {
     eyebrow: string;

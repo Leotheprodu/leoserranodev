@@ -18,7 +18,6 @@ interface Props {
   status: string;
   statusVariant?: 'live' | 'secundario' | 'default' | 'outline';
   liveUrl?: string;
-  githubUrl?: string;
   stack: string[];
   metrics: Array<{ value: string; label: string }>;
   highlights: string[];
@@ -33,7 +32,6 @@ const {
   status,
   statusVariant = 'live',
   liveUrl,
-  githubUrl,
   stack,
   metrics,
   highlights,
@@ -105,17 +103,6 @@ const formattedDate = publishedAt.toLocaleDateString(
                 {liveUrl && (
                   <Button href={liveUrl} target="_blank" variant="primary" size="lg">
                     {t('caseStudy.visitLive')}
-                    <span slot="icon-right" aria-hidden="true">↗</span>
-                  </Button>
-                )}
-                {githubUrl && (
-                  <Button
-                    href={githubUrl}
-                    target="_blank"
-                    variant="outline"
-                    size="lg"
-                  >
-                    GitHub
                     <span slot="icon-right" aria-hidden="true">↗</span>
                   </Button>
                 )}

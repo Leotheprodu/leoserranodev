@@ -30,9 +30,9 @@ export const es: Dictionary = {
     title: 'Lo que estoy construyendo ahora',
     subtitle:
       'Cuatro sistemas en producción, cada uno en un dominio distinto, todos hechos desde cero.',
-    liveCta: 'Live',
-    githubCta: 'GitHub',
-    caseStudyCta: 'Case study',
+    liveCta: 'Visitar',
+    caseStudyCta: 'Leer case study',
+    featuredBadge: 'Destacado',
   },
   stack: {
     eyebrow: 'Stack',
@@ -44,7 +44,7 @@ export const es: Dictionary = {
     eyebrow: 'Sobre mí',
     title: 'Construyendo software que ',
     titleHighlight: 'pone comida en la mesa',
-    p1: 'Soy Leo, ingeniero full-stack de Heredia, Costa Rica. Tengo',
+    p1: 'Soy Leo, ingeniero full-stack basado en Herediana de Siquirres, Limón, Costa Rica. Tengo',
     p1Strong1: 'FLProductions',
     p1Strong2:
       ', un estudio de grabación que está live desde 2013 y trae al 80% de sus clientes a través de la web.',
@@ -66,8 +66,9 @@ export const es: Dictionary = {
       'Disponible para proyectos interesantes, trabajo como contratista, y posiciones full-time donde el equipo entrega software de producción con cuidado.',
   },
   footer: {
-    tagline: 'Hecho con Astro 5 + Tailwind 4 + Framer Motion.',
-    location: 'Heredia, Costa Rica',
+    tagline:
+      'Next.js · React · Tailwind · NestJS · Prisma · Socket.IO · TypeScript',
+    location: 'Limón, Costa Rica',
   },
   projectsPage: {
     title: '4 sistemas en producción',

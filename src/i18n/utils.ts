@@ -18,13 +18,23 @@ export function getLangFromUrl(url: URL): Language {
 
 export function getLocalizedPath(path: string, targetLang: Language): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  if (targetLang === defaultLanguage) {
-    return cleanPath;
+
+  let basePath = cleanPath;
+  if (basePath === '/es' || basePath === '/es/') {
+    basePath = '/';
+  } else if (basePath.startsWith('/es/')) {
+    basePath = basePath.slice(3);
+  } else if (basePath.startsWith('/es')) {
+    basePath = basePath.slice(3) || '/';
   }
-  if (cleanPath === '/') {
+
+  if (targetLang === defaultLanguage) {
+    return basePath;
+  }
+  if (basePath === '/') {
     return `/${targetLang}/`;
   }
-  return `/${targetLang}${cleanPath}`;
+  return `/${targetLang}${basePath}`;
 }
 
 export function useTranslations(lang: Language = defaultLanguage) {
