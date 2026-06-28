@@ -1,0 +1,64 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Card from '@components/ui/Card.astro';
+import StatCard from '@components/bento/StatCard.astro';
+import BentoGrid from '@components/bento/BentoGrid.astro';
+import Reveal from '@components/motion/Reveal.astro';
+import { headlineStats, heroStats, localizeStat } from '@data/stats';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<Section id="stats" container="wide" background="soft" spacing="lg">
+  <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+    <Heading as="h2" size="4xl" gradient>
+      {t('stats.title')}
+    </Heading>
+    <p class="max-w-2xl text-text-soft">{t('stats.subtitle')}</p>
+  </Reveal>
+
+  {
+    heroStats.length > 0 && (
+      <Reveal direction="up" speed="slow" distance={32} class="mb-8">
+        {heroStats.map((s) => {
+          const local = localizeStat(s, lang);
+          return (
+            <Card variant="stat" padding="lg" class="bg-gradient-to-br from-secundario/10 via-bg to-acento/10">
+              <div class="flex flex-col items-center gap-3 text-center md:flex-row md:items-baseline md:justify-center md:gap-6">
+                <span class="text-7xl font-black tracking-tighter text-gradient md:text-8xl">
+                  {local.value}
+                  {local.suffix}
+                </span>
+                <div class="flex flex-col gap-1 md:text-left">
+                  <span class="text-xl font-bold text-text md:text-2xl">
+                    {local.label}
+                  </span>
+                  {local.description && (
+                    <span class="text-sm text-text-soft md:text-base">
+                      {local.description}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Card>
+          );
+        })}
+      </Reveal>
+    )
+  }
+
+  <BentoGrid cols={3} gap="md">
+    {headlineStats
+      .filter((s) => !s.hero)
+      .map((s) => (
+        <StatCard
+          stat={localizeStat(s, lang)}
+          size="md"
+          highlight={s.highlight}
+        />
+      ))}
+  </BentoGrid>
+</Section>

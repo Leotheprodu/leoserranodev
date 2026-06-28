@@ -4,6 +4,10 @@ import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
 import Icon from '@components/ui/Icon.astro';
 import { stack } from '@data/stack';
+import { getLangFromUrl } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const currentYear = new Date().getFullYear();
 
 const levelVariant = {
   expert: 'secundario',
@@ -12,10 +16,9 @@ const levelVariant = {
 } as const;
 
 const levelLabel = {
-  expert: 'Expert',
-  proficient: 'Proficient',
-  learning: 'Learning',
-};
+  en: { expert: 'Expert', proficient: 'Proficient', learning: 'Learning' },
+  es: { expert: 'Experto', proficient: 'Competente', learning: 'Aprendiendo' },
+} as const;
 ---
 
 <Section id="stack" container="wide" background="default" spacing="lg">
@@ -44,14 +47,14 @@ const levelLabel = {
               <li class="flex items-center justify-between gap-2 text-sm">
                 <span class="text-text">{item.name}</span>
                 <div class="flex items-center gap-1.5">
-                  {item.years && (
+                  {item.since && (
                     <span class="text-xs text-text-muted">
-                      {item.years}y
+                      {currentYear - item.since}y
                     </span>
                   )}
                   {item.level && (
                     <Badge variant={levelVariant[item.level]} size="sm">
-                      {levelLabel[item.level]}
+                      {levelLabel[lang][item.level]}
                     </Badge>
                   )}
                 </div>

@@ -3,6 +3,7 @@ export interface TechItem {
   icon?: string;
   level?: 'expert' | 'proficient' | 'learning';
   years?: number;
+  since?: number;
 }
 
 export interface TechCategory {
@@ -12,19 +13,23 @@ export interface TechCategory {
   items: TechItem[];
 }
 
+const CURRENT_YEAR = 2026;
+const yearsAgo = (y: number) => CURRENT_YEAR - y;
+
 export const stack: TechCategory[] = [
   {
     id: 'backend',
     title: 'Backend',
     icon: 'mdi:server',
     items: [
-      { name: 'NestJS', level: 'expert', years: 5 },
-      { name: 'Express', level: 'proficient', years: 6 },
-      { name: 'Prisma', level: 'expert', years: 4 },
-      { name: 'TypeScript', level: 'expert', years: 6 },
-      { name: 'PostgreSQL', level: 'proficient', years: 4 },
-      { name: 'MySQL', level: 'proficient', years: 5 },
-      { name: 'Socket.IO', level: 'expert', years: 4 },
+      { name: 'TypeScript', level: 'expert', since: yearsAgo(7) },
+      { name: 'Node.js', level: 'expert', since: yearsAgo(8) },
+      { name: 'NestJS', level: 'expert', since: yearsAgo(5) },
+      { name: 'Express', level: 'proficient', since: yearsAgo(7) },
+      { name: 'Prisma', level: 'expert', since: yearsAgo(5) },
+      { name: 'PostgreSQL', level: 'proficient', since: yearsAgo(5) },
+      { name: 'MySQL', level: 'proficient', since: yearsAgo(6) },
+      { name: 'Socket.IO', level: 'expert', since: yearsAgo(4) },
     ],
   },
   {
@@ -32,12 +37,12 @@ export const stack: TechCategory[] = [
     title: 'Frontend',
     icon: 'mdi:monitor-dashboard',
     items: [
-      { name: 'Next.js', level: 'expert', years: 5 },
-      { name: 'React', level: 'expert', years: 7 },
-      { name: 'Astro', level: 'proficient', years: 2 },
-      { name: 'Tailwind CSS', level: 'expert', years: 4 },
-      { name: 'HeroUI', level: 'proficient', years: 2 },
-      { name: 'TanStack Query', level: 'proficient', years: 3 },
+      { name: 'React', level: 'expert', since: yearsAgo(8) },
+      { name: 'Next.js', level: 'expert', since: yearsAgo(5) },
+      { name: 'Astro', level: 'proficient', since: yearsAgo(2) },
+      { name: 'Tailwind CSS', level: 'expert', since: yearsAgo(5) },
+      { name: 'HeroUI', level: 'proficient', since: yearsAgo(2) },
+      { name: 'TanStack Query', level: 'proficient', since: yearsAgo(3) },
     ],
   },
   {
@@ -45,10 +50,10 @@ export const stack: TechCategory[] = [
     title: 'Real-time',
     icon: 'mdi:lightning-bolt',
     items: [
-      { name: 'Socket.IO', level: 'expert', years: 4 },
-      { name: 'EventEmitter2', level: 'proficient', years: 3 },
-      { name: 'WebSockets', level: 'expert', years: 4 },
-      { name: 'SSE', level: 'proficient', years: 2 },
+      { name: 'Socket.IO', level: 'expert', since: yearsAgo(4) },
+      { name: 'EventEmitter2', level: 'proficient', since: yearsAgo(3) },
+      { name: 'WebSockets', level: 'expert', since: yearsAgo(4) },
+      { name: 'SSE', level: 'proficient', since: yearsAgo(2) },
     ],
   },
   {
@@ -56,9 +61,9 @@ export const stack: TechCategory[] = [
     title: 'AI / ML',
     icon: 'mdi:brain',
     items: [
-      { name: 'OpenAI GPT-4o-mini', level: 'proficient', years: 2 },
-      { name: 'Google Gemini', level: 'proficient', years: 1 },
-      { name: 'Prompt engineering', level: 'proficient', years: 2 },
+      { name: 'OpenAI GPT-4o-mini', level: 'proficient', since: yearsAgo(2) },
+      { name: 'Google Gemini', level: 'proficient', since: yearsAgo(1) },
+      { name: 'Prompt engineering', level: 'proficient', since: yearsAgo(2) },
     ],
   },
   {
@@ -66,11 +71,11 @@ export const stack: TechCategory[] = [
     title: 'DevOps',
     icon: 'mdi:cloud-outline',
     items: [
-      { name: 'Google Cloud', level: 'proficient', years: 4 },
-      { name: 'Railway', level: 'proficient', years: 2 },
-      { name: 'Vercel', level: 'proficient', years: 4 },
-      { name: 'GitHub Actions', level: 'proficient', years: 3 },
-      { name: 'Docker', level: 'proficient', years: 3 },
+      { name: 'Google Cloud', level: 'proficient', since: yearsAgo(5) },
+      { name: 'Vercel', level: 'proficient', since: yearsAgo(5) },
+      { name: 'Railway', level: 'proficient', since: yearsAgo(2) },
+      { name: 'GitHub Actions', level: 'proficient', since: yearsAgo(4) },
+      { name: 'Docker', level: 'proficient', since: yearsAgo(4) },
     ],
   },
   {
@@ -78,10 +83,10 @@ export const stack: TechCategory[] = [
     title: 'Tools',
     icon: 'mdi:toolbox-outline',
     items: [
-      { name: 'Git / GitHub', level: 'expert', years: 8 },
-      { name: 'VS Code', level: 'expert', years: 7 },
-      { name: 'Jest / Vitest', level: 'proficient', years: 4 },
-      { name: 'Playwright', level: 'learning', years: 1 },
+      { name: 'Git / GitHub', level: 'expert', since: yearsAgo(9) },
+      { name: 'VS Code', level: 'expert', since: yearsAgo(8) },
+      { name: 'Jest / Vitest', level: 'proficient', since: yearsAgo(4) },
+      { name: 'Playwright', level: 'learning', since: yearsAgo(1) },
     ],
   },
 ];

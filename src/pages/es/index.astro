@@ -12,12 +12,10 @@ import Reveal from '@components/motion/Reveal.astro';
 import StaggerChildren from '@components/motion/StaggerChildren.astro';
 import Hero from '@components/bento/Hero.astro';
 import ProjectCard from '@components/bento/ProjectCard.astro';
-import StatCard from '@components/bento/StatCard.astro';
-import BentoGrid from '@components/bento/BentoGrid.astro';
 import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
 import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
-import { headlineStats, localizeStat } from '@data/stats';
+import NumbersSection from '@components/bento/NumbersSection.astro';
 import { stack } from '@data/stack';
 import { useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
 
@@ -64,18 +62,7 @@ const projectsByOrder = allProjects
       stack={['Astro 5', 'React 19', 'Tailwind 4', 'NestJS', 'Prisma', 'Socket.IO']}
     />
 
-    <Section id="stats" container="wide" background="soft" spacing="lg">
-      <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
-        <Heading as="h2" size="4xl" gradient>
-          {t('stats.title')}
-        </Heading>
-        <p class="max-w-2xl text-text-soft">{t('stats.subtitle')}</p>
-      </Reveal>
-
-      <BentoGrid cols={3} gap="md">
-        {headlineStats.map((s) => <StatCard stat={localizeStat(s, 'es')} size="md" highlight={s.highlight} />)}
-      </BentoGrid>
-    </Section>
+    <NumbersSection />
 
     <Section id="projects" container="wide" background="default" spacing="lg">
       <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
