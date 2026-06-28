@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
 import Heading from '@components/ui/Heading.astro';
@@ -12,8 +13,6 @@ import StackSection from '@components/bento/StackSection.astro';
 import ContactSection from '@components/bento/ContactSection.astro';
 import SnippetsShowcase from '@components/bento/SnippetsShowcase.astro';
 import NumbersSection from '@components/bento/NumbersSection.astro';
-import { Image } from 'astro:assets';
-import avatarImg from '@/assets/avatar/avatar-256.png';
 import Section from '@components/ui/Section.astro';
 import Header from '@components/layouts/Header.astro';
 import Footer from '@components/layouts/Footer.astro';
@@ -22,6 +21,7 @@ import Reveal from '@components/motion/Reveal.astro';
 import StaggerChildren from '@components/motion/StaggerChildren.astro';
 import { stack } from '@data/stack';
 import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
+import avatarImg from '@/assets/avatar/avatar-256.png';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -146,6 +146,16 @@ const projectsByOrder = allProjects
 
     <Section id="about" container="narrow" background="default" spacing="lg">
       <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-6 text-center">
+        <div class="about-avatar relative h-20 w-20 overflow-hidden rounded-full ring-2 ring-secundario/40 shadow-lg">
+          <Image
+            src={avatarImg}
+            alt="Leonardo Serrano"
+            width={80}
+            height={80}
+            loading="lazy"
+            class="h-full w-full object-cover"
+          />
+        </div>
         <Heading as="h2" size="4xl">
           {t('about.title')}<span class="text-gradient">{t('about.titleHighlight')}</span>
         </Heading>
