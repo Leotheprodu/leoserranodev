@@ -1,0 +1,73 @@
+---
+type Variant = 'default' | 'bento' | 'feature' | 'project' | 'stat' | 'flat';
+type Padding = 'none' | 'sm' | 'md' | 'lg';
+type Hover = 'none' | 'lift' | 'glow' | 'border';
+
+interface Props {
+  variant?: Variant;
+  padding?: Padding;
+  hover?: Hover;
+  href?: string;
+  target?: '_blank' | '_self';
+  rel?: string;
+  class?: string;
+  id?: string;
+  as?: 'div' | 'article' | 'section' | 'a';
+}
+
+const {
+  variant = 'default',
+  padding = 'md',
+  hover = 'none',
+  href,
+  target,
+  rel,
+  class: className = '',
+  id,
+  as = 'div',
+} = Astro.props as Props;
+
+const isLink = typeof href === 'string';
+const Tag = isLink ? 'a' : as;
+
+const base = 'relative block rounded-lg border border-border bg-surface overflow-hidden';
+
+const variants: Record<Variant, string> = {
+  default: 'shadow-sm',
+  bento: 'transition-shadow duration-300',
+  feature: 'shadow-sm',
+  project: 'shadow-sm',
+  stat: 'flex flex-col gap-2',
+  flat: 'border-transparent bg-bg-soft',
+};
+
+const paddings: Record<Padding, string> = {
+  none: '',
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8',
+};
+
+const hovers: Record<Hover, string> = {
+  none: '',
+  lift: 'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg',
+  glow: 'transition-all duration-300 hover:border-secundario hover:shadow-[0_0_0_1px_var(--color-secundario),0_8px_30px_-8px_var(--color-secundario)]',
+  border: 'transition-colors duration-200 hover:border-secundario',
+};
+
+const linkAttrs = isLink
+  ? {
+      href,
+      target,
+      rel: rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined),
+    }
+  : {};
+
+const classes = [base, variants[variant], paddings[padding], hovers[hover], className]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<Tag id={id} class={classes} {...linkAttrs}>
+  <slot />
+</Tag>
