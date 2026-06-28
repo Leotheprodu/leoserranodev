@@ -1,0 +1,132 @@
+---
+import Card from '@components/ui/Card.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Button from '@components/ui/Button.astro';
+import type { Project, ProjectStatus } from '@data/projects';
+
+interface Props {
+  project: Project;
+  variant?: 'default' | 'wide' | 'tall';
+  showMetrics?: boolean;
+}
+
+const { project, variant = 'default', showMetrics = true } = Astro.props as Props;
+
+const statusVariant: Record<
+  ProjectStatus,
+  'live' | 'secundario' | 'default' | 'outline'
+> = {
+  live: 'live',
+  beta: 'secundario',
+  building: 'default',
+  archived: 'outline',
+};
+
+const statusLabel: Record<ProjectStatus, string> = {
+  live: 'Live',
+  beta: 'Beta',
+  building: 'Building',
+  archived: 'Archived',
+};
+
+const typeLabel: Record<Project['type'], string> = {
+  saas: 'SaaS',
+  ecommerce: 'E-commerce',
+  studio: 'Studio',
+  platform: 'Platform',
+};
+---
+
+<Card
+  variant="bento"
+  padding="lg"
+  hover="glow"
+  class={
+    variant === 'wide'
+      ? 'lg:col-span-2'
+      : variant === 'tall'
+        ? 'lg:row-span-2'
+        : ''
+  }
+>
+  <div class="flex h-full flex-col gap-5">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <Badge variant="default" size="sm">{typeLabel[project.type]}</Badge>
+        <Badge variant={statusVariant[project.status]} size="sm">
+          {statusLabel[project.status]}
+        </Badge>
+      </div>
+      {project.featured && (
+        <Badge variant="highlight" size="sm">Featured</Badge>
+      )}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Heading as="h3" size="xl" weight="black">{project.title}</Heading>
+      <p class="text-sm text-text-soft">{project.tagline}</p>
+    </div>
+
+    <p class="text-sm leading-relaxed text-text-soft">
+      {project.description}
+    </p>
+
+    {showMetrics && project.metrics.length > 0 && (
+      <div class="grid grid-cols-2 gap-3 border-y border-border py-4 sm:grid-cols-4">
+        {project.metrics.map((m) => (
+          <div class="flex flex-col">
+            <span class="text-2xl font-black tracking-tight text-text">
+              {m.value}
+            </span>
+            <span class="text-xs text-text-muted">{m.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <ul class="flex flex-col gap-1.5 text-sm text-text-soft">
+      {
+        project.highlights.slice(0, 3).map((h) => (
+          <li class="flex items-start gap-2">
+            <span class="mt-1.5 inline-block h-1 w-1 flex-shrink-0 rounded-full bg-secundario" />
+            <span>{h}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-auto flex flex-wrap gap-2 pt-2">
+      {project.url && (
+        <Button
+          href={project.url}
+          target="_blank"
+          variant="primary"
+          size="sm"
+        >
+          Live
+          <span slot="icon-right" aria-hidden="true">↗</span>
+        </Button>
+      )}
+      {project.githubUrl && (
+        <Button
+          href={project.githubUrl}
+          target="_blank"
+          variant="ghost"
+          size="sm"
+        >
+          GitHub
+          <span slot="icon-right" aria-hidden="true">↗</span>
+        </Button>
+      )}
+      <Button
+        href={`/projects/${project.slug}`}
+        variant="outline"
+        size="sm"
+      >
+        Case study
+        <span slot="icon-right" aria-hidden="true">→</span>
+      </Button>
+    </div>
+  </div>
+</Card>

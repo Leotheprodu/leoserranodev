@@ -1,0 +1,44 @@
+---
+import Card from '@components/ui/Card.astro';
+import type { Stat } from '@data/stats';
+
+interface Props {
+  stat: Stat;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { stat, size = 'md', class: className = '' } = Astro.props as Props;
+
+const valueSize = {
+  sm: 'text-3xl md:text-4xl',
+  md: 'text-4xl md:text-5xl',
+  lg: 'text-5xl md:text-6xl',
+};
+---
+
+<Card
+  variant="stat"
+  padding="md"
+  class:list={['group', className]}
+  hover={stat.highlight ? 'glow' : 'border'}
+>
+  <div class="flex flex-col gap-1.5">
+    <span
+      class:list={[
+        'font-black tracking-tighter text-text',
+        valueSize[size],
+        stat.highlight && 'text-gradient',
+      ]}
+    >
+      {stat.value}
+      {stat.suffix && <span>{stat.suffix}</span>}
+    </span>
+    <span class="text-sm font-semibold uppercase tracking-wider text-text-soft">
+      {stat.label}
+    </span>
+    {stat.description && (
+      <span class="text-xs text-text-muted">{stat.description}</span>
+    )}
+  </div>
+</Card>

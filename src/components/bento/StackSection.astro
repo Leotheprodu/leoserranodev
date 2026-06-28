@@ -1,0 +1,66 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Icon from '@components/ui/Icon.astro';
+import { stack } from '@data/stack';
+
+const levelVariant = {
+  expert: 'secundario',
+  proficient: 'default',
+  learning: 'outline',
+} as const;
+
+const levelLabel = {
+  expert: 'Expert',
+  proficient: 'Proficient',
+  learning: 'Learning',
+};
+---
+
+<Section id="stack" container="wide" background="default" spacing="lg">
+  <div class="mb-12 flex flex-col items-center gap-3 text-center">
+    <Badge variant="default" size="sm">Stack</Badge>
+    <Heading as="h2" size="4xl" gradient>
+      What I work with
+    </Heading>
+    <p class="max-w-2xl text-text-soft">
+      Tools I've shipped to production. Grouped by layer, ordered by how
+      much I've used them.
+    </p>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      stack.map((category) => (
+        <div class="rounded-lg border border-border bg-surface p-6">
+          <div class="mb-4 flex items-center gap-3">
+            <span class="grid h-9 w-9 place-items-center rounded-md bg-secundario/10 text-secundario">
+              <Icon name={category.icon} size={18} ariaLabel={category.title} />
+            </span>
+            <h3 class="text-base font-bold text-text">{category.title}</h3>
+          </div>
+          <ul class="flex flex-col gap-2">
+            {category.items.map((item) => (
+              <li class="flex items-center justify-between gap-2 text-sm">
+                <span class="text-text">{item.name}</span>
+                <div class="flex items-center gap-1.5">
+                  {item.years && (
+                    <span class="text-xs text-text-muted">
+                      {item.years}y
+                    </span>
+                  )}
+                  {item.level && (
+                    <Badge variant={levelVariant[item.level]} size="sm">
+                      {levelLabel[item.level]}
+                    </Badge>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>

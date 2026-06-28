@@ -1,0 +1,86 @@
+---
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Button from '@components/ui/Button.astro';
+import Icon from '@components/ui/Icon.astro';
+
+const email = 'hola@leonardoserrano.site';
+
+const socials = [
+  {
+    label: 'GitHub',
+    href: 'https://github.com/Leotheprodu',
+    icon: 'simple-icons:github',
+    handle: '@Leotheprodu',
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/leonardoserranodev',
+    icon: 'simple-icons:linkedin',
+    handle: 'leonardoserranodev',
+  },
+  {
+    label: 'YouTube',
+    href: 'https://www.youtube.com/channel/UCAVKw7wP-yKPGSbCd1BJ7mw',
+    icon: 'simple-icons:youtube',
+    handle: 'FLProductions CR',
+  },
+];
+---
+
+<Section
+  id="contact"
+  container="narrow"
+  background="primario"
+  spacing="lg"
+  class="text-center"
+>
+  <div class="flex flex-col items-center gap-6">
+    <Badge variant="highlight" size="sm">Get in touch</Badge>
+
+    <Heading as="h2" size="5xl" class="text-bg">
+      Let's build something <span class="text-gradient">real</span>
+    </Heading>
+
+    <p class="max-w-xl text-base text-bg/80">
+      Open to interesting projects, contract work, and full-time roles where
+      the team ships production software with care.
+    </p>
+
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+      <Button
+        href={`mailto:${email}`}
+        variant="primary"
+        size="lg"
+        class="!bg-bg !text-primario hover:!bg-bg/90"
+      >
+        <span slot="icon-left" aria-hidden="true">
+          <Icon name="mdi:email-outline" size={18} ariaLabel="Email" />
+        </span>
+        {email}
+      </Button>
+    </div>
+
+    <div
+      class="mt-10 grid w-full max-w-2xl gap-3 sm:grid-cols-3"
+    >
+      {
+        socials.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group flex flex-col items-center gap-2 rounded-lg border border-bg/20 bg-bg/5 p-4 transition hover:border-highlight hover:bg-bg/10"
+          >
+            <span class="grid h-10 w-10 place-items-center rounded-md bg-bg/10 text-bg transition group-hover:bg-highlight group-hover:text-primario">
+              <Icon name={s.icon} size={20} ariaLabel={s.label} />
+            </span>
+            <span class="text-sm font-semibold text-bg">{s.label}</span>
+            <span class="text-xs text-bg/60">{s.handle}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Section>

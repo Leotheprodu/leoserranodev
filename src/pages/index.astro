@@ -1,16 +1,24 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Button from '@components/ui/Button.astro';
-import Card from '@components/ui/Card.astro';
-import Section from '@components/ui/Section.astro';
 import Heading from '@components/ui/Heading.astro';
 import Badge from '@components/ui/Badge.astro';
+import Card from '@components/ui/Card.astro';
+import Hero from '@components/bento/Hero.astro';
+import ProjectCard from '@components/bento/ProjectCard.astro';
+import StatCard from '@components/bento/StatCard.astro';
+import BentoGrid from '@components/bento/BentoGrid.astro';
+import StackSection from '@components/bento/StackSection.astro';
+import ContactSection from '@components/bento/ContactSection.astro';
+import Section from '@components/ui/Section.astro';
 import ThemeToggle from '@components/ui/ThemeToggle.astro';
+import { projectsByOrder } from '@data/projects';
+import { headlineStats } from '@data/stats';
 ---
 
 <BaseLayout
-  title="Leonardo Serrano — Full-Stack Engineer"
-  description="Building production systems that scale. 3 active projects, ~159K lines of code, real users in production."
+  title="Leonardo Serrano — Full-Stack Engineer from Costa Rica"
+  description="Building production systems that scale. 4 live products, 159K+ lines of code, real users in production. 13+ years shipping software."
 >
   <header
     class="sticky top-0 z-50 w-full border-b border-border/60 bg-bg/80 backdrop-blur-md"
@@ -37,6 +45,18 @@ import ThemeToggle from '@components/ui/ThemeToggle.astro';
           Projects
         </a>
         <a
+          href="#stats"
+          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+        >
+          Numbers
+        </a>
+        <a
+          href="#stack"
+          class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
+        >
+          Stack
+        </a>
+        <a
           href="#about"
           class="hidden text-sm text-text-soft transition hover:text-text md:inline-flex"
         >
@@ -53,235 +73,96 @@ import ThemeToggle from '@components/ui/ThemeToggle.astro';
     </div>
   </header>
 
-  <Section
-    container="wide"
-    background="default"
-    spacing="xl"
-    class="relative overflow-hidden"
-  >
-    <div
-      class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,var(--color-secundario)/8,transparent_50%),radial-gradient(circle_at_70%_80%,var(--color-acento)/8,transparent_50%)]"
-    >
-    </div>
+  <main>
+    <Hero
+      eyebrow="Building in public"
+      title="Full-stack engineer building production systems that scale"
+      subtitle="Costa Rica · 4 live products · 159K+ lines of code · real users every day. I run a recording studio and ship SaaS on the side."
+      primaryCta={{ label: 'See the work', href: '#projects' }}
+      secondaryCta={{ label: 'Get in touch', href: '#contact' }}
+      stack={['Astro 5', 'React 19', 'Tailwind 4', 'NestJS', 'Prisma', 'Socket.IO']}
+    />
 
-    <div class="flex flex-col items-center gap-8 text-center">
-      <Badge variant="secundario" size="md">
-        <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-secundario"
-        ></span>
-        Portfolio v2 — building in public
-      </Badge>
-
-      <Heading
-        as="h1"
-        size="6xl"
-        weight="black"
-        gradient
-        class="max-w-5xl"
-      >
-        Full-stack engineer building production systems that scale
-      </Heading>
-
-      <p
-        class="max-w-2xl text-balance text-lg text-text-soft md:text-xl"
-      >
-        Costa Rica · 3 active products in production · ~159K lines of code ·
-        real users every day
-      </p>
-
-      <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
-        <Button href="#projects" variant="primary" size="lg">
-          See the work
-          <span slot="icon-right" aria-hidden="true">→</span>
-        </Button>
-        <Button
-          href="mailto:hola@leonardoserrano.site"
-          variant="outline"
-          size="lg"
-        >
-          Get in touch
-        </Button>
+    <Section id="stats" container="wide" background="soft" spacing="lg">
+      <div class="mb-12 flex flex-col items-center gap-3 text-center">
+        <Badge variant="default" size="sm">Numbers</Badge>
+        <Heading as="h2" size="4xl" gradient>
+          What 13 years of shipping looks like
+        </Heading>
+        <p class="max-w-2xl text-text-soft">
+          Real metrics from production codebases, not vanity numbers.
+        </p>
       </div>
 
-      <div class="mt-12 flex flex-wrap items-center justify-center gap-2 text-xs text-text-muted">
-        <span>Stack:</span>
-        <Badge variant="outline" size="sm">Astro 5</Badge>
-        <Badge variant="outline" size="sm">React 19</Badge>
-        <Badge variant="outline" size="sm">Tailwind 4</Badge>
-        <Badge variant="outline" size="sm">Framer Motion</Badge>
-        <Badge variant="outline" size="sm">NestJS</Badge>
-        <Badge variant="outline" size="sm">Prisma</Badge>
-        <Badge variant="outline" size="sm">Socket.IO</Badge>
+      <BentoGrid cols={3} gap="md">
+        {headlineStats.map((stat) => <StatCard stat={stat} size="md" />)}
+      </BentoGrid>
+    </Section>
+
+    <Section id="projects" container="wide" background="default" spacing="lg">
+      <div class="mb-12 flex flex-col items-center gap-3 text-center">
+        <Badge variant="default" size="sm">Featured</Badge>
+        <Heading as="h2" size="4xl" gradient>
+          What I'm shipping right now
+        </Heading>
+        <p class="max-w-2xl text-text-soft">
+          Four production systems, each one a different domain, all built from
+          scratch.
+        </p>
       </div>
-    </div>
-  </Section>
 
-  <Section id="projects" container="wide" background="soft" spacing="lg">
-    <div class="mb-12 flex flex-col items-center gap-3 text-center">
-      <Badge variant="default" size="sm">Featured</Badge>
-      <Heading as="h2" size="4xl" gradient>What I'm shipping right now</Heading>
-      <p class="max-w-2xl text-text-soft">
-        Three production systems, each one a different domain, all built from
-        scratch.
-      </p>
-    </div>
-
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card variant="bento" padding="lg" hover="glow" class="lg:col-span-2">
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <Badge variant="secundario" size="sm">Lead project</Badge>
-            <Badge variant="live" size="sm">13+ years live</Badge>
-          </div>
-          <Heading as="h3" size="2xl">FLProductions</Heading>
-          <p class="text-text-soft">
-            Recording studio website + artist portal + beat e-commerce. NestJS
-            + Prisma + Next.js · 28 models · 202 endpoints · real-time sync.
-          </p>
-          <div class="mt-2 flex gap-2">
-            <Button href="https://www.flproductionscr.com" target="_blank" variant="primary" size="sm">
-              Live site
-              <span slot="icon-right" aria-hidden="true">↗</span>
-            </Button>
-            <Button href="#" variant="ghost" size="sm">Case study</Button>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="bento" padding="lg" hover="glow">
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <Badge variant="acento" size="sm">SaaS</Badge>
-            <Badge variant="live" size="sm">500+ users tested</Badge>
-          </div>
-          <Heading as="h3" size="xl">Zamr</Heading>
-          <p class="text-text-soft">
-            Worship band management. Multi-tenant, real-time lyrics, WebSocket
-            gateway load-tested to 500 concurrent.
-          </p>
-          <div class="mt-2 flex gap-2">
-            <Button href="https://www.zamr.app" target="_blank" variant="primary" size="sm">
-              Live site
-              <span slot="icon-right" aria-hidden="true">↗</span>
-            </Button>
-            <Button href="#" variant="ghost" size="sm">Case study</Button>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="bento" padding="lg" hover="glow">
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <Badge variant="highlight" size="sm">SaaS</Badge>
-            <Badge variant="live" size="sm">3 clients</Badge>
-          </div>
-          <Heading as="h3" size="xl">MejorMenu</Heading>
-          <p class="text-text-soft">
-            Multi-tenant menus for restaurants in Costa Rica. AI image
-            generation, WhatsApp deep-links, real-time orders.
-          </p>
-          <div class="mt-2 flex gap-2">
-            <Button href="https://www.mejormenu.com" target="_blank" variant="primary" size="sm">
-              Live site
-              <span slot="icon-right" aria-hidden="true">↗</span>
-            </Button>
-            <Button href="#" variant="ghost" size="sm">Case study</Button>
-          </div>
-        </div>
-      </Card>
-
-      <Card variant="bento" padding="lg" hover="glow" class="md:col-span-2">
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <Badge variant="default" size="sm">E-commerce</Badge>
-            <Badge variant="outline" size="sm">Part of FLProductions</Badge>
-          </div>
-          <Heading as="h3" size="2xl">Ackee Beats</Heading>
-          <p class="text-text-soft">
-            Beat marketplace with PayPal licensing, YouTube preview integration,
-            and PDF license generation per purchase.
-          </p>
-          <div class="mt-2 flex gap-2">
-            <Button href="https://www.ackeebeats.com" target="_blank" variant="primary" size="sm">
-              Live site
-              <span slot="icon-right" aria-hidden="true">↗</span>
-            </Button>
-          </div>
-        </div>
-      </Card>
-    </div>
-  </Section>
-
-  <Section id="about" container="narrow" background="default" spacing="lg">
-    <div class="flex flex-col items-center gap-6 text-center">
-      <Badge variant="default" size="sm">About</Badge>
-      <Heading as="h2" size="4xl">
-        Building software that <span class="text-gradient">puts food on the table</span>
-      </Heading>
-      <p class="max-w-2xl text-lg text-text-soft">
-        I'm Leo, a full-stack engineer from Costa Rica. I run a recording
-        studio (FLProductions) and build SaaS products on the side. My
-        favourite problems are real-time systems, multi-tenant architectures,
-        and developer experience.
-      </p>
-    </div>
-  </Section>
-
-  <Section
-    id="contact"
-    container="narrow"
-    background="primario"
-    spacing="lg"
-    class="text-center"
-  >
-    <div class="flex flex-col items-center gap-6">
-      <Badge variant="highlight" size="sm">Get in touch</Badge>
-      <Heading
-        as="h2"
-        size="5xl"
-        class="text-bg"
-      >
-        Let's build something <span class="text-gradient">real</span>
-      </Heading>
-      <p class="max-w-xl text-base text-bg/80">
-        Open to interesting projects, contract work, and full-time roles where
-        the team ships production software with care.
-      </p>
-      <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
-        <Button
-          href="mailto:hola@leonardoserrano.site"
-          variant="primary"
-          size="lg"
-          class="!bg-bg !text-primario hover:!bg-bg/90"
-        >
-          hola@leonardoserrano.site
-        </Button>
-        <Button
-          href="https://github.com/Leotheprodu"
-          target="_blank"
-          variant="outline"
-          size="lg"
-          class="!border-bg/20 !text-bg hover:!border-highlight hover:!text-highlight"
-        >
-          GitHub
-        </Button>
-        <Button
-          href="https://www.linkedin.com/in/leonardoserranodev"
-          target="_blank"
-          variant="outline"
-          size="lg"
-          class="!border-bg/20 !text-bg hover:!border-highlight hover:!text-highlight"
-        >
-          LinkedIn
-        </Button>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {projectsByOrder.map((project, i) => (
+          <ProjectCard
+            project={project}
+            variant={i === 0 ? 'wide' : 'default'}
+          />
+        ))}
       </div>
-    </div>
-  </Section>
+    </Section>
+
+    <StackSection />
+
+    <Section id="about" container="narrow" background="default" spacing="lg">
+      <div class="flex flex-col items-center gap-6 text-center">
+        <Badge variant="default" size="sm">About</Badge>
+        <Heading as="h2" size="4xl">
+          Building software that <span class="text-gradient">puts food on the table</span>
+        </Heading>
+        <div class="max-w-2xl space-y-4 text-left text-lg text-text-soft">
+          <p>
+            I'm Leo, a full-stack engineer from Heredia, Costa Rica. I run
+            <strong class="text-text">FLProductions</strong>, a recording
+            studio that's been live since 2013 and brings in 80% of its
+            clients through the website.
+          </p>
+          <p>
+            On the side I ship multi-tenant SaaS products:
+            <strong class="text-text">Zamr</strong> for worship bands
+            (load-tested to 500 WebSocket users) and
+            <strong class="text-text">MejorMenu</strong> for local restaurants
+            (3 clients live and growing).
+          </p>
+          <p>
+            My favourite problems: real-time systems, multi-tenant
+            architectures, and developer experience. I write the kind of docs
+            I'd want to read — 4,000+ lines across the 3 projects.
+          </p>
+        </div>
+      </div>
+    </Section>
+
+    <ContactSection />
+  </main>
 
   <footer class="border-t border-border py-8">
     <div
       class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs text-text-muted md:flex-row md:px-10"
     >
-      <p>© {new Date().getFullYear()} Leonardo Serrano. Built with Astro 5 + Tailwind 4.</p>
+      <p>
+        © {new Date().getFullYear()} Leonardo Serrano. Built with Astro 5 +
+        Tailwind 4 + Framer Motion.
+      </p>
       <p>Heredia, Costa Rica</p>
     </div>
   </footer>

@@ -8,7 +8,18 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://leonardoserrano.site',
-  integrations: [react(), mdx(), sitemap(), icon()],
+  integrations: [
+    react(),
+    mdx(),
+    sitemap(),
+    icon({
+      iconSets: {
+        mdi: () => import('@iconify-json/mdi/icons.json').then((m) => m.default),
+        'simple-icons': () =>
+          import('@iconify-json/simple-icons/icons.json').then((m) => m.default),
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
