@@ -1,0 +1,57 @@
+---
+import ThemeToggle from '@components/ui/ThemeToggle.astro';
+
+interface Props {
+  activeSection?: 'home' | 'projects' | 'stats' | 'stack' | 'about' | 'contact';
+}
+
+const { activeSection } = Astro.props as Props;
+
+const navItems = [
+  { id: 'projects', label: 'Projects', href: '/#projects' },
+  { id: 'stats', label: 'Numbers', href: '/#stats' },
+  { id: 'stack', label: 'Stack', href: '/#stack' },
+  { id: 'about', label: 'About', href: '/#about' },
+  { id: 'contact', label: 'Contact', href: '/#contact' },
+];
+---
+
+<header
+  class="sticky top-0 z-50 w-full border-b border-border/60 bg-bg/80 backdrop-blur-md"
+>
+  <div
+    class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10"
+  >
+    <a
+      href="/"
+      class="flex items-center gap-2 text-sm font-bold tracking-tight"
+    >
+      <span
+        class="grid h-7 w-7 place-items-center rounded-md bg-primario text-bg"
+      >
+        L
+      </span>
+      <span>Leonardo Serrano</span>
+    </a>
+    <nav class="flex items-center gap-1">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'hidden rounded-md px-3 py-1.5 text-sm transition md:inline-flex',
+              activeSection === item.id
+                ? 'text-text'
+                : 'text-text-soft hover:text-text',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <div class="ml-2">
+        <ThemeToggle />
+      </div>
+    </nav>
+  </div>
+</header>

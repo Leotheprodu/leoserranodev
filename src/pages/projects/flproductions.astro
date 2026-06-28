@@ -1,0 +1,70 @@
+---
+import { getCollection, render } from 'astro:content';
+import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
+import Card from '@components/ui/Card.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Button from '@components/ui/Button.astro';
+
+const allProjects = await getCollection('projects');
+const current = allProjects.find((p) => p.data.slug === 'flproductions');
+
+if (!current) {
+  return Astro.redirect('/projects');
+}
+
+const { Content } = await render(current);
+
+const others = allProjects
+  .filter((p) => p.data.slug !== 'flproductions')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<CaseStudyLayout
+  title={`${current.data.title} — Case Study`}
+  description={current.data.tagline}
+  tagline={current.data.tagline}
+  type={current.data.type}
+  status={current.data.status}
+  statusVariant="live"
+  liveUrl={current.data.liveUrl}
+  githubUrl={current.data.githubUrl}
+  stack={current.data.stack}
+  metrics={current.data.metrics}
+  highlights={current.data.highlights}
+  publishedAt={current.data.publishedAt}
+>
+  <Content />
+
+  <Fragment slot="related">
+    {
+      others.map((p) => (
+        <Card
+          variant="bento"
+          padding="md"
+          hover="border"
+          href={`/projects/${p.data.slug}`}
+        >
+          <div class="flex flex-col gap-2">
+            <Badge variant="default" size="sm">
+              {p.data.type === 'saas'
+                ? 'SaaS'
+                : p.data.type === 'ecommerce'
+                  ? 'E-commerce'
+                  : p.data.type === 'studio'
+                    ? 'Studio'
+                    : 'Platform'}
+            </Badge>
+            <Heading as="h3" size="lg">{p.data.title}</Heading>
+            <p class="text-sm text-text-soft line-clamp-2">
+              {p.data.tagline}
+            </p>
+            <Button variant="link" size="sm" href={`/projects/${p.data.slug}`}>
+              Read case study →
+            </Button>
+          </div>
+        </Card>
+      ))
+    }
+  </Fragment>
+</CaseStudyLayout>
