@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import ThemeToggle from '@components/ui/ThemeToggle.astro';
 import LanguageSwitcher from '@components/ui/LanguageSwitcher.astro';
 import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
@@ -37,11 +38,18 @@ const localizedHome = lang === defaultLanguage ? '/' : `/${lang}/`;
       aria-label="Home"
     >
       <span
-        class="grid h-7 w-7 place-items-center rounded-md bg-primario text-bg"
+        class="relative inline-block h-7 w-7 overflow-hidden rounded-full ring-1 ring-border"
         transition:name="site-logo"
         transition:animate="fade"
       >
-        L
+        <Image
+          src={import('@/assets/avatar/avatar-256.png')}
+          alt="Leonardo Serrano"
+          width={28}
+          height={28}
+          loading="eager"
+          class="h-full w-full object-cover"
+        />
       </span>
       <span transition:name="site-name" transition:animate="fade">Leonardo Serrano</span>
     </a>
