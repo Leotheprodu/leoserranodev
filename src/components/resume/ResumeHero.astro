@@ -2,8 +2,10 @@
 import { Image } from 'astro:assets';
 import Badge from '@components/ui/Badge.astro';
 import Icon from '@components/ui/Icon.astro';
+import { DownloadPDFButton } from '@components/resume/DownloadPDFButton';
 import avatarImg from '@/assets/avatar/avatar-256.png';
 import { resume } from '@data/resume';
+import { buildPdfData } from '@data/resume-pdf';
 import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils';
 
 interface Props {
@@ -14,6 +16,7 @@ const { class: className = '' } = Astro.props as Props;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const pdfData = buildPdfData(lang);
 ---
 
 <header
@@ -115,14 +118,13 @@ const t = useTranslations(lang);
       </div>
 
       <div class="mt-4 flex flex-wrap items-center justify-center gap-3 md:justify-start">
-        <button
-          type="button"
-          data-resume-print
-          class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold !text-[#0a0a0a] transition hover:bg-white/90 print:hidden"
-        >
-          <Icon name="mdi:download" size={16} ariaLabel="Download" />
-          {t('resume.downloadPdf')}
-        </button>
+        <DownloadPDFButton
+          client:load
+          label={t('resume.downloadPdf')}
+          loadingLabel="Generando PDF…"
+          lang={lang}
+          pdfData={pdfData}
+        />
         <a
           href={getLocalizedPath('/#contact', lang)}
           class="inline-flex items-center gap-2 rounded-md border border-border bg-bg-soft px-5 py-2.5 text-sm font-semibold text-text transition hover:border-secundario hover:text-secundario"
@@ -133,20 +135,3 @@ const t = useTranslations(lang);
     </div>
   </div>
 </header>
-
-<script>
-  // Print / Save as PDF: nativo del browser, 0 dependencias, sin CORS issues
-  function initPrint() {
-    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-resume-print]');
-    if (buttons.length === 0) return;
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        window.print();
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', initPrint);
-  if (document.readyState !== 'loading') initPrint();
-</script>

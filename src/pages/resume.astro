@@ -10,14 +10,17 @@ import StatCard from '@components/bento/StatCard.astro';
 import BentoGrid from '@components/bento/BentoGrid.astro';
 import ResumeHero from '@components/resume/ResumeHero.astro';
 import ExperienceCard from '@components/resume/ExperienceCard.astro';
+import { DownloadPDFButton } from '@components/resume/DownloadPDFButton';
 import Reveal from '@components/motion/Reveal.astro';
 import StaggerChildren from '@components/motion/StaggerChildren.astro';
 import { resume } from '@data/resume';
+import { buildPdfData } from '@data/resume-pdf';
 import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const isEs = lang === 'es';
+const pdfData = buildPdfData(lang);
 ---
 
 <BaseLayout
@@ -115,14 +118,14 @@ const isEs = lang === 'es';
             {t('resume.ctaSubtitle')}
           </p>
           <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
-            <button
-              type="button"
-              data-resume-print
-              class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold !text-[#0a0a0a] transition hover:bg-white/90 print:hidden"
-            >
-              <Icon name="mdi:download" size={16} ariaLabel="Download" />
-              {t('resume.downloadPdf')}
-            </button>
+            <DownloadPDFButton
+              client:load
+              label={t('resume.downloadPdf')}
+              loadingLabel="Generando PDF…"
+              variant="light"
+              lang={lang}
+              pdfData={pdfData}
+            />
             <a
               href={getLocalizedPath('/#contact', lang)}
               class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-highlight hover:text-highlight"
