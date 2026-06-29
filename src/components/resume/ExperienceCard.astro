@@ -1,0 +1,68 @@
+---
+import Card from '@components/ui/Card.astro';
+import Badge from '@components/ui/Badge.astro';
+import Heading from '@components/ui/Heading.astro';
+import Icon from '@components/ui/Icon.astro';
+import { type ResumeExperience } from '@data/resume';
+import { getLangFromUrl } from '@/i18n/utils';
+
+interface Props {
+  experience: ResumeExperience;
+  index: number;
+}
+
+const { experience, index } = Astro.props as Props;
+const lang = getLangFromUrl(Astro.url);
+const isEs = lang === 'es';
+---
+
+<Card variant="default" padding="lg" hover="border" class="break-inside-avoid">
+  <div class="flex flex-col gap-4">
+    <div class="flex items-start justify-between gap-3">
+      <div class="flex-1">
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          <Badge variant="secundario" size="sm">#{index + 1}</Badge>
+          <Badge variant="default" size="sm">{experience.company}</Badge>
+        </div>
+        <Heading as="h3" size="lg" class="!text-text">
+          {isEs ? experience.role.es : experience.role.en}
+        </Heading>
+        <p class="mt-1 text-sm font-medium text-secundario">
+          {isEs ? experience.period.es : experience.period.en} · {experience.location}
+        </p>
+      </div>
+      {experience.liveUrl && (
+        <a
+          href={experience.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden shrink-0 items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario md:inline-flex"
+        >
+          <Icon name="mdi:open-in-new" size={14} ariaLabel="Live" />
+          Live
+        </a>
+      )}
+    </div>
+
+    <ul class="flex flex-col gap-2 text-sm leading-relaxed text-text-soft">
+      {
+        experience.highlights.map((h) => (
+          <li class="flex items-start gap-2">
+            <span class="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-secundario" />
+            <span>{isEs ? h.es : h.en}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex flex-wrap gap-1.5 pt-2">
+      {
+        experience.stack.map((tech) => (
+          <span class="rounded-md border border-border bg-bg-soft px-2 py-0.5 font-mono text-xs text-text-soft">
+            {tech}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</Card>

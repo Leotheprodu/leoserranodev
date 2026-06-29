@@ -1,0 +1,211 @@
+---
+import { Image } from 'astro:assets';
+import Badge from '@components/ui/Badge.astro';
+import Icon from '@components/ui/Icon.astro';
+import avatarImg from '@/assets/avatar/avatar-256.png';
+import { resume } from '@data/resume';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props as Props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<header
+  class:list={[
+    'relative overflow-hidden border-b border-border/60 py-16 md:py-20',
+    className,
+  ]}
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,var(--color-secundario)/10,transparent_45%),radial-gradient(circle_at_70%_80%,var(--color-acento)/8,transparent_45%)]"
+  >
+  </div>
+
+  <div
+    class="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 md:flex-row md:items-start md:gap-12 md:px-10"
+  >
+    <div
+      class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full ring-4 ring-secundario/30 shadow-2xl md:h-40 md:w-40"
+      transition:name="author-photo"
+      transition:animate="fade"
+    >
+      <Image
+        src={avatarImg}
+        alt="Leonardo Serrano"
+        width={160}
+        height={160}
+        loading="eager"
+        class="h-full w-full object-cover"
+      />
+    </div>
+
+    <div class="flex flex-1 flex-col items-center gap-3 text-center md:items-start md:text-left">
+      <Badge variant="secundario" size="md">
+        {t('resume.availableBadge')}
+      </Badge>
+
+      <h1
+        class="text-balance text-4xl font-black tracking-tight text-text md:text-6xl"
+        transition:name="author-name"
+        transition:animate="fade"
+      >
+        {resume.name}
+      </h1>
+
+      <p
+        class="text-balance text-xl font-medium text-secundario md:text-2xl"
+        transition:animate="fade"
+      >
+        {resume.title[lang]}
+      </p>
+
+      <div class="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm text-text-soft md:justify-start">
+        <Icon name="mdi:map-marker-outline" size={16} ariaLabel="Location" />
+        <span>{resume.location[lang]}</span>
+      </div>
+
+      <div
+        class="mt-3 flex max-w-2xl text-balance text-left text-base leading-relaxed text-text-soft md:text-lg"
+      >
+        <p>{resume.summary[lang]}</p>
+      </div>
+
+      <div class="mt-3 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+        <a
+          href="mailto:leovpc@gmail.com"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="mdi:email-outline" size={14} ariaLabel="Email" />
+          leovpc@gmail.com
+        </a>
+        <a
+          href="https://wa.me/50663017707"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:whatsapp" size={14} ariaLabel="WhatsApp" />
+          +506 6301 7707
+        </a>
+        <a
+          href="https://github.com/Leotheprodu"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:github" size={14} ariaLabel="GitHub" />
+          @Leotheprodu
+        </a>
+        <a
+          href="https://www.linkedin.com/in/leonardo-serrano-dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:linkedin" size={14} ariaLabel="LinkedIn" />
+          leonardo-serrano-dev
+        </a>
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+        <button
+          type="button"
+          data-resume-pdf
+          class="inline-flex items-center gap-2 rounded-md bg-primario px-5 py-2.5 text-sm font-semibold text-bg transition hover:bg-primario/90"
+        >
+          <Icon name="mdi:download" size={16} ariaLabel="Download" />
+          {t('resume.downloadPdf')}
+        </button>
+        <a
+          href={getLocalizedPath('/#contact', lang)}
+          class="inline-flex items-center gap-2 rounded-md border border-border bg-bg-soft px-5 py-2.5 text-sm font-semibold text-text transition hover:border-secundario hover:text-secundario"
+        >
+          {t('resume.getInTouch')}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Carga html2pdf.js dinámicamente y genera el PDF con un click
+  type Html2PdfOptions = {
+    margin: number | number[];
+    filename: string;
+    image: { type: string; quality: number };
+    html2canvas: { scale: number; useCORS: boolean; backgroundColor: string | null };
+    jsPDF: { unit: string; format: string; orientation: string };
+    pagebreak: { mode: string[] };
+  };
+
+  declare global {
+    interface Window {
+      html2pdf?: (element: HTMLElement, options: Html2PdfOptions) => { save: (filename?: string) => void; from: (element: HTMLElement) => { save: (filename?: string) => void } };
+    }
+  }
+
+  async function loadHtml2Pdf(): Promise<void> {
+    if (window.html2pdf) return;
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src =
+        'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load html2pdf.js'));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function initDownload() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-resume-pdf]');
+    if (buttons.length === 0) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const originalLabel = btn.innerHTML;
+        btn.setAttribute('disabled', 'true');
+        btn.innerHTML =
+          '<span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-bg/30 border-t-bg"></span><span>Generando PDF…</span>';
+
+        try {
+          await loadHtml2Pdf();
+          if (!window.html2pdf) throw new Error('html2pdf not loaded');
+
+          const target = document.querySelector<HTMLElement>('#resume-content');
+          if (!target) throw new Error('Resume content not found');
+
+          const filename = `leonardo-serrano-cv-${new Date().toISOString().slice(0, 10)}.pdf`;
+
+          await window
+            .html2pdf()
+            .from(target)
+            .set({
+              margin: [10, 10, 10, 10],
+              filename,
+              image: { type: 'jpeg', quality: 0.95 },
+              html2canvas: { scale: 2, useCORS: true, backgroundColor: null },
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+              pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+            })
+            .save();
+        } catch (err) {
+          console.error('PDF generation failed:', err);
+          alert('PDF generation failed. Try using Print → Save as PDF.');
+        } finally {
+          btn.removeAttribute('disabled');
+          btn.innerHTML = originalLabel;
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initDownload);
+  if (document.readyState !== 'loading') initDownload();
+</script>

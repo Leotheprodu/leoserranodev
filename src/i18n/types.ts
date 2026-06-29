@@ -15,6 +15,7 @@ export interface Dictionary {
     about: string;
     contact: string;
     home: string;
+    resume: string;
   };
   theme: {
     toggle: string;
@@ -86,6 +87,19 @@ export interface Dictionary {
     title: string;
     description: string;
     backHome: string;
+  };
+  resume: {
+    availableBadge: string;
+    downloadPdf: string;
+    getInTouch: string;
+    highlights: string;
+    highlightsSubtitle: string;
+    experience: string;
+    experienceSubtitle: string;
+    languages: string;
+    interests: string;
+    ctaTitle: string;
+    ctaSubtitle: string;
   };
   common: {
     openMenu: string;
