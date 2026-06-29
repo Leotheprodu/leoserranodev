@@ -1,0 +1,137 @@
+---
+import { Image } from 'astro:assets';
+import Badge from '@components/ui/Badge.astro';
+import Icon from '@components/ui/Icon.astro';
+import { DownloadPDFButton } from '@components/resume/DownloadPDFButton';
+import avatarImg from '@/assets/avatar/avatar-256.png';
+import { resume } from '@data/resume';
+import { buildPdfData } from '@data/resume-pdf';
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props as Props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const pdfData = buildPdfData(lang);
+---
+
+<header
+  class:list={[
+    'relative overflow-hidden border-b border-border/60 py-16 md:py-20',
+    className,
+  ]}
+>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,var(--color-secundario)/10,transparent_45%),radial-gradient(circle_at_70%_80%,var(--color-acento)/8,transparent_45%)]"
+  >
+  </div>
+
+  <div
+    class="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 md:flex-row md:items-start md:gap-12 md:px-10"
+  >
+    <div
+      class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full ring-4 ring-secundario/30 shadow-2xl md:h-40 md:w-40"
+      transition:name="author-photo"
+      transition:animate="fade"
+    >
+      <Image
+        src={avatarImg}
+        alt="Leonardo Serrano"
+        width={160}
+        height={160}
+        loading="eager"
+        class="h-full w-full object-cover"
+      />
+    </div>
+
+    <div class="flex flex-1 flex-col items-center gap-3 text-center md:items-start md:text-left">
+      <Badge variant="secundario" size="md">
+        {t('resume.availableBadge')}
+      </Badge>
+
+      <h1
+        class="text-balance text-4xl font-black tracking-tight text-text md:text-6xl"
+        transition:name="author-name"
+        transition:animate="fade"
+      >
+        {resume.name}
+      </h1>
+
+      <p
+        class="text-balance text-xl font-medium text-secundario md:text-2xl"
+        transition:animate="fade"
+      >
+        {resume.title[lang]}
+      </p>
+
+      <div class="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm text-text-soft md:justify-start">
+        <Icon name="mdi:map-marker-outline" size={16} ariaLabel="Location" />
+        <span>{resume.location[lang]}</span>
+      </div>
+
+      <div
+        class="mt-3 flex max-w-2xl text-balance text-left text-base leading-relaxed text-text-soft md:text-lg"
+      >
+        <p>{resume.summary[lang]}</p>
+      </div>
+
+      <div class="mt-3 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+        <a
+          href="mailto:leovpc@gmail.com"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="mdi:email-outline" size={14} ariaLabel="Email" />
+          leovpc@gmail.com
+        </a>
+        <a
+          href="https://wa.me/50663017707"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:whatsapp" size={14} ariaLabel="WhatsApp" />
+          +506 6301 7707
+        </a>
+        <a
+          href="https://github.com/Leotheprodu"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:github" size={14} ariaLabel="GitHub" />
+          @Leotheprodu
+        </a>
+        <a
+          href="https://www.linkedin.com/in/leonardo-serrano-dev/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-xs font-medium text-text transition hover:border-secundario hover:text-secundario"
+        >
+          <Icon name="simple-icons:linkedin" size={14} ariaLabel="LinkedIn" />
+          leonardo-serrano-dev
+        </a>
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+        <DownloadPDFButton
+          client:load
+          label={t('resume.downloadPdf')}
+          loadingLabel="Generando PDF…"
+          lang={lang}
+          pdfData={pdfData}
+        />
+        <a
+          href={getLocalizedPath('/#contact', lang)}
+          class="inline-flex items-center gap-2 rounded-md border border-border bg-bg-soft px-5 py-2.5 text-sm font-semibold text-text transition hover:border-secundario hover:text-secundario"
+        >
+          {t('resume.getInTouch')}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

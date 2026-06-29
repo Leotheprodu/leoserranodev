@@ -16,6 +16,7 @@ const isHome = !activeSection || activeSection === 'home';
 
 const navItems = [
   { id: 'projects', label: t('nav.projects'), href: getLocalizedPath('/projects', lang) },
+  { id: 'resume', label: t('nav.resume'), href: getLocalizedPath('/resume', lang) },
   { id: 'stats', label: t('nav.numbers'), href: `${getLocalizedPath('/', lang)}#stats` },
   { id: 'stack', label: t('nav.stack'), href: `${getLocalizedPath('/', lang)}#stack` },
   { id: 'about', label: t('nav.about'), href: `${getLocalizedPath('/', lang)}#about` },

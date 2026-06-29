@@ -8,6 +8,7 @@ export const en: Dictionary = {
     about: 'About',
     contact: 'Contact',
     home: 'Home',
+    resume: 'Resume',
   },
   theme: {
     toggle: 'Toggle theme',
@@ -89,6 +90,20 @@ export const en: Dictionary = {
     title: 'Page not found',
     description: "The page you were looking for doesn't exist or has been moved.",
     backHome: '← Back home',
+  },
+  resume: {
+    availableBadge: 'Open to opportunities',
+    downloadPdf: 'Download PDF',
+    getInTouch: 'Get in touch',
+    highlights: 'Highlights',
+    highlightsSubtitle: 'Real metrics from 13+ years of production work.',
+    experience: 'Experience',
+    experienceSubtitle: 'Three products shipping to real users every day.',
+    languages: 'Languages',
+    interests: 'What I work on',
+    ctaTitle: 'Like what you see?',
+    ctaSubtitle:
+      'Open to interesting projects, contract work, and full-time roles where the team ships production software with care.',
   },
   common: {
     openMenu: 'Open menu',

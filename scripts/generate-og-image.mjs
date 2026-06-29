@@ -48,7 +48,7 @@ async function generate() {
   const avatarResized = await sharp(avatar)
     .resize(320, 320, { fit: 'cover' })
     .composite([{
-      input: Buffer.from(`<svg><circle cx="160" cy="160" r="160" fill="none"/></svg>`),
+      input: Buffer.from(`<svg><circle cx="160" cy="160" r="160" fill="white"/></svg>`),
       blend: 'dest-in',
     }])
     .png()

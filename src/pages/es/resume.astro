@@ -1,0 +1,177 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@components/layouts/Header.astro';
+import Footer from '@components/layouts/Footer.astro';
+import Section from '@components/ui/Section.astro';
+import Heading from '@components/ui/Heading.astro';
+import Badge from '@components/ui/Badge.astro';
+import Icon from '@components/ui/Icon.astro';
+import StatCard from '@components/bento/StatCard.astro';
+import BentoGrid from '@components/bento/BentoGrid.astro';
+import ResumeHero from '@components/resume/ResumeHero.astro';
+import ExperienceCard from '@components/resume/ExperienceCard.astro';
+import { DownloadPDFButton } from '@components/resume/DownloadPDFButton';
+import Reveal from '@components/motion/Reveal.astro';
+import StaggerChildren from '@components/motion/StaggerChildren.astro';
+import { resume } from '@data/resume';
+import { buildPdfData } from '@data/resume-pdf';
+import { getLangFromUrl, useTranslations, getLocalizedPath, defaultLanguage } from '@/i18n/utils';
+
+const lang = 'es' as const;
+const t = useTranslations(lang);
+const pdfData = buildPdfData(lang);
+---
+
+<BaseLayout
+  title="CV — Leonardo Serrano"
+  description={resume.summary.es}
+  image="/og-default.png"
+  lang="es"
+>
+  <Header activeSection="home" />
+
+  <main id="main">
+    <div id="resume-content">
+      <ResumeHero />
+
+      <Section container="wide" background="default" spacing="lg">
+        <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+          <Heading as="h2" size="4xl" gradient>{t('resume.highlights')}</Heading>
+          <p class="max-w-2xl text-text-soft">{t('resume.highlightsSubtitle')}</p>
+        </Reveal>
+
+        <BentoGrid cols={3} gap="md">
+          {
+            resume.highlights.map((h) => (
+              <StatCard
+                stat={{
+                  value: h.value,
+                  label: h.label.es,
+                }}
+                size="md"
+              />
+            ))
+          }
+        </BentoGrid>
+      </Section>
+
+      <Section
+        id="experience"
+        container="wide"
+        background="soft"
+        spacing="lg"
+      >
+        <Reveal direction="up" speed="normal" class="mb-12 flex flex-col items-center gap-3 text-center">
+          <Heading as="h2" size="4xl" gradient>{t('resume.experience')}</Heading>
+          <p class="max-w-2xl text-text-soft">{t('resume.experienceSubtitle')}</p>
+        </Reveal>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          {
+            resume.experience.map((exp, i) => (
+              <ExperienceCard experience={exp} index={i} />
+            ))
+          }
+        </div>
+      </Section>
+
+      <Section container="wide" background="default" spacing="lg">
+        <div class="grid gap-6 md:grid-cols-2">
+          <Reveal direction="up" speed="normal">
+            <div class="rounded-lg border border-border bg-surface p-6">
+              <Heading as="h3" size="lg" class="mb-4">{t('resume.languages')}</Heading>
+              <ul class="flex flex-col gap-2">
+                {
+                  resume.languages.map((l) => (
+                    <li class="flex items-center gap-2 text-sm text-text-soft">
+                      <Icon name="mdi:translate" size={16} ariaLabel="Language" />
+                      {l.es}
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </Reveal>
+
+          <Reveal direction="up" speed="normal" class="md:delay-150">
+            <div class="rounded-lg border border-border bg-surface p-6">
+              <Heading as="h3" size="lg" class="mb-4">{t('resume.interests')}</Heading>
+              <ul class="flex flex-col gap-2">
+                {
+                  resume.interests.map((interest) => (
+                    <li class="flex items-center gap-2 text-sm text-text-soft">
+                      <Icon name="mdi:lightbulb-on-outline" size={16} ariaLabel="Interest" />
+                      {interest.es}
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+
+      <Section container="narrow" background="primario" spacing="lg" class="text-center">
+        <Reveal direction="up" speed="normal" class="flex flex-col items-center gap-6">
+          <Heading as="h2" size="4xl" class="!text-white">{t('resume.ctaTitle')}</Heading>
+          <p class="max-w-xl text-base text-white/80 md:text-lg">
+            {t('resume.ctaSubtitle')}
+          </p>
+          <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
+            <DownloadPDFButton
+              client:load
+              label={t('resume.downloadPdf')}
+              loadingLabel="Generando PDF…"
+              variant="light"
+              lang={lang}
+              pdfData={pdfData}
+            />
+            <a
+              href="/es/#contact"
+              class="inline-flex items-center gap-2 rounded-md border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-highlight hover:text-highlight"
+            >
+              {t('resume.getInTouch')}
+            </a>
+          </div>
+        </Reveal>
+      </Section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style is:global>
+  @media print {
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+    html, body {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    .dark, [class*='bg-bg'], [class*='bg-bg-soft'], [class*='bg-surface'] {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    [class*='text-text-soft'], [class*='text-text-muted'] {
+      color: #444444 !important;
+    }
+    [class*='border-border'] {
+      border-color: #d4d4d8 !important;
+    }
+    [class*='bg-primario'] {
+      background: #0a0a0a !important;
+      color: #ffffff !important;
+    }
+    [class*='text-gradient'] {
+      color: #22d0c9 !important;
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+    }
+    header.sticky, [data-theme-toggle], [data-resume-print] {
+      display: none !important;
+    }
+  }
+</style>

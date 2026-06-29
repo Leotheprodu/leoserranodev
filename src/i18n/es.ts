@@ -8,6 +8,7 @@ export const es: Dictionary = {
     about: 'Sobre mí',
     contact: 'Contacto',
     home: 'Inicio',
+    resume: 'CV',
   },
   theme: {
     toggle: 'Cambiar tema',
@@ -89,6 +90,21 @@ export const es: Dictionary = {
     title: 'Página no encontrada',
     description: 'La página que buscabas no existe o fue movida.',
     backHome: '← Volver al inicio',
+  },
+  resume: {
+    availableBadge: 'Disponible para oportunidades',
+    downloadPdf: 'Descargar PDF',
+    getInTouch: 'Hablemos',
+    highlights: 'Highlights',
+    highlightsSubtitle:
+      'Métricas reales de 13+ años de trabajo en producción.',
+    experience: 'Experiencia',
+    experienceSubtitle: 'Tres productos entregando a usuarios reales todos los días.',
+    languages: 'Idiomas',
+    interests: 'En qué trabajo',
+    ctaTitle: '¿Te gusta lo que ves?',
+    ctaSubtitle:
+      'Disponible para proyectos interesantes, trabajo como contratista, y posiciones full-time donde el equipo entrega software de producción con cuidado.',
   },
   common: {
     openMenu: 'Abrir menú',
