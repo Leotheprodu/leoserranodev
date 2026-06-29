@@ -117,8 +117,8 @@ const isEs = lang === 'es';
           <div class="mt-2 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
-              data-resume-pdf
-              class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold !text-[#0a0a0a] transition hover:bg-white/90"
+              data-resume-print
+              class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-semibold !text-[#0a0a0a] transition hover:bg-white/90 print:hidden"
             >
               <Icon name="mdi:download" size={16} ariaLabel="Download" />
               {t('resume.downloadPdf')}
@@ -167,7 +167,7 @@ const isEs = lang === 'es';
       background: none !important;
       -webkit-text-fill-color: initial !important;
     }
-    header.sticky, [data-theme-toggle], [data-resume-pdf] {
+    header.sticky, [data-theme-toggle], [data-resume-print] {
       display: none !important;
     }
   }
